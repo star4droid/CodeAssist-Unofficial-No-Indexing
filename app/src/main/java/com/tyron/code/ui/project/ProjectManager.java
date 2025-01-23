@@ -47,7 +47,7 @@ public class ProjectManager {
   public static String XML="Index XML files",
     JAVA = "Index Java files", RES = "Generate Resource files",
     DOWNLOAD = "Download Libraries ",INJECT_RES="Inject Resources";
-  public static final HashMap<String, Boolean> indexFiles = new HashMap<>(){
+  public static final HashMap<String, Boolean> indexFiles = new HashMap<String, Boolean>(){
         {
             put(XML, false);
             put(JAVA, true);
