@@ -29,7 +29,7 @@ android {
     }
     
     kotlinOptions {
-        jvmTarget = '1.11'
+        jvmTarget = '1.9'
     }
 
     testOptions {
