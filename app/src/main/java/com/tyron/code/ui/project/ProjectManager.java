@@ -33,17 +33,30 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import kotlin.collections.CollectionsKt;
+//import kotlin.collections.CollectionsKt;
 import org.apache.commons.io.FileUtils;
 
 public class ProjectManager {
 
   private static final Logger LOG = IdeLog.getCurrentLogger(ProjectManager.class);
   private Instant now;
-
+  public static String XML="Index XML files",
+    JAVA = "Index Java files", RES = "Generate Resource files",
+    DOWNLOAD = "Download Libraries ",INJECT_RES="Inject Resources";
+  public static final HashMap<String, Boolean> indexFiles = new HashMap<>(){
+        {
+            put(XML, false);
+            put(JAVA, true);
+            put(RES, false);
+            put(DOWNLOAD,true);
+            put(INJECT_RES,true);
+        }
+    };
+    
   public interface TaskListener {
     void onTaskStarted(String message);
 
@@ -62,6 +75,10 @@ public class ProjectManager {
     }
     return INSTANCE;
   }
+  
+  public static String[] getTaskList() {
+        return indexFiles.keySet().toArray(new String[0]);
+    }
 
   private final List<OnProjectOpenListener> mProjectOpenListeners = new ArrayList<>();
   private volatile Project mCurrentProject;
@@ -151,7 +168,7 @@ public class ProjectManager {
     }
 
     JavaModule javaModule = (JavaModule) module;
-    if (gradleFile.exists()) {
+    if (gradleFile.exists() && indexFiles.containsKey(DOWNLOAD)) {
       if (module instanceof JavaModule) {
         try {
           downloadLibraries(javaModule, mListener, logger);
@@ -166,7 +183,7 @@ public class ProjectManager {
     File res = androidModule.getAndroidResourcesDirectory();
     if (res.exists()) {
 
-      if (module instanceof AndroidModule) {
+      if (module instanceof AndroidModule && indexFiles.containsKey(RES)) {
         mListener.onTaskStarted("Generating resource files.");
         ManifestMergeTask manifestMergeTask =
             new ManifestMergeTask(project, (AndroidModule) module, logger);
@@ -191,7 +208,7 @@ public class ProjectManager {
       }
 
       if (res.exists()) {
-        if (module instanceof JavaModule) {
+        if (module instanceof JavaModule && indexFiles.containsKey(XML)) {
           if (module instanceof AndroidModule) {
             mListener.onTaskStarted("Indexing XML files.");
 
@@ -219,30 +236,32 @@ public class ProjectManager {
 
         mListener.onTaskStarted("Indexing");
         try {
-          JavaCompilerProvider provider =
-              CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
-          JavaCompilerService service = provider.get(project, module);
-          if (res.exists()) {
-            if (module instanceof AndroidModule) {
-              String packageName = getApplicationId(((AndroidModule) module));
-              if (packageName != null) {
-                InjectResourcesTask.inject(project, (AndroidModule) module);
-                InjectViewBindingTask.inject(project, (AndroidModule) module);
-                logger.debug(
-                    "> Task :" + module.getRootFile().getName() + ":" + "injectingResources");
+          if(indexFiles.containsKey(JAVA)){
+              JavaCompilerProvider provider =
+                  CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
+              JavaCompilerService service = provider.get(project, module);
+              if (res.exists()&&indexFiles.containsKey(INJECT_RES)) {
+                if (module instanceof AndroidModule) {
+                  String packageName = getApplicationId(((AndroidModule) module));
+                  if (packageName != null) {
+                    InjectResourcesTask.inject(project, (AndroidModule) module);
+                    InjectViewBindingTask.inject(project, (AndroidModule) module);
+                    logger.debug(
+                        "> Task :" + module.getRootFile().getName() + ":" + "injectingResources");
+                  }
+                }
               }
-            }
-          }
-          Collection<File> files = javaModule.getJavaFiles().values();
-          File first = CollectionsKt.firstOrNull(files);
-          if (first != null) {
-            service.compile(first.toPath());
+              Collection<File> files = javaModule.getJavaFiles().values();
+              File first = files.size()>0?((File)files.toArray()[0]):null;//CollectionsKt.firstOrNull(files);
+              if (first != null) {
+                service.compile(first.toPath());
+              }
           }
         } catch (Throwable e) {
           String message = "Failure indexing project.\n" + Throwables.getStackTraceAsString(e);
           mListener.onComplete(project, false, message);
         }
-      }
+        }
     }
 
     mCurrentProject.setIndexing(false);
