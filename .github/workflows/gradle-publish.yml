@@ -37,6 +37,10 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
+    # Run Spotless apply
+    - name: Run spotlessApply
+      run: ./gradlew :app:spotlessApply
+      
     - name: Build with Gradle
       run: ./gradlew build
 
