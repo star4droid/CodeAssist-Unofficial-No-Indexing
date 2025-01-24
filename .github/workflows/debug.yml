@@ -28,8 +28,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !github.head_ref }}
         with:
-          name: apk-release
-          path: app/build/outputs/apk/release/app-release.apk
+          name: apk-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
   
       - name: Upload mapping files
         uses: actions/upload-artifact@v4      
