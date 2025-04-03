@@ -29,3 +29,5 @@
 
 -keep class java.lang**
 -keepclassmembers class java.lang** { *; }
+-keep class org.h2.** { *; }
+-dontwarn org.h2.**
