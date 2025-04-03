@@ -49,9 +49,9 @@ public class ProjectManager {
     DOWNLOAD = "Download Libraries ",INJECT_RES="Inject Resources";
   public static final HashMap<String, Boolean> indexFiles = new HashMap<String, Boolean>(){
         {
-            put(XML, false);
+            put(XML, true);
             put(JAVA, true);
-            put(RES, false);
+            put(RES, true);
             put(DOWNLOAD,true);
             put(INJECT_RES,true);
         }
