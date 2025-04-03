@@ -44,6 +44,7 @@ import com.google.android.material.transition.MaterialSharedAxis;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
 //import com.tyron.code.R;
+import org.codeassist.unofficial.R; 
 import com.tyron.code.ui.wizard.adapter.WizardTemplateAdapter;
 import com.tyron.code.util.UiUtilsKt;
 import com.tyron.common.util.AndroidUtilities;
@@ -66,8 +67,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
-import org.codeassist.unofficial.R; 
-    
+
 @SuppressWarnings("ConstantConditions")
 public class WizardFragment extends Fragment {
 
