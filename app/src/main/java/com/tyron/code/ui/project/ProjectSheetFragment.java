@@ -346,6 +346,13 @@ public class ProjectSheetFragment extends BottomSheetDialogFragment {
   }
   
   private void checkIndexingThen(Runnable runnable) {
+    if (ProjectManager.indexFiles.isEmpty()) {
+        ProjectManager.indexFiles.put(ProjectManager.XML, true);
+        ProjectManager.indexFiles.put(ProjectManager.JAVA, true);
+        ProjectManager.indexFiles.put(ProjectManager.RES, true);
+        ProjectManager.indexFiles.put(ProjectManager.DOWNLOAD, true);
+        ProjectManager.indexFiles.put(ProjectManager.INJECT_RES, true);
+    }
     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
     builder.setTitle("Select Tasks for Indexing");
 
