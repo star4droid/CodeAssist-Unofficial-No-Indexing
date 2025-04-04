@@ -149,10 +149,9 @@ class KotlinEnvironment private constructor(val module: KotlinModule, disposable
                 PsiTreeChangeListener::class.java
             )
 
-            // التعديل الرئيسي هنا ▼
-            val coreAppEnv = environment.projectEnvironment.environment as CoreApplicationEnvironment
-            if (coreAppEnv.getService(AsyncExecutionService::class.java) == null) {
-                coreAppEnv.registerApplicationService(AsyncExecutionService::class.java, object : AsyncExecutionService() {
+            (environment.projectEnvironment.environment as CoreApplicationEnvironment)
+                .registerApplicationService(AsyncExecutionService::class.java, object : AsyncExecutionService() {
+
                     val executor = Executors.newSingleThreadExecutor()
 
                     override fun createWriteThreadExecutor(p0: ModalityState): AppUIExecutor {
@@ -169,18 +168,20 @@ class KotlinEnvironment private constructor(val module: KotlinModule, disposable
                             override fun later(): AppUIExecutor {
                                 TODO("Not yet implemented")
                             }
+
                         }
                     }
 
                     override fun <T : Any?> buildNonBlockingReadAction(callable: Callable<T>): NonBlockingReadAction<T> {
                         return NonBlockingReadActionImpl(callable)
                     }
+
                 })
-            }
 
             val newInstance = DocumentCommitThread::class.constructors.first()
                 .javaConstructor?.newInstance();
-            coreAppEnv.registerApplicationService(DocumentCommitProcessor::class.java, newInstance);
+            (environment.projectEnvironment.environment as CoreApplicationEnvironment)
+                .registerApplicationService(DocumentCommitProcessor::class.java, newInstance);
             environment.projectEnvironment.project.picoContainer.unregisterComponent(PsiDocumentManager::class.java.name)
 
             registerProjectDependentServices(module, environment.project as MockProject)
