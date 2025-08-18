@@ -13,6 +13,13 @@
             app:iconSpaceReserved="false"
             android:title="@string/open_custom_project_title"
             android:summary="@string/open_custom_project_desc"/>
+     <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:iconSpaceReserved="false"
+            android:key="custom_index_project"
+            app:iconSpaceReserved="false"
+            android:title="@string/enable_custom_index_title"
+            android:summary="@string/enable_custom_index_desc"/>
      
     </PreferenceCategory>
 </PreferenceScreen>
