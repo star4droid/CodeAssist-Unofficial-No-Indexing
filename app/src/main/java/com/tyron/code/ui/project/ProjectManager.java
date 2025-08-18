@@ -110,8 +110,8 @@ public class ProjectManager {
     mCurrentProject = project;
     Module module = mCurrentProject.getMainModule();
     
-    //mPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-   // boolean isCustomIndex = mPreferences.getBoolean("custom_index_project", false);
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance());
+    boolean isCustomIndex = mPreferences.getBoolean("custom_index_project", false);
 
     now = Instant.now();
     boolean shouldReturn = false;
