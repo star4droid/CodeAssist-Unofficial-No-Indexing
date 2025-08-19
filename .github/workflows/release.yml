@@ -1,0 +1,53 @@
+name: Android CI Release
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Android SDK 34
+        uses: android-actions/setup-android@v2
+        with:
+          sdk-platform: android-34
+          sdk-build-tools: 34.0.0
+          ndk-version: '25.2.9519653'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew :app:spotlessApply 
+          ./gradlew clean 
+          ./gradlew assembleRelease
+
+      - name: Upload debug apk
+        uses: actions/upload-artifact@v4
+        if: ${{ !github.head_ref }}
+        with:
+          name: apk-release
+          path: app/build/outputs/apk/release/app-release.apk

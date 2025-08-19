@@ -48,6 +48,7 @@ configurations.implementation {
 dependencies {
 
     implementation project(path: ':kotlinc')
+	//implementation("com.github.Cosmic-Ide.kotlinc-android:kotlinc-android:fce2462f00") 
     implementation project(path: ':javac')
     implementation project(path: ':project')
     implementation project(path: ':logging')
@@ -60,7 +61,7 @@ dependencies {
     api 'org.jetbrains.exposed:exposed-core:0.32.1'
     api 'org.jetbrains.exposed:exposed-dao:0.32.1'
     api 'org.jetbrains.exposed:exposed-jdbc:0.32.1'
-    api 'com.h2database:h2:2.3.232'
+    api 'com.h2database:h2:1.4.200'
     implementation 'androidx.annotation:annotation:1.8.2'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

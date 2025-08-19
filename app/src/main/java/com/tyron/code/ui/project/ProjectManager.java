@@ -2,6 +2,8 @@ package com.tyron.code.ui.project;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.tyron.builder.compiler.BuildType;
@@ -44,14 +46,15 @@ public class ProjectManager {
 
   private static final Logger LOG = IdeLog.getCurrentLogger(ProjectManager.class);
   private Instant now;
+  private SharedPreferences mPreferences;
   public static String XML="Index XML files",
     JAVA = "Index Java files", RES = "Generate Resource files",
     DOWNLOAD = "Download Libraries ",INJECT_RES="Inject Resources";
   public static final HashMap<String, Boolean> indexFiles = new HashMap<String, Boolean>(){
         {
-            put(XML, false);
+            put(XML, true);
             put(JAVA, true);
-            put(RES, false);
+            put(RES, true);
             put(DOWNLOAD,true);
             put(INJECT_RES,true);
         }
@@ -106,6 +109,9 @@ public class ProjectManager {
       Project project, boolean downloadLibs, TaskListener mListener, ILogger logger) {
     mCurrentProject = project;
     Module module = mCurrentProject.getMainModule();
+    
+  //  mPreferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance());
+ //   boolean isCustomIndex = mPreferences.getBoolean("custom_index_project", false);
 
     now = Instant.now();
     boolean shouldReturn = false;

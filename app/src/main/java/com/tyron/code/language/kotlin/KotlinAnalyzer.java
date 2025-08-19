@@ -292,7 +292,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
             .getBoolean(SharedPreferenceKeys.KOTLIN_HIGHLIGHTING, true)) {
           ProgressManager.getInstance()
               .runLater(
-                  () -> {
+                  () -> { try{
                     mEditor.setAnalyzing(true);
 
                     CompletionEngine.getInstance((AndroidModule) module)
@@ -304,7 +304,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
                               ProgressManager.getInstance()
                                   .runLater(() -> mEditor.setAnalyzing(false), 300);
-                            });
+                            });}catch(Exception e){}
                   },
                   900);
         }

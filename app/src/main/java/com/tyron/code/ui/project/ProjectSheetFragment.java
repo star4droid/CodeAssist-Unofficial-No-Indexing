@@ -4,6 +4,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +28,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.transition.MaterialFade;
 import com.tyron.builder.project.Project;
+import com.tyron.code.ApplicationLoader;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.project.adapter.ProjectManagerAdapter;
 import com.tyron.common.SharedPreferenceKeys;
@@ -346,6 +348,22 @@ public class ProjectSheetFragment extends BottomSheetDialogFragment {
   }
   
   private void checkIndexingThen(Runnable runnable) {
+    if (!ProjectManager.indexFiles.isEmpty()) {}
+      ProjectManager.indexFiles.clear();
+    
+        ProjectManager.indexFiles.put(ProjectManager.XML, true);
+        ProjectManager.indexFiles.put(ProjectManager.JAVA, true);
+        ProjectManager.indexFiles.put(ProjectManager.RES, true);
+        ProjectManager.indexFiles.put(ProjectManager.DOWNLOAD, true);
+        ProjectManager.indexFiles.put(ProjectManager.INJECT_RES, true);
+    
+     
+    boolean isCustomIndex = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance()).getBoolean("custom_index_project", false);
+    if(!isCustomIndex){
+    runnable.run();
+    return;
+    } 
+    
     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
     builder.setTitle("Select Tasks for Indexing");
 
