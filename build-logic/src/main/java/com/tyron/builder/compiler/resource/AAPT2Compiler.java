@@ -182,7 +182,7 @@ public class AAPT2Compiler {
 
                 String line;
                 while ((line = br.readLine()) != null) {
-                    diagnostics.add(new DiagnosticWrapper("AAPT2", DiagnosticWrapper.Severity.ERROR, line));
+                    diagnostics.add(new DiagnosticWrapper("AAPT2", DiagnosticWrapper.ERROR, line));
                 }
             }
 
