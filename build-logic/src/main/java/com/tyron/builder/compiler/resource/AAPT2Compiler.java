@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.tools.Diagnostic;
+
 public class AAPT2Compiler {
 
     /* ---------------------------------------------------------------------- */
@@ -36,13 +38,19 @@ public class AAPT2Compiler {
     private static final Pattern MANIFEST_PACKAGE =
             Pattern.compile("\\s*(package)\\s*(=)\\s*(\")([a-zA-Z0-9.]+)(\")");
     private static final String TAG = AAPT2Compiler.class.getSimpleName();
-    private static final String AAPT2_FILE_NAME = "aapt2";            // file name in /files
+    private static final String AAPT2_FILE_NAME = "aapt2";
+
+    /* Log-level constants for log(...) helper */
+    private static final int LOG_LEVEL_ERROR   = 0;
+    private static final int LOG_LEVEL_WARNING = 1;
+    private static final int LOG_LEVEL_INFO    = 2;
 
     /* ---------------------------------------------------------------------- */
     /*  Fields                                                                */
     /* ---------------------------------------------------------------------- */
     private final Project  mProject;
     private final ILogger  mLogger;
+    private final List<DiagnosticWrapper> mDiagnostics = new ArrayList<>();
 
     /* ---------------------------------------------------------------------- */
     /*  Constructor                                                           */
@@ -83,7 +91,6 @@ public class AAPT2Compiler {
         );
 
         runAapt2(args, "project");
-
         compileLibraries();
     }
 
@@ -126,7 +133,6 @@ public class AAPT2Compiler {
         args.add("--min-sdk-version"); args.add(String.valueOf(mProject.getMinSdk()));
         args.add("--target-sdk-version"); args.add(String.valueOf(mProject.getTargetSdk()));
 
-        /* add compiled .zip files */
         File[] resources = getOutputPath().listFiles();
         if (resources != null) {
             for (File f : resources) {
@@ -136,19 +142,15 @@ public class AAPT2Compiler {
             }
         }
 
-        /* java / gen */
         File gen = new File(mProject.getBuildDirectory(), "gen");
         FileUtils.forceMkdir(gen);
         args.add("--java"); args.add(gen.getAbsolutePath());
 
-        /* manifest */
         args.add("--manifest"); args.add(mProject.getManifestFile().getAbsolutePath());
 
-        /* output */
         File resApk = new File(getOutputPath().getParentFile(), "generated.apk.res");
         args.add("-o"); args.add(resApk.getAbsolutePath());
 
-        /* R.txt */
         File rTxt = new File(getOutputPath(), "R.txt");
         Files.deleteIfExists(rTxt.toPath());
         FileUtils.touch(rTxt);
@@ -171,57 +173,55 @@ public class AAPT2Compiler {
         ProcessBuilder pb = new ProcessBuilder(cmd);
         pb.redirectErrorStream(true);
 
-        List<DiagnosticWrapper> diagnostics = new ArrayList<>();
+        clearLogs();
         int exit;
 
         try {
             Process p = pb.start();
-
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(p.getInputStream(), Charset.defaultCharset()))) {
 
                 String line;
                 while ((line = br.readLine()) != null) {
-                    diagnostics.add(new DiagnosticWrapper("AAPT2", DiagnosticWrapper.ERROR, line));
+                    /* All aapt2 output lines are treated as errors for simplicity */
+                    log(LOG_LEVEL_ERROR, null, -1, line);
                 }
             }
-
             exit = p.waitFor();
         } catch (IOException | InterruptedException e) {
             throw new CompilationFailedException("AAPT2 execution failed: " + e.getMessage(), e);
         }
 
-        LogUtils.log(diagnostics, mLogger);
+        LogUtils.log(mDiagnostics, mLogger);
 
         if (exit != 0) {
             throw new CompilationFailedException("AAPT2 " + task + " failed (exit code " + exit + ")");
         }
     }
- 
-/* ---------------------------------------------------------------------- */
-/*  AAPT2 binary discovery / installation                                 */
-/* ---------------------------------------------------------------------- */
-private File getAapt2Binary() throws IOException {
-    Context ctx   = BuildModule.getContext();
-    File target   = new File(ctx.getFilesDir(), "aapt2");
 
-    if (target.exists() && target.canExecute()) {
+    /* ---------------------------------------------------------------------- */
+    /*  AAPT2 binary discovery / installation                                 */
+    /* ---------------------------------------------------------------------- */
+    private File getAapt2Binary() throws IOException {
+        Context ctx   = BuildModule.getContext();
+        File target   = new File(ctx.getFilesDir(), AAPT2_FILE_NAME);
+
+        if (target.exists() && target.canExecute()) {
+            return target;
+        }
+
+        /* Copy the plain executable from assets */
+        try (InputStream in  = ctx.getAssets().open(AAPT2_FILE_NAME);
+             FileOutputStream out = new FileOutputStream(target)) {
+            IOUtils.copy(in, out);
+        }
+
+        /* Make it executable */
+        if (!target.setExecutable(true, false)) {
+            throw new IOException("Cannot mark aapt2 binary as executable");
+        }
         return target;
     }
-
-    /* Copy the plain executable from assets */
-    try (InputStream in  = ctx.getAssets().open("aapt2");
-         FileOutputStream out = new FileOutputStream(target)) {
-        IOUtils.copy(in, out);
-    }
-
-    /* Make it executable */
-    if (!target.setExecutable(true, false)) {
-        throw new IOException("Cannot mark aapt2 binary as executable");
-    }
-    return target;
-}
-
 
     /* ---------------------------------------------------------------------- */
     /*  Helpers                                                               */
@@ -254,5 +254,40 @@ private File getAapt2Binary() throws IOException {
         }
         return null;
     }
+
+    /* ---------------------------------------------------------------------- */
+    /*  Logging helpers requested by the user                                 */
+    /* ---------------------------------------------------------------------- */
+    @SuppressWarnings({"unused", "SameParameterValue"})
+    private void log(int level, String path, long line, String message) {
+        DiagnosticWrapper wrapper = new DiagnosticWrapper();
+        switch (level) {
+            case LOG_LEVEL_ERROR:
+                wrapper.setKind(Diagnostic.Kind.ERROR);
+                break;
+            case LOG_LEVEL_WARNING:
+                wrapper.setKind(Diagnostic.Kind.WARNING);
+                break;
+            case LOG_LEVEL_INFO:
+                wrapper.setKind(Diagnostic.Kind.NOTE);
+                break;
+            default:
+                wrapper.setKind(Diagnostic.Kind.OTHER);
+                break;
+        }
+        if (path != null) {
+            wrapper.setSource(new File(path));
+        }
+        if (line != -1) {
+            wrapper.setLineNumber(line);
+            wrapper.setEndLine((int) line);
+            wrapper.setStartLine((int) line);
+        }
+        wrapper.setMessage(message);
+        mDiagnostics.add(wrapper);
+    }
+
+    private void clearLogs() {
+        mDiagnostics.clear();
+    }
 }
- 
