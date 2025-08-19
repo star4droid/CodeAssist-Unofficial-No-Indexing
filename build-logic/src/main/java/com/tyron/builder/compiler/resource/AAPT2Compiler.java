@@ -1,7 +1,8 @@
 package com.tyron.builder.compiler.resource;
 
+import android.content.Context;
 import android.util.Log;
-import com.android.tools.aapt2.Aapt2Jni;
+
 import com.tyron.builder.BuildModule;
 import com.tyron.builder.exception.CompilationFailedException;
 import com.tyron.builder.log.ILogger;
@@ -9,229 +10,291 @@ import com.tyron.builder.log.LogUtils;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.model.Project;
 import com.tyron.builder.parser.FileManager;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.io.FileUtils;
+
+import javax.tools.Diagnostic;
 
 public class AAPT2Compiler {
 
-  private static final Pattern MANIFEST_PACKAGE =
-      Pattern.compile("\\s*(package)\\s*(=)\\s*(\")([a-zA-Z0-9.]+)(\")");
-  private static final String TAG = AAPT2Compiler.class.getSimpleName();
+    /* ---------------------------------------------------------------------- */
+    /*  Constants                                                             */
+    /* ---------------------------------------------------------------------- */
+    private static final Pattern MANIFEST_PACKAGE =
+            Pattern.compile("\\s*(package)\\s*(=)\\s*(\")([a-zA-Z0-9.]+)(\")");
+    private static final String TAG = AAPT2Compiler.class.getSimpleName();
+    private static final String AAPT2_FILE_NAME = "aapt2";
 
-  private final Project mProject;
-  private final ILogger mLogger;
+    /* Log-level constants for log(...) helper */
+    private static final int LOG_LEVEL_ERROR   = 0;
+    private static final int LOG_LEVEL_WARNING = 1;
+    private static final int LOG_LEVEL_INFO    = 2;
 
-  public AAPT2Compiler(ILogger log, Project project) {
-    mLogger = log;
-    mProject = project;
-  }
+    /* ---------------------------------------------------------------------- */
+    /*  Fields                                                                */
+    /* ---------------------------------------------------------------------- */
+    private final Project  mProject;
+    private final ILogger  mLogger;
+    private final List<DiagnosticWrapper> mDiagnostics = new ArrayList<>();
 
-  public void run() throws IOException, CompilationFailedException {
-    long start = System.currentTimeMillis();
-
-    compileProject();
-    link();
-
-    Log.d(TAG, "Resource compilation took " + (System.currentTimeMillis() - start) + " ms");
-  }
-
-  private void compileProject() throws IOException, CompilationFailedException {
-
-    mLogger.debug("Compiling project resources.");
-
-    FileManager.deleteDir(getOutputPath());
-    FileManager.deleteDir(new File(mProject.getBuildDirectory(), "gen"));
-
-    List<String> args = new ArrayList<>();
-    args.add("--dir");
-    args.add(mProject.getResourceDirectory().getAbsolutePath());
-    args.add("-o");
-    args.add(createNewFile(getOutputPath(), "project.zip").getAbsolutePath());
-
-    int compile = Aapt2Jni.compile(args);
-    List<DiagnosticWrapper> logs = Aapt2Jni.getLogs();
-    LogUtils.log(logs, mLogger);
-
-    if (compile != 0) {
-      throw new CompilationFailedException("Compilation failed, check logs for more details.");
+    /* ---------------------------------------------------------------------- */
+    /*  Constructor                                                           */
+    /* ---------------------------------------------------------------------- */
+    public AAPT2Compiler(ILogger log, Project project) {
+        mLogger = log;
+        mProject = project;
     }
-    compileLibraries();
-  }
 
-  private void compileLibraries() throws IOException, CompilationFailedException {
+    /* ---------------------------------------------------------------------- */
+    /*  Public API                                                            */
+    /* ---------------------------------------------------------------------- */
+    public void run() throws IOException, CompilationFailedException {
+        long start = System.currentTimeMillis();
 
-    mLogger.debug("Compiling libraries.");
+        compileProject();
+        link();
 
-    for (File file : mProject.getLibraries()) {
-      File parent = file.getParentFile();
-      if (parent == null) {
-        throw new IOException("Library folder doesn't exist");
-      }
-
-      File resFolder = new File(parent, "res");
-      if (!resFolder.exists() || !resFolder.isDirectory()) {
-        continue;
-      }
-
-      Log.d(TAG, "Compiling library " + parent.getName());
-
-      List<String> args = new ArrayList<>();
-      args.add(getBinary().getAbsolutePath());
-      args.add("compile");
-      args.add("--dir");
-      args.add(resFolder.getAbsolutePath());
-      args.add("-o");
-      args.add(createNewFile(getOutputPath(), parent.getName() + ".zip").getAbsolutePath());
-
-      int compile = Aapt2Jni.compile(args);
-      List<DiagnosticWrapper> logs = Aapt2Jni.getLogs();
-      LogUtils.log(logs, mLogger);
-
-      if (compile != 0) {
-        throw new CompilationFailedException("Compilation failed, check logs for more details.");
-      }
+        Log.d(TAG, "Resource compilation took " + (System.currentTimeMillis() - start) + " ms");
     }
-  }
 
-  private void link() throws IOException, CompilationFailedException {
-    mLogger.debug("Linking resources");
+    /* ---------------------------------------------------------------------- */
+    /*  Compilation & Linking                                                 */
+    /* ---------------------------------------------------------------------- */
+    private void compileProject() throws IOException, CompilationFailedException {
 
-    List<String> args = new ArrayList<>();
+        mLogger.debug("Compiling project resources.");
 
-    args.add("-I");
-    args.add(BuildModule.getAndroidJar().getAbsolutePath());
-    args.add("--allow-reserved-package-id");
-    args.add("--no-version-vectors");
-    args.add("--no-version-transitions");
-    args.add("--auto-add-overlay");
-    args.add("--min-sdk-version");
-    args.add(String.valueOf(mProject.getMinSdk()));
-    args.add("--target-sdk-version");
-    args.add(String.valueOf(mProject.getTargetSdk()));
+        FileManager.deleteDir(getOutputPath());
+        FileManager.deleteDir(new File(mProject.getBuildDirectory(), "gen"));
 
-    File[] resources = getOutputPath().listFiles();
-    if (resources != null) {
-      for (File resource : resources) {
-        if (resource.isDirectory()) {
-          continue;
+        File projectOut = createNewFile(getOutputPath(), "project.zip");
+
+        List<String> args = Arrays.asList(
+                "compile",
+                "--dir", mProject.getResourceDirectory().getAbsolutePath(),
+                "-o",    projectOut.getAbsolutePath()
+        );
+
+        runAapt2(args, "project");
+        compileLibraries();
+    }
+
+    private void compileLibraries() throws IOException, CompilationFailedException {
+
+        mLogger.debug("Compiling libraries.");
+
+        for (File libJar : mProject.getLibraries()) {
+            File parent = libJar.getParentFile();
+            if (parent == null) continue;
+
+            File resFolder = new File(parent, "res");
+            if (!resFolder.isDirectory()) continue;
+
+            Log.d(TAG, "Compiling library " + parent.getName());
+
+            File out = createNewFile(getOutputPath(), parent.getName() + ".zip");
+
+            List<String> args = Arrays.asList(
+                    "compile",
+                    "--dir", resFolder.getAbsolutePath(),
+                    "-o",    out.getAbsolutePath()
+            );
+
+            runAapt2(args, "library " + parent.getName());
         }
-        if (!resource.getName().endsWith(".zip")) {
-          continue;
+    }
+
+    private void link() throws IOException, CompilationFailedException {
+
+        mLogger.debug("Linking resources");
+
+        List<String> args = new ArrayList<>();
+        args.add("link");
+        args.add("-I"); args.add(BuildModule.getAndroidJar().getAbsolutePath());
+        args.add("--allow-reserved-package-id");
+        args.add("--no-version-vectors");
+        args.add("--no-version-transitions");
+        args.add("--auto-add-overlay");
+        args.add("--min-sdk-version"); args.add(String.valueOf(mProject.getMinSdk()));
+        args.add("--target-sdk-version"); args.add(String.valueOf(mProject.getTargetSdk()));
+
+        File[] resources = getOutputPath().listFiles();
+        if (resources != null) {
+            for (File f : resources) {
+                if (f.isFile() && f.getName().endsWith(".zip")) {
+                    args.add("-R"); args.add(f.getAbsolutePath());
+                }
+            }
         }
-        args.add("-R");
-        args.add(resource.getAbsolutePath());
-      }
-    }
-    args.add("--java");
-    File gen = new File(mProject.getBuildDirectory(), "gen");
-    if (!gen.exists()) {
-      if (!gen.mkdirs()) {
-        throw new CompilationFailedException("Failed to create gen folder");
-      }
-    }
-    args.add(gen.getAbsolutePath());
 
-    args.add("--manifest");
-    args.add(mProject.getManifestFile().getAbsolutePath());
+        File gen = new File(mProject.getBuildDirectory(), "gen");
+        FileUtils.forceMkdir(gen);
+        args.add("--java"); args.add(gen.getAbsolutePath());
 
-    args.add("-o");
-    args.add(getOutputPath().getParent() + "/generated.apk.res");
+        args.add("--manifest"); args.add(mProject.getManifestFile().getAbsolutePath());
 
-    args.add("--output-text-symbols");
-    File file = new File(getOutputPath(), "R.txt");
-    Files.deleteIfExists(file.toPath());
-    if (!file.createNewFile()) {
-      throw new IOException("Unable to create R.txt file");
-    }
-    args.add(file.getAbsolutePath());
+        File resApk = new File(getOutputPath().getParentFile(), "generated.apk.res");
+        args.add("-o"); args.add(resApk.getAbsolutePath());
 
-    int compile = Aapt2Jni.link(args);
-    List<DiagnosticWrapper> logs = Aapt2Jni.getLogs();
-    LogUtils.log(logs, mLogger);
+        File rTxt = new File(getOutputPath(), "R.txt");
+        Files.deleteIfExists(rTxt.toPath());
+        FileUtils.touch(rTxt);
+        args.add("--output-text-symbols"); args.add(rTxt.getAbsolutePath());
 
-    if (compile != 0) {
-      throw new CompilationFailedException("Compilation failed, check logs for more details.");
-    }
-  }
-
-  private File getOutputPath() throws IOException {
-    File file = new File(mProject.getBuildDirectory(), "bin/res");
-    if (!file.exists()) {
-      if (!file.mkdirs()) {
-        throw new IOException("Failed to get resource directory");
-      }
-    }
-    return file;
-  }
-
-  private File createNewFile(File parent, String name) throws IOException {
-    File createdFile = new File(parent, name);
-    if (!parent.exists()) {
-      if (!parent.mkdirs()) {
-        throw new IOException("Unable to create directories");
-      }
-    }
-    if (!createdFile.createNewFile()) {
-      throw new IOException("Unable to create file " + name);
-    }
-    return createdFile;
-  }
-
-  /**
-   * Retrieves the package names of libraries of has a resource file
-   *
-   * @return list of package names in a form of string separated by ":" for use with AAPT2 directly
-   */
-  private String getPackageNames() {
-    StringBuilder builder = new StringBuilder();
-
-    // getLibraries return list of classes.jar, get its parent
-    for (File library : mProject.getLibraries()) {
-      File parent = library.getParentFile();
-
-      String packageName = getPackageName(parent);
-      if (packageName != null) {
-        builder.append(packageName);
-        builder.append(":");
-      }
+        runAapt2(args, "link");
     }
 
-    return builder.toString();
-  }
-
-  /**
-   * Retrieves the package name of a manifest (.xml) file
-   *
-   * @return null if an exception occurred or cannot be determined.
-   */
-  public static String getPackageName(File library) {
-    String manifestString;
+    /* ---------------------------------------------------------------------- */
+    /*  AAPT2 process handling                                                */
+    /* ---------------------------------------------------------------------- */
+    private void runAapt2(List<String> args, String task) throws CompilationFailedException {
+    File aapt2;
     try {
-      manifestString = FileUtils.readFileToString(library, Charset.defaultCharset());
+        aapt2 = getAapt2Binary();
     } catch (IOException e) {
-      return null;
-    }
-    Matcher matcher = MANIFEST_PACKAGE.matcher(manifestString);
-    if (matcher.find()) {
-      return matcher.group(4);
-    }
-    return null;
-  }
-
-  private static File getBinary() throws IOException {
-    File check =
-        new File(BuildModule.getContext().getApplicationInfo().nativeLibraryDir, "libaapt2.so");
-    if (check.exists()) {
-      return check;
+        throw new CompilationFailedException("Unable to obtain aapt2 binary: " + e.getMessage(), e);
     }
 
-    throw new IOException("AAPT2 Binary not found");
-  }
+    List<String> cmd = new ArrayList<>();
+    cmd.add(aapt2.getAbsolutePath());
+    cmd.addAll(args);
+
+    mLogger.debug("Running AAPT2 " + task + ": " + cmd);
+
+    ProcessBuilder pb = new ProcessBuilder(cmd);
+    pb.redirectErrorStream(true);
+
+    clearLogs();
+    int exit;
+
+    try {
+        Process p = pb.start();
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream(), Charset.defaultCharset()))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                log(LOG_LEVEL_ERROR, null, -1, line);
+            }
+        }
+        exit = p.waitFor();
+    } catch (IOException | InterruptedException e) {
+        throw new CompilationFailedException("AAPT2 execution failed: " + e.getMessage(), e);
+    }
+
+    LogUtils.log(mDiagnostics, mLogger);
+
+    if (exit != 0) {
+        throw new CompilationFailedException("AAPT2 " + task + " failed (exit code " + exit + ")");
+    }
+}
+
+
+
+    /* ---------------------------------------------------------------------- */
+    /*  AAPT2 binary discovery / installation                                 */
+    /* ---------------------------------------------------------------------- */
+    private File getAapt2Binary() throws IOException {
+        Context ctx   = BuildModule.getContext();
+        File target   = new File(ctx.getFilesDir(), AAPT2_FILE_NAME);
+
+        if (target.exists() && target.canExecute()) {
+            return target;
+        }
+
+        /* Copy the plain executable from assets */
+        try (InputStream in  = ctx.getAssets().open(AAPT2_FILE_NAME);
+             FileOutputStream out = new FileOutputStream(target)) {
+            IOUtils.copy(in, out);
+        }
+
+        /* Make it executable */
+        if (!target.setExecutable(true, false)) {
+            throw new IOException("Cannot mark aapt2 binary as executable");
+        }
+        return target;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*  Helpers                                                               */
+    /* ---------------------------------------------------------------------- */
+    private File getOutputPath() throws IOException {
+        File dir = new File(mProject.getBuildDirectory(), "bin/res");
+        FileUtils.forceMkdir(dir);
+        return dir;
+    }
+
+    private File createNewFile(File parent, String name) throws IOException {
+        File f = new File(parent, name);
+        FileUtils.touch(f);
+        return f;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*  Package name helpers (unchanged)                                      */
+    /* ---------------------------------------------------------------------- */
+    public static String getPackageName(File library) {
+        String manifestString;
+        try {
+            manifestString = FileUtils.readFileToString(library, Charset.defaultCharset());
+        } catch (IOException e) {
+            return null;
+        }
+        Matcher matcher = MANIFEST_PACKAGE.matcher(manifestString);
+        if (matcher.find()) {
+            return matcher.group(4);
+        }
+        return null;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*  Logging helpers requested by the user                                 */
+    /* ---------------------------------------------------------------------- */
+    @SuppressWarnings({"unused", "SameParameterValue"})
+    private void log(int level, String path, long line, String message) {
+        DiagnosticWrapper wrapper = new DiagnosticWrapper();
+        switch (level) {
+            case LOG_LEVEL_ERROR:
+                wrapper.setKind(Diagnostic.Kind.ERROR);
+                break;
+            case LOG_LEVEL_WARNING:
+                wrapper.setKind(Diagnostic.Kind.WARNING);
+                break;
+            case LOG_LEVEL_INFO:
+                wrapper.setKind(Diagnostic.Kind.NOTE);
+                break;
+            default:
+                wrapper.setKind(Diagnostic.Kind.OTHER);
+                break;
+        }
+        if (path != null) {
+            wrapper.setSource(new File(path));
+        }
+        if (line != -1) {
+            wrapper.setLineNumber(line);
+            wrapper.setEndLine((int) line);
+            wrapper.setStartLine((int) line);
+        }
+        wrapper.setMessage(message);
+        mDiagnostics.add(wrapper);
+    }
+
+    private void clearLogs() {
+        mDiagnostics.clear();
+    }
 }
