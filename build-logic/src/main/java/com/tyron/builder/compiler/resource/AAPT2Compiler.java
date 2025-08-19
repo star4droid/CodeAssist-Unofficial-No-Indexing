@@ -163,41 +163,48 @@ public class AAPT2Compiler {
     /*  AAPT2 process handling                                                */
     /* ---------------------------------------------------------------------- */
     private void runAapt2(List<String> args, String task) throws CompilationFailedException {
-        File aapt2 = getAapt2Binary();
-        List<String> cmd = new ArrayList<>();
-        cmd.add(aapt2.getAbsolutePath());
-        cmd.addAll(args);
-
-        mLogger.debug("Running AAPT2 " + task + ": " + cmd);
-
-        ProcessBuilder pb = new ProcessBuilder(cmd);
-        pb.redirectErrorStream(true);
-
-        clearLogs();
-        int exit;
-
-        try {
-            Process p = pb.start();
-            try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(p.getInputStream(), Charset.defaultCharset()))) {
-
-                String line;
-                while ((line = br.readLine()) != null) {
-                    /* All aapt2 output lines are treated as errors for simplicity */
-                    log(LOG_LEVEL_ERROR, null, -1, line);
-                }
-            }
-            exit = p.waitFor();
-        } catch (IOException | InterruptedException e) {
-            throw new CompilationFailedException("AAPT2 execution failed: " + e.getMessage(), e);
-        }
-
-        LogUtils.log(mDiagnostics, mLogger);
-
-        if (exit != 0) {
-            throw new CompilationFailedException("AAPT2 " + task + " failed (exit code " + exit + ")");
-        }
+    File aapt2;
+    try {
+        aapt2 = getAapt2Binary();
+    } catch (IOException e) {
+        throw new CompilationFailedException("Unable to obtain aapt2 binary: " + e.getMessage(), e);
     }
+
+    List<String> cmd = new ArrayList<>();
+    cmd.add(aapt2.getAbsolutePath());
+    cmd.addAll(args);
+
+    mLogger.debug("Running AAPT2 " + task + ": " + cmd);
+
+    ProcessBuilder pb = new ProcessBuilder(cmd);
+    pb.redirectErrorStream(true);
+
+    clearLogs();
+    int exit;
+
+    try {
+        Process p = pb.start();
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream(), Charset.defaultCharset()))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                log(LOG_LEVEL_ERROR, null, -1, line);
+            }
+        }
+        exit = p.waitFor();
+    } catch (IOException | InterruptedException e) {
+        throw new CompilationFailedException("AAPT2 execution failed: " + e.getMessage(), e);
+    }
+
+    LogUtils.log(mDiagnostics, mLogger);
+
+    if (exit != 0) {
+        throw new CompilationFailedException("AAPT2 " + task + " failed (exit code " + exit + ")");
+    }
+}
+
+
 
     /* ---------------------------------------------------------------------- */
     /*  AAPT2 binary discovery / installation                                 */
