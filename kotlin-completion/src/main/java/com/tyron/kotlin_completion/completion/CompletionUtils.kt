@@ -554,7 +554,12 @@ private fun completeMembers(
             } else expressionType
 
             // LOG.debug("Completing members of instance '{}'", receiverType)
-            val members = receiverType.memberScope.getContributedDescriptors().asSequence()
+           // val members = receiverType.memberScope.getContributedDescriptors().asSequence()
+            val members = try {
+    receiverType.memberScope.getContributedDescriptors().asSequence()
+} catch (e: AssertionError) {
+    emptySequence()
+            }
             val extensions =
                 extensionFunctions(lexicalScope).filter {
                     ProgressManager.checkCanceled()
