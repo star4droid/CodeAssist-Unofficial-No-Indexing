@@ -136,7 +136,7 @@ public class JavaLanguage implements Language, EditorFormatter {
 
     try {
 
-     /* StringWriter out = new StringWriter();
+      StringWriter out = new StringWriter();
       StringWriter err = new StringWriter();
 
       com.google.googlejavaformat.java.Main main =
@@ -151,8 +151,8 @@ public class JavaLanguage implements Language, EditorFormatter {
       if (exitCode != 0) {
         formatted = text;
       }
-*/
-       formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+
+   //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
     } catch (Exception e) {
     }
 
