@@ -345,6 +345,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
 
     @ColorInt
     private int getColor(Diagnostic.Kind kind) {
+        if(kind==null) return Color.WHITE;
         switch (kind) {
             case ERROR:
                 return Color.RED;
