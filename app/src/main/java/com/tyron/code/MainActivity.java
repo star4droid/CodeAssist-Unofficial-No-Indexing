@@ -47,6 +47,8 @@ private void requestIgnoreBatteryOptimizations() {
         startActivity(intent);
     }
 
+  }
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     return super.onKeyDown(keyCode, event);
