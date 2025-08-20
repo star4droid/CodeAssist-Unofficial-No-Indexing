@@ -281,8 +281,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     }
 
     private void process(List<DiagnosticWrapper> texts) {
-    final android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
-    handler.postDelayed(
+    new android.os.Handler(Looper.getMainLooper()).postDelayed(
             () -> {
                 SpannableStringBuilder combinedText = new SpannableStringBuilder();
 
@@ -293,66 +292,52 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                     for (DiagnosticWrapper diagnostic : diagnostics) {
                         if (diagnostic == null) continue;
 
-                        // Color map
-                        int color;
-                        switch (diagnostic.getKind()) {
-                            case ERROR:
-                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_error);
-                                break;
-                            case WARNING:
-                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_warning);
-                                break;
-                            case NOTE:
-                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_note);
-                                break;
-                            default:
-                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_other);
-                                break;
-                        }
-
-                        // Build one logical line
-                        int lineStart = combinedText.length();
-
-                        combinedText.append(diagnostic.getKind().name())
-                                    .append(": ");
-
-                        String msg   = diagnostic.getMessage(Locale.getDefault());
-                        String src   = diagnostic.getSource();
-                        combinedText.append(msg);
-                        if (src != null && !src.trim().isEmpty()) {
-                            combinedText.append(' ').append(src);
-                        }
-                        combinedText.append('\n');
-
-                        // Color the whole line
+                        /* -------- KIND -------- */
+                        String kindStr = diagnostic.getKind() == null
+                                ? "OTHER" : diagnostic.getKind().name();
+                        int kindStart = combinedText.length();
+                        combinedText.append(kindStr).append(": ");
                         combinedText.setSpan(
-                                new ForegroundColorSpan(color),
-                                lineStart,
-                                combinedText.length() - 1,   // exclude '\n'
-                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        );
+                                new ForegroundColorSpan(getColor(diagnostic.getKind())),
+                                kindStart,
+                                combinedText.length(),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        // FAB logic (unchanged)
+                        /* -------- MESSAGE -------- */
+                        String msg = diagnostic.getMessage(Locale.getDefault());
+                        int msgStart = combinedText.length();
+                        combinedText.append(msg).append("\n");
+                        combinedText.setSpan(
+                                new ForegroundColorSpan(getColor(diagnostic.getKind())),
+                                msgStart,
+                                combinedText.length() - 1,   // skip '\n'
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        /* -------- FAB visibility -------- */
                         if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
                             actionFab.setVisibility(View.VISIBLE);
                             actionFab.setImageResource(R.drawable.ic_error);
-                        } else if (msg.contains("Generated APK has been saved")) {
-                            actionFab.setVisibility(View.VISIBLE);
-                            actionFab.setImageResource(R.drawable.apk_install);
                         } else {
-                            actionFab.setVisibility(View.GONE);
+                            if (msg.contains("Generated APK has been saved")) {
+                                actionFab.setVisibility(View.VISIBLE);
+                                actionFab.setImageResource(R.drawable.apk_install);
+                            } else {
+                                actionFab.setVisibility(View.GONE);
+                            }
                         }
                     }
                 }
 
                 mEditor.setText(combinedText);
 
-                // Scroll to bottom
+                /* scroll to bottom */
                 int lastLine = mEditor.getLineCount() - 1;
                 mEditor.setSelection(Math.max(lastLine, 0), 0);
             },
             100);
 }
+
+
 
 
     @Override
