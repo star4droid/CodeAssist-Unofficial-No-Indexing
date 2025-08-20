@@ -2,6 +2,11 @@ package com.tyron.code.ui.editor.log;
 
 import static io.github.rosemoe.sora2.text.EditorUtil.getDefaultColorScheme;
 
+//by Wadamzmail 
+import androidx.core.content.ContextCompat;
+import android.text.style.ForegroundColorSpan;
+
+
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -276,52 +281,79 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     }
 
     private void process(List<DiagnosticWrapper> texts) {
-        final android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
-        handler.postDelayed(
-                () -> {
-                    SpannableStringBuilder combinedText = new SpannableStringBuilder();
+    final android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
+    handler.postDelayed(
+            () -> {
+                SpannableStringBuilder combinedText = new SpannableStringBuilder();
 
-                    if (texts != null) {
-                        List<DiagnosticWrapper> diagnostics = new ArrayList<>(texts);
-                        this.diags = diagnostics;
-                        for (DiagnosticWrapper diagnostic : diagnostics) {
-                            if (diagnostic != null) {
-                                if (diagnostic.getKind() != null) {
-                                    combinedText.append(diagnostic.getKind().name()).append(": ");
-                                    addDiagnosticSpan(combinedText, diagnostic);
-                                    combinedText.append(' ');
-                                }
+                if (texts != null) {
+                    List<DiagnosticWrapper> diagnostics = new ArrayList<>(texts);
+                    this.diags = diagnostics;
 
-                                if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
-                                    actionFab.setVisibility(View.VISIBLE);
-                                    actionFab.setImageResource(R.drawable.ic_error);
-                                } else {
-                                    String msg = diagnostic.getMessage(Locale.getDefault());
-                                    if (msg.contains("Generated APK has been saved")) {
-                                        actionFab.setVisibility(View.VISIBLE);
-                                        actionFab.setImageResource(R.drawable.apk_install);
-                                    } else {
-                                        actionFab.setVisibility(View.GONE);
-                                    }
-                                }
+                    for (DiagnosticWrapper diagnostic : diagnostics) {
+                        if (diagnostic == null) continue;
 
-                                combinedText.append(diagnostic.getMessage(Locale.getDefault()));
-                                if (diagnostic.getSource() != null) {
-                                    combinedText.append(' ');
-                                }
-                                combinedText.append("\n");
-                            }
+                        // Color map
+                        int color;
+                        switch (diagnostic.getKind()) {
+                            case ERROR:
+                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_error);
+                                break;
+                            case WARNING:
+                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_warning);
+                                break;
+                            case NOTE:
+                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_note);
+                                break;
+                            default:
+                                color = ContextCompat.getColor(mEditor.getContext(), R.color.diagnostic_other);
+                                break;
+                        }
+
+                        // Build one logical line
+                        int lineStart = combinedText.length();
+
+                        combinedText.append(diagnostic.getKind().name())
+                                    .append(": ");
+
+                        String msg   = diagnostic.getMessage(Locale.getDefault());
+                        String src   = diagnostic.getSource();
+                        combinedText.append(msg);
+                        if (src != null && !src.trim().isEmpty()) {
+                            combinedText.append(' ').append(src);
+                        }
+                        combinedText.append('\n');
+
+                        // Color the whole line
+                        combinedText.setSpan(
+                                new ForegroundColorSpan(color),
+                                lineStart,
+                                combinedText.length() - 1,   // exclude '\n'
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        );
+
+                        // FAB logic (unchanged)
+                        if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
+                            actionFab.setVisibility(View.VISIBLE);
+                            actionFab.setImageResource(R.drawable.ic_error);
+                        } else if (msg.contains("Generated APK has been saved")) {
+                            actionFab.setVisibility(View.VISIBLE);
+                            actionFab.setImageResource(R.drawable.apk_install);
+                        } else {
+                            actionFab.setVisibility(View.GONE);
                         }
                     }
+                }
 
-                    mEditor.setText(combinedText);
+                mEditor.setText(combinedText);
 
-                    // Scroll to bottom
-                    int lastLine = mEditor.getLineCount() - 1;
-                    mEditor.setSelection(Math.max(lastLine, 0), 0);
-                },
-                100);
-    }
+                // Scroll to bottom
+                int lastLine = mEditor.getLineCount() - 1;
+                mEditor.setSelection(Math.max(lastLine, 0), 0);
+            },
+            100);
+}
+
 
     @Override
     public void onProjectOpen(Project project) {}
