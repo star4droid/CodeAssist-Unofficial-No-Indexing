@@ -152,7 +152,7 @@ public class JavaLanguage implements Language, EditorFormatter {
         formatted = text;
       }
 */
-       formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text);
+       formatted = (CharSequence) new com.google.googlejavaformat.java.Formatter().formatSource(text);
     } catch (Exception e) {
     }
 
