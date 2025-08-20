@@ -286,7 +286,8 @@ public class IncrementalAapt2Task extends Task<AndroidModule> {
     /*  AAPT2 binary discovery / installation                                 */
     /* ---------------------------------------------------------------------- */
     private File getAapt2Binary() throws IOException {
-        Context ctx = getProject().getContext();
+        
+        Context ctx = com.tyron.builder.BuildModule.getContext();
         File target = new File(ctx.getFilesDir(), "aapt2");
 
         if (target.exists() && target.canExecute()) {
