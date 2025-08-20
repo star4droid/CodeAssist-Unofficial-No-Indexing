@@ -7,7 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.PowerManager; 
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.os.Binder;
 import android.os.Build;
@@ -43,8 +43,13 @@ public class CompilerService extends Service {
   private final Handler mMainHandler = new Handler(Looper.getMainLooper());
   private final CompilerBinder mBinder = new CompilerBinder(this);
 
-  public static class CompilerBinder extends Binder {
+  private Project mProject;
+  private ApkBuilder.OnResultListener onResultListener;
+  private ILogger external;
+  private PowerManager.WakeLock wakeLock; // <-- class-level wake lock
 
+  /** Binder implementation */
+  public static class CompilerBinder extends Binder {
     private final WeakReference<CompilerService> mServiceReference;
 
     public CompilerBinder(CompilerService service) {
@@ -56,40 +61,27 @@ public class CompilerService extends Service {
     }
   }
 
-  private Project mProject;
-  private ApkBuilder.OnResultListener onResultListener;
-  private ILogger external;
-
   /** Logger that delegates logs to the external logger set */
   private final ILogger logger =
       new ILogger() {
-
         @Override
         public void info(DiagnosticWrapper wrapper) {
-          if (external != null) {
-            external.info(wrapper);
-          }
+          if (external != null) external.info(wrapper);
         }
 
         @Override
         public void debug(DiagnosticWrapper wrapper) {
-          if (external != null) {
-            external.debug(wrapper);
-          }
+          if (external != null) external.debug(wrapper);
         }
 
         @Override
         public void warning(DiagnosticWrapper wrapper) {
-          if (external != null) {
-            external.warning(wrapper);
-          }
+          if (external != null) external.warning(wrapper);
         }
 
         @Override
         public void error(DiagnosticWrapper wrapper) {
-          if (external != null) {
-            external.error(wrapper);
-          }
+          if (external != null) external.error(wrapper);
         }
       };
 
@@ -114,14 +106,12 @@ public class CompilerService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-
     Notification notification = setupNotification();
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
       startForeground(201, notification);
     } else {
       startForeground(201, notification, FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
     }
-
     return START_STICKY;
   }
 
@@ -165,7 +155,6 @@ public class CompilerService extends Service {
             .build();
 
     NotificationManagerCompat.from(this).createNotificationChannel(channel);
-
     return "Compiler";
   }
 
@@ -183,12 +172,11 @@ public class CompilerService extends Service {
         mMainHandler.post(
             () ->
                 onResultListener.onComplete(
-                    false, "Failed to open " + "project  (Have you opened a project?)"));
+                    false, "Failed to open project (Have you opened a project?)"));
       }
-
       if (shouldShowNotification) {
         updateNotification(
-            "Compilation failed", "Unable to open project", -1, NotificationCompat.PRIORITY_HEIGH);
+            "Compilation failed", "Unable to open project", -1, NotificationCompat.PRIORITY_HIGH);
       }
       return;
     }
@@ -214,22 +202,15 @@ public class CompilerService extends Service {
 
   private void buildProject(Project project, BuildType type) {
     boolean success = true;
-
     try {
       ProjectBuilder projectBuilder = new ProjectBuilder(project, logger);
       projectBuilder.setTaskListener(this::updateNotification);
       projectBuilder.build(type);
     } catch (Throwable e) {
-      String message;
-      if (BuildConfig.DEBUG) {
-        message = Log.getStackTraceString(e);
-      } else {
-        message = e.getMessage();
-      }
+      String message = BuildConfig.DEBUG ? Log.getStackTraceString(e) : e.getMessage();
       mMainHandler.post(() -> onResultListener.onComplete(false, message));
       success = false;
     }
-
     report(success, type, project.getMainModule());
   }
 
@@ -241,25 +222,21 @@ public class CompilerService extends Service {
     module.index();
 
     boolean success = true;
-
     projectBuilder.setTaskListener(this::updateNotification);
 
-    PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CodeAssist:CompileLock");
-wakeLock.acquire();
+    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+    wakeLock =
+        pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CodeAssist:CompileLock");
+    // Acquire with timeout to prevent battery drain
+    wakeLock.acquire(10 * 60 * 1000L);
 
     try {
       projectBuilder.build(type);
     } catch (Exception e) {
-      String message;
-      if (BuildConfig.DEBUG) {
-        message = Log.getStackTraceString(e);
-      } else {
-        message = e.getMessage();
-      }
+      String message = BuildConfig.DEBUG ? Log.getStackTraceString(e) : e.getMessage();
       mMainHandler.post(() -> onResultListener.onComplete(false, message));
       success = false;
     }
-
     report(success, type, module);
   }
 
@@ -304,7 +281,9 @@ wakeLock.acquire();
       }
     }
 
-    wakeLock.release();
+    if (wakeLock != null && wakeLock.isHeld()) {
+      wakeLock.release();
+    }
     stopSelf();
     stopForeground(true);
   }
