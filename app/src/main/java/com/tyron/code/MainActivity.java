@@ -7,13 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import com.tyron.code.ui.main.HomeFragment;
 import org.codeassist.unofficial.R;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.net.Uri;
 
 public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-    WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+   requestIgnoreBatteryOptimizations(); WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
     HomeFragment homeFragment = new HomeFragment();
     if (getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG) == null) {
@@ -33,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
   public boolean onKeyShortcut(int keyCode, KeyEvent event) {
     return super.onKeyShortcut(keyCode, event);
   }
+
+private void requestIgnoreBatteryOptimizations() {
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    if (pm != null && !pm.isIgnoringBatteryOptimizations(getPackageName())) {
+        Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
