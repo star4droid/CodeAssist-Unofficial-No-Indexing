@@ -6,6 +6,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.PowerManager; android.provider.Settings;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -127,14 +129,14 @@ public class CompilerService extends Service {
         .setContentTitle(getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_stat_code)
         .setContentText("Preparing")
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setPriority(NotificationCompat.PRIORITY_MAX)
         .setOngoing(true)
         .setProgress(100, 0, true)
         .build();
   }
 
   private void updateNotification(String title, String message, int progress) {
-    updateNotification(title, message, progress, NotificationCompat.PRIORITY_LOW);
+    updateNotification(title, message, progress, NotificationCompat.PRIORITY_MAX);
   }
 
   private void updateNotification(String title, String message, int progress, int priority) {
@@ -185,7 +187,7 @@ public class CompilerService extends Service {
 
       if (shouldShowNotification) {
         updateNotification(
-            "Compilation failed", "Unable to open project", -1, NotificationCompat.PRIORITY_HIGH);
+            "Compilation failed", "Unable to open project", -1, NotificationCompat.PRIORITY_HEIGH);
       }
       return;
     }
@@ -240,6 +242,9 @@ public class CompilerService extends Service {
     boolean success = true;
 
     projectBuilder.setTaskListener(this::updateNotification);
+
+    PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CodeAssist:CompileLock");
+wakeLock.acquire();
 
     try {
       projectBuilder.build(type);
@@ -298,6 +303,7 @@ public class CompilerService extends Service {
       }
     }
 
+    wakeLock.release();
     stopSelf();
     stopForeground(true);
   }
