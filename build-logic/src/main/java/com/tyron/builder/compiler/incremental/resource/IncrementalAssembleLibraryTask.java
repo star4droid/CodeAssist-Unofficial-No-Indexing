@@ -105,37 +105,38 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
     }
 
     private void runAapt2(List<String> args, String taskName)
-            throws CompilationFailedException {
-        File aapt2;
-        try { aapt2 = getAapt2Binary(); }
-        catch (IOException e) { throw new CompilationFailedException("aapt2 not found", e); }
+        throws CompilationFailedException {
+    File aapt2;
+    try { aapt2 = getAapt2Binary(); }
+    catch (IOException e) { throw new CompilationFailedException("aapt2 not found", e); }
 
-        List<String> cmd = new ArrayList<>();
-        cmd.add(aapt2.getAbsolutePath());
-        cmd.addAll(cmd);
+    List<String> cmd = new ArrayList<>();
+    cmd.add(aapt2.getAbsolutePath());
+    cmd.addAll(args);
 
-        getLogger().debug("Running AAPT2 " + taskName + ": " + cmd);
+    getLogger().debug("Running AAPT2 " + taskName + ": " + cmd);
 
-        ProcessBuilder pb = new ProcessBuilder(cmd);
-        pb.redirectErrorStream(true);
-        mDiagnostics.clear();
+    ProcessBuilder pb = new ProcessBuilder(cmd);
+    pb.redirectErrorStream(true);
+    mDiagnostics.clear();
 
-        int exit;
-        try (BufferedReader br = Files.newBufferedReader(
-                pb.start().getInputStream(), StandardCharsets.UTF_8)) {
-            String line;
-            while ((line = br.readLine()) != null) log(LOG_LEVEL_ERROR, null, -1, line);
-            exit = pb.start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new CompilationFailedException("AAPT2 " + taskName + " failed", e);
-        }
-
-        LogUtils.log(mDiagnostics, getLogger());
-        if (exit != 0)
-            throw new CompilationFailedException(
-                    "AAPT2 " + taskName + " failed (exit " + exit + ")");
+    int exit;
+    try (BufferedReader br = new BufferedReader(
+            new InputStreamReader(pb.start().getInputStream(), StandardCharsets.UTF_8))) {
+        String line;
+        while ((line = br.readLine()) != null) log(LOG_LEVEL_ERROR, null, -1, line);
+        exit = pb.start().waitFor();
+    } catch (IOException | InterruptedException e) {
+        Thread.currentThread().interrupt();
+        throw new CompilationFailedException("AAPT2 " + taskName + " failed", e);
     }
+
+    LogUtils.log(mDiagnostics, getLogger());
+    if (exit != 0)
+        throw new CompilationFailedException(
+                "AAPT2 " + taskName + " failed (exit " + exit + ")");
+   }
+
 
     /* ------------------------------------------------------------------ */
     /*  Original fields / constants                                       */
