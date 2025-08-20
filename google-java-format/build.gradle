@@ -11,7 +11,7 @@ java {
 dependencies {
 	api files('libs/google-java-format.jar')
 	//api files('libs/google-java-format-1.28.0.jar')
-	implementation project(path: ':common')
+	//implementation project(path: ':common')
     api 'com.google.auto.value:auto-value-annotations:1.11.0'
 	//implementation "com.google.guava:guava:33.4.8-jre"
 }
