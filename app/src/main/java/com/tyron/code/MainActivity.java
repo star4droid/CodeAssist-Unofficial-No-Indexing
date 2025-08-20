@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.KeyEvent;
-import android.content.pm.packagemanager;
+import android.content.pm.PackageManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
