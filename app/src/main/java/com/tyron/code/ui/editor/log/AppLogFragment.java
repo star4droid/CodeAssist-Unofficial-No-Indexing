@@ -350,10 +350,6 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
             }
 
             mEditor.setText(combinedText);
-            // Scroll to bottom
-mEditor.setSelection(mEditor.getText().length());
-mEditor.scrollTo(0, mEditor.getLayout().getLineTop(mEditor.getLineCount()));
-
           },
           100);
     }
