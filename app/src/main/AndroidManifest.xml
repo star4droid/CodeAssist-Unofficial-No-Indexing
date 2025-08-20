@@ -25,6 +25,10 @@
     <!-- run foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+<!-- make the CPU awake so it doesn't stop while doing somethings -->
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+<!-- request battery optimization permission -->
+<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <application
         android:name="com.tyron.code.ApplicationLoader"
         android:allowBackup="true"
