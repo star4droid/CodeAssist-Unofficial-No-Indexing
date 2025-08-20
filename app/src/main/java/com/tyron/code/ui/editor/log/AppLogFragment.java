@@ -350,6 +350,10 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
             }
 
             mEditor.setText(combinedText);
+            // Move caret to the last line, first column
+int lastLine = mEditor.getLineCount() - 1;
+mEditor.setSelection(Math.max(lastLine, 0), 0);
+
           },
           100);
     }
