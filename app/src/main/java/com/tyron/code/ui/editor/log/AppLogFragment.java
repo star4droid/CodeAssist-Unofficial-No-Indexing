@@ -331,6 +331,9 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                 }
 
                 mEditor.setText(combinedText);
+                try{
+                    mEditor.setDiagnostics(diagnostics);
+                }catch(Exception err){}
 
                 /* scroll to bottom */
                 int lastLine = mEditor.getLineCount() - 1;
