@@ -74,17 +74,29 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
     private final List<DiagnosticWrapper> mDiagnostics = new ArrayList<>();
 
     private File getAapt2Binary() throws IOException {
-        File target = new File(BuildModule.getContext().getFilesDir(), "aapt2");
-        if (target.exists() && target.canExecute()) return target;
+    java.io.File target = new java.io.File(
+            com.tyron.builder.BuildModule.getContext().getFilesDir(), "aapt2");
 
-        try (InputStream in  = BuildModule.getContext().getAssets().open("aapt2");
-             FileOutputStream out = new FileOutputStream(target)) {
-            IOUtils.copy(in, out);
-        }
-        if (!target.setExecutable(true, false))
-            throw new IOException("Cannot mark aapt2 as executable");
-        return target;
+    if (target.exists() && target.canExecute()) return target;
+
+    try (java.io.InputStream in  = com.tyron.builder.BuildModule.getContext().getAssets().open("aapt2");
+         java.io.FileOutputStream out = new java.io.FileOutputStream(target)) {
+        org.apache.commons.io.IOUtils.copy(in, out);
     }
+
+    if (!target.setExecutable(true, false))
+        throw new java.io.IOException("Cannot mark aapt2 as executable");
+
+    try {
+        java.lang.Runtime.getRuntime().exec("chmod 755 " + target.getAbsolutePath()).waitFor();
+    } catch (Exception ignore) {}
+
+    if (!target.canExecute())
+        throw new java.io.IOException("aapt2 still not executable");
+
+    return target;
+}
+
 
     @SuppressWarnings({"unused", "SameParameterValue"})
     private void log(int level, String path, long line, String message) {
