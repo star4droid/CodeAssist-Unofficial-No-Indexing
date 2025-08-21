@@ -295,7 +295,9 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                         /* -------- KIND -------- */
                         String kindStr = diagnostic.getKind() == null
                                 ? "OTHER" : diagnostic.getKind().name();
+                        
                         int kindStart = combinedText.length();
+                        if(!kindStr.equals("OTHER"))
                         combinedText.append(kindStr).append(": ");
                         combinedText.setSpan(
                                 new ForegroundColorSpan(getColor(diagnostic.getKind())),
@@ -353,6 +355,21 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
             case WARNING:
                 return Color.YELLOW;
             case NOTE:
+                return Color.CYAN;
+            default:
+                return Color.WHITE;
+        }
+    }
+    @ColorInt
+    private int getColor(String kind) {
+        if(kind==null) return Color.WHITE;
+        switch (kind) {
+            case "ERROR":
+                return Color.RED;
+            case "MANDATORY_WARNING":
+            case "WARNING":
+                return Color.YELLOW;
+            case "NOTE":
                 return Color.CYAN;
             default:
                 return Color.WHITE;
