@@ -34,6 +34,16 @@ public class MainActivity extends AppCompatActivity {
     ActivityCompat.requestPermissions(this,
             new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
     }
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34+
+    if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC)
+        != PackageManager.PERMISSION_GRANTED) {
+
+        ActivityCompat.requestPermissions(this,
+            new String[]{Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC},
+            1001);
+    }
+    }
     HomeFragment homeFragment = new HomeFragment();
     if (getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG) == null) {
       getSupportFragmentManager()
