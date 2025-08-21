@@ -332,7 +332,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
 
                 mEditor.setText(combinedText);
                 try{
-                    mEditor.setDiagnostics(diagnostics);
+                    mEditor.setDiagnostics(diags);
                 }catch(Exception err){}
 
                 /* scroll to bottom */
