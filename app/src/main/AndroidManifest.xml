@@ -24,6 +24,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- run foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <!-- make the CPU awake so it doesn't stop while doing somethings -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
