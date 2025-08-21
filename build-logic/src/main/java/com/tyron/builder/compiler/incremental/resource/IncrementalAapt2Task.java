@@ -286,24 +286,30 @@ public class IncrementalAapt2Task extends Task<AndroidModule> {
     /*  AAPT2 binary discovery / installation                                 */
     /* ---------------------------------------------------------------------- */
     private File getAapt2Binary() throws IOException {
-        
-        Context ctx = com.tyron.builder.BuildModule.getContext();
-        File target = new File(ctx.getFilesDir(), "aapt2");
+    File target = new File(BuildModule.getContext().getFilesDir(), "aapt2");
 
-        if (target.exists() && target.canExecute()) {
-            return target;
-        }
+    if (target.exists() && target.canExecute()) return target;
 
-        try (InputStream in = ctx.getAssets().open("aapt2");
-             FileOutputStream out = new FileOutputStream(target)) {
-            IOUtils.copy(in, out);
-        }
-
-        if (!target.setExecutable(true, false)) {
-            throw new IOException("Cannot mark aapt2 binary as executable");
-        }
-        return target;
+    // copy from assets
+    try (InputStream in  = BuildModule.getContext().getAssets().open("aapt2");
+         FileOutputStream out = new FileOutputStream(target)) {
+        IOUtils.copy(in, out);
     }
+
+    // make it executable for everyone
+    if (!target.setExecutable(true, false))
+        throw new IOException("Cannot mark aapt2 as executable");
+
+    // extra safety: try chmod 755 via shell
+    try {
+        Runtime.getRuntime().exec("chmod 755 " + target.getAbsolutePath()).waitFor();
+    } catch (Exception ignore) {}
+
+    if (!target.canExecute())
+        throw new IOException("aapt2 still not executable");
+
+    return target;
+}
 
     /* ---------------------------------------------------------------------- */
     /*  Logging helpers                                                       */
