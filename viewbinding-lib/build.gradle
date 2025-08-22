@@ -22,7 +22,7 @@ dependencies {
     implementation 'com.android.tools:annotations:31.6.0'
     api project(path: ':javapoet')
     implementation project(path: ":javac")
-	api files('libs/viewbinding-lib.jar')
+	//api files('libs/viewbinding-lib.jar')
     // jaxb
     api 'javax.xml.bind:jaxb-api:2.3.1'
 }
