@@ -21,7 +21,7 @@ import android.content.Context;
 import android.graphics.Color;
 import io.github.rosemoe.sora.lang.styling.TextStyle;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
-
+import com.google.gson.GsonBuilder;
 /**
  * Base class for editor color schemes in AndroidIDE. If you're implementing a color scheme for the
  * IDE, this should be the base class instead of {@link EditorColorScheme}.
@@ -69,6 +69,15 @@ public class SchemeAndroidIDE extends EditorColorScheme {
    */
   public static long get(int id) {
     return TextStyle.makeStyle(id);
+  }
+
+  @NonNull
+  public String toString() {
+    return new GsonBuilder()
+        .excludeFieldsWithoutExposeAnnotation()
+        .setPrettyPrinting()
+        .create()
+        .toJson(this);
   }
 
   /**
