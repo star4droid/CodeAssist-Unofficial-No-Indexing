@@ -40,4 +40,3 @@ internal fun renderConfigurationJavadoc(present: List<String>, absent: List<Stri
         |</ul>
         |""".trimMargin() // Trailing newline for JavaPoet.
 }
- 
