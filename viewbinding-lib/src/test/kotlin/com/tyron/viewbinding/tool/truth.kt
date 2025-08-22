@@ -32,4 +32,3 @@ class JavaFileSubject(
             .parsesAs(JavaFileObjects.forSourceString("Expected", expected))
     }
 }
- 
