@@ -66,7 +66,7 @@ public class JavaLanguage implements Language, EditorFormatter {
     }
 
     if (format == null) {
-      format = text;
+      format = text.toString();
     } 
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
