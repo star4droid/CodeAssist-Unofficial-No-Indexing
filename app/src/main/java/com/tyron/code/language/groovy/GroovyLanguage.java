@@ -25,7 +25,7 @@ public class GroovyLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = format(text);
+            String format = text;
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
                 text.insert(0, 0, format);
