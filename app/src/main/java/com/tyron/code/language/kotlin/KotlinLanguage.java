@@ -45,7 +45,28 @@ public class KotlinLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = format(text);
+            String format = null;
+          ByteArrayOutputStream out = new ByteArrayOutputStream();
+    ByteArrayOutputStream err = new ByteArrayOutputStream();
+
+    com.facebook.ktfmt.cli.Main main =
+        new com.facebook.ktfmt.cli.Main(
+            new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)),
+            new PrintStream(out),
+            new PrintStream(err),
+            new String[] {"-"});
+    int exitCode = main.run();
+
+    format= out.toString();
+
+    if (exitCode != 0) {
+      format = text;
+    }
+
+    if (format == null) {
+      format = text;
+    }
+  
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
                 text.insert(0, 0, format);
