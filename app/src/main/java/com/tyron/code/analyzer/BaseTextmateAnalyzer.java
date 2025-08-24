@@ -116,6 +116,11 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
 
   @Override 
   public void onAbandonState(StackElement state){}
+
+  @Override 
+  public LineTokenizeResult<StackElement, Span> tokenizeLine(CharSequence line, StackElement state, int lineIndex){
+    return null;
+  } 
   @Override
   public boolean stateEquals(StackElement state, StackElement another) {
     if (state == null && another == null) {
