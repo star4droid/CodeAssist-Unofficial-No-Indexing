@@ -47,7 +47,12 @@ public class IncrementalJavaAnalyzeManager
     return null;
   }
   @Override 
-  public void onAbandonState(LexerPosition state){}     
+  public void onAbandonState(LexerPosition state){}  
+        
+  @Override 
+ public LineTokenizeResult<LexerPosition,Object> tokenizeLine(CharSequence line,LexerPosition state,int lineIndex){
+     return null;
+ }    
 
   @Override
   public List<Span> generateSpansForLine(LineTokenizeResult<LexerPosition, Object> tokens) {
