@@ -32,6 +32,8 @@ import java.util.List;
 import io.github.rosemoe.sora.text.TextRange;
 import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import io.github.rosemoe.sora.lang.format.Formatter;
+import io.github.rosemoe.sora.text.Content;
+import androidx.annotation.Nullable;
 
 public class LanguageXML implements Language {
 
