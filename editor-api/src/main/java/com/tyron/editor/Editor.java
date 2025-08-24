@@ -19,9 +19,9 @@ public interface Editor {
    *
    * @return mutable list of diagnostics
    */
-  List<DiagnosticWrapper> getDiagnostics();
+  DiagnosticContainer getDiagnostics();
 
-  void setDiagnostics(List<DiagnosticWrapper> diagnostics);
+  void setDiagnostics(DiagnosticContainer diagnostics);
 
   boolean isBackgroundAnalysisEnabled();
 
