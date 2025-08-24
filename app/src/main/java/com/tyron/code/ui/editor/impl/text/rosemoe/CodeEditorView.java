@@ -142,7 +142,6 @@ public class CodeEditorView extends CodeEditor implements Editor {
     super.setColorScheme(colors);
   }
 
-  @Override
   public List<DiagnosticWrapper> getDiagnostics() {
     return mDiagnostics;
   }
@@ -164,7 +163,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(manager, styles);
+      setStyles(/*manager,*/ styles);
     }
   }
 
