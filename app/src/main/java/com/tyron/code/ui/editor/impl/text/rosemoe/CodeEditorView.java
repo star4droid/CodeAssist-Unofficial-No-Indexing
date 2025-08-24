@@ -396,7 +396,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
                       ((EditorFormatter) getEditorLanguage()).format(originalText, start, end);
                   if (formatted != null) {
                     TextRange oTextRange = new TextRange(0,originalText.length());
-                    super.onFormatSucceed(oTextRange, formatted);
+                    super.onFormatSucceed(formatted,oTextRange);
                   } else {
                     // Handle null formatted text
                   }
