@@ -13,7 +13,7 @@ import io.github.rosemoe.sora.lang.analysis.StyleReceiver;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentReference;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.theme.IRawTheme;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
