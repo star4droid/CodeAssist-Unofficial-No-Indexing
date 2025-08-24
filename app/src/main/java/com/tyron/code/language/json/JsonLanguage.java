@@ -33,7 +33,33 @@ public class JsonLanguage implements Language {
   private final Editor mEditor;
 
   private final BaseTextmateAnalyzer mAnalyzer;
+  private final Formatter formatter = new AsyncFormatter() {
+        @Nullable
+        @Override
+        public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
+            String format = com.tyron.eclipse.formatter.Formatter.format(text.toString(),
+                    cursorRange.getStartIndex(),
+                    cursorRange.getEndIndex() - cursorRange.getStartIndex());
+            if (!text.toString().equals(format)) {
+                text.delete(0, text.getLineCount() - 1);
+                text.insert(0, 0, format);
+            }
+            return cursorRange;
+        }
 
+        @Nullable
+        @Override
+        public TextRange formatRegionAsync(@NonNull Content text,
+                                           @NonNull TextRange rangeToFormat,
+                                           @NonNull TextRange cursorRange) {
+            return null;
+        }
+    };
+@NonNull
+    @Override
+    public Formatter getFormatter() {
+        return formatter;
+    }
   public JsonLanguage(Editor editor) {
     mEditor = editor;
 
