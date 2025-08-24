@@ -58,7 +58,7 @@ public class JavaLanguage implements Language, EditorFormatter {
       format = out.toString();
 
       if (exitCode != 0) {
-        format = text;
+        format = text.toString();
       }
 
    //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
@@ -178,7 +178,7 @@ public class JavaLanguage implements Language, EditorFormatter {
     return 4;
   }
 
-  @Override
+  
   public CharSequence format(CharSequence p1) {
     return format(p1, 0, p1.length());
   }
