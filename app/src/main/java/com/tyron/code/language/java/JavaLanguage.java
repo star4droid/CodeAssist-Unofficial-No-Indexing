@@ -42,7 +42,7 @@ public class JavaLanguage implements Language, EditorFormatter {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = format(text);
+            String format = JavaLanguage.formatThis(text,0,text.length());
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
                 text.insert(0, 0, format);
@@ -191,6 +191,39 @@ public class JavaLanguage implements Language, EditorFormatter {
     }
     return formatted;
   }
+
+  @NonNull
+  @Override
+  public static CharSequence formatThis(@NonNull CharSequence text, int start, int end) {
+
+    CharSequence formatted = null;
+    try {
+
+      StringWriter out = new StringWriter();
+      StringWriter err = new StringWriter();
+
+      com.google.googlejavaformat.java.Main main =
+          new com.google.googlejavaformat.java.Main(
+              new PrintWriter(out, true),
+              new PrintWriter(err, true),
+              new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)));
+      int exitCode = main.format("-");
+
+      formatted = out.toString();
+
+      if (exitCode != 0) {
+        formatted = text;
+      }
+
+   //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+    } catch (Exception e) {
+    }
+
+    if (formatted == null) {
+      formatted = text;
+    }
+    return formatted;
+  } 
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
