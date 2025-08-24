@@ -114,6 +114,8 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   @Override 
   public void onAddState(StackElement state){}
 
+  @Override 
+  public void onAbandonState(StackElement state){}
   @Override
   public boolean stateEquals(StackElement state, StackElement another) {
     if (state == null && another == null) {
