@@ -5,8 +5,8 @@ import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.editor.Editor;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import org.eclipse.tm4e.core.theme.IRawTheme;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
