@@ -60,11 +60,11 @@ public class KotlinLanguage implements Language {
     format= out.toString();
 
     if (exitCode != 0) {
-      format = text;
+      format = text.toString();
     }
 
     if (format == null) {
-      format = text;
+      format = text.toString();
     }
   
             if (!text.toString().equals(format)) {
@@ -164,7 +164,6 @@ public class KotlinLanguage implements Language {
     return true;
   }
 
-  @Override
   public CharSequence format(CharSequence text) {
 
     CharSequence formatted = null;
