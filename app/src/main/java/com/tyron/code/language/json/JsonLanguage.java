@@ -27,6 +27,9 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
+import io.github.rosemoe.sora.text.TextRange;
+import io.github.rosemoe.sora.lang.format.AsyncFormatter;
+import io.github.rosemoe.sora.lang.format.Formatter;
 
 public class JsonLanguage implements Language {
 
