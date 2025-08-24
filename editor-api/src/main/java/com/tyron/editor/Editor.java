@@ -5,6 +5,8 @@ import com.tyron.builder.project.Project;
 import java.io.File;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticContainer;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
 public interface Editor {
 
