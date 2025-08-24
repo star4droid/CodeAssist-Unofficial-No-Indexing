@@ -399,10 +399,16 @@ public class CodeEditorView extends CodeEditor implements Editor {
                   if (formatted != null) {
                     CharPosition tStart = new CharPosition();
                     CharPosition tEnd = new CharPosition();
-                    tStart.zero();
-                    tEnd.index = 0;
-                    tEnd.line = 0;
-                    tEnd.column = 0;
+                    int[] startPos = getText().getIndexer().getCharPosition(start);
+                int[] endPos   = getText().getIndexer().getCharPosition(end);
+
+                tStart.index = start;
+                tStart.line  = startPos[0];
+                tStart.column = startPos[1];
+
+                tEnd.index = end;
+                tEnd.line  = endPos[0];
+                tEnd.column = endPos[1];
                     TextRange oTextRange = new TextRange(tStart,tEnd);
                     super.onFormatSucceed(formatted,oTextRange);
                   } else {
