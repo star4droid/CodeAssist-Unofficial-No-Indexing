@@ -36,7 +36,7 @@ public class CodeAssistColorScheme extends EditorColorScheme {
     if (scheme.mName == null) {
       throw new IOException("Scheme does not contain a name.");
     }
-    if (scheme.colors == null) {
+    if (scheme.mColors == null) {
       throw new IOException("Scheme does not have colors.");
     }
     return scheme;
@@ -117,8 +117,8 @@ public class CodeAssistColorScheme extends EditorColorScheme {
 
     static {
       sIdToNameMap.put(WHOLE_BACKGROUND, "wholeBackground");
-      sIdToNameMap.put(COMPLETION_WND_BACKGROUND, "completionPanelBackground");
-      sIdToNameMap.put(COMPLETION_WND_CORNER, "completionPanelStrokeColor");
+      sIdToNameMap.put(AUTO_COMP_PANEL_BG, "completionPanelBackground");
+      sIdToNameMap.put(AUTO_COMP_PANEL_CORNER, "completionPanelStrokeColor");
       sIdToNameMap.put(LINE_NUMBER, "lineNumber");
       sIdToNameMap.put(LINE_NUMBER_BACKGROUND, "lineNumberBackground");
       sIdToNameMap.put(LINE_NUMBER_PANEL, "lineNumberPanel");
@@ -155,4 +155,4 @@ public class CodeAssistColorScheme extends EditorColorScheme {
       sIdToNameMap.put(KEYWORD, "keyword");
     }
   }
-}
+} 
