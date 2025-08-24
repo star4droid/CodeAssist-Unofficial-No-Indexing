@@ -149,8 +149,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
  /* public List<DiagnosticWrapper> getDiagnostics() {
     return mDiagnostics;
   }
- */
-  @Override
+ 
+ @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
 
@@ -167,10 +167,45 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(/*manager,*/ styles);
+      setStyles(manager, styles);
     }
   }
+*/
 
+/*@Override
+public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
+    // 1) clear & fill the container
+    DiagnosticsContainer container = new DiagnosticsContainer();
+    for (DiagnosticWrapper w : diagnostics) {
+        container.addDiagnostic(
+            new DiagnosticRegion(
+                w.getKind(),
+                w.getMessage(),
+                new TextRange(
+                    getCharPosition(w.getStart()),
+                    getCharPosition(w.getEnd())
+                )
+            )
+        );
+    }
+  super.setDiagnostics(container);
+
+    // 2) push into the analyzer
+    AnalyzeManager mgr = getEditorLanguage().getAnalyzeManager();
+    if (mgr instanceof DiagnosticTextmateAnalyzer) {
+        ((DiagnosticTextmateAnalyzer) mgr).setDiagnostics(this, diagnostics);
+        // NEW: also push the container
+        if (mgr instanceof StyleReceiver) {
+            ((StyleReceiver) mgr).setDiagnostics(mgr, container);
+        }
+    }
+
+    // 3) keep legacy listener
+    if (mDiagnosticsListener != null) {
+        mDiagnosticsListener.accept(diagnostics);
+    }
+}
+*/
   public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
     mDiagnosticsListener = listener;
   }
