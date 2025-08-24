@@ -40,9 +40,7 @@ public class JsonLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = com.tyron.eclipse.formatter.Formatter.format(text.toString(),
-                    cursorRange.getStartIndex(),
-                    cursorRange.getEndIndex() - cursorRange.getStartIndex());
+            String format = format(text);
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
                 text.insert(0, 0, format);
