@@ -50,7 +50,7 @@ import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import io.github.rosemoe.sora.text.TextRange;
 //import io.github.rosemoe.sora.text.CharPosition;
-import io.github.rosemoe.sora.lang.diagnostic.*;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticContainer;
 
 
 public class CodeEditorView extends CodeEditor implements Editor {
