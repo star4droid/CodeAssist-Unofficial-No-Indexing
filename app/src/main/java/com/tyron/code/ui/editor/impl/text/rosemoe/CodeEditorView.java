@@ -50,7 +50,7 @@ import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import io.github.rosemoe.sora.text.TextRange;
 //import io.github.rosemoe.sora.text.CharPosition;
-
+import io.github.rosemoe.sora.lang.diagnostic.*;
 
 
 public class CodeEditorView extends CodeEditor implements Editor {
@@ -168,7 +168,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(/*manager*/, styles);
+      setStyles(/*manager, */styles);
     }
   }
 
