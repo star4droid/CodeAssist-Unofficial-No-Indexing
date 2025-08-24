@@ -146,10 +146,10 @@ public class CodeEditorView extends CodeEditor implements Editor {
     super.setColorScheme(colors);
   }
 
-  public List<DiagnosticWrapper> getDiagnostics() {
+ /* public List<DiagnosticWrapper> getDiagnostics() {
     return mDiagnostics;
   }
-
+ */
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
