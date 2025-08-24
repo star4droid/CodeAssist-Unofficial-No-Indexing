@@ -13,7 +13,7 @@ dependencies {
 
     // diagnostics
     implementation project(path: ':javac')
-	implementation project(path: ':code-editor')
+	compileOnly 'io.github.Rosemoe.sora-editor:editor:0.15.1'
 }
 
 spotless {
