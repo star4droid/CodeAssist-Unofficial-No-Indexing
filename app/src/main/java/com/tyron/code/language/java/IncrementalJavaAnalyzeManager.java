@@ -23,6 +23,9 @@ public class IncrementalJavaAnalyzeManager
     mLexer = new JavaLexer(LanguageLevel.HIGHEST);
   }
 
+  @Override 
+  public void onAddState(LexerPosition pos){} 
+
   @Override
   public LexerPosition getInitialState() {
     return mLexer.getCurrentPosition();
