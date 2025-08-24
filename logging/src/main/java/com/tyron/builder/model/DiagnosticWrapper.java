@@ -6,8 +6,9 @@ import java.util.Locale;
 import java.util.Objects;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
-public class DiagnosticWrapper implements Diagnostic<File> {
+public class DiagnosticWrapper extends DiagnosticRegion implements Diagnostic<File> {
 
   public static final int USE_LINE_POS = -31;
 
@@ -52,6 +53,8 @@ public class DiagnosticWrapper implements Diagnostic<File> {
       this.message = obj.getMessage(Locale.getDefault());
 
       this.mExtra = obj;
+      this.startIndex = this.startPosition;
+      this.endIndex = this.endPosition;
     } catch (Throwable e) {
       // ignored
     }
@@ -128,10 +131,12 @@ public class DiagnosticWrapper implements Diagnostic<File> {
 
   public void setStartPosition(long startPosition) {
     this.startPosition = startPosition;
+    this.startIndex = startPosition;
   }
 
   public void setEndPosition(long endPosition) {
     this.endPosition = endPosition;
+    this.endIndex = ednPosition;
   }
 
   public void setMessage(String message) {
@@ -183,7 +188,7 @@ public class DiagnosticWrapper implements Diagnostic<File> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(
+    return Objects.hash(id,severity,
         code,
         source,
         kind,
@@ -200,7 +205,7 @@ public class DiagnosticWrapper implements Diagnostic<File> {
   public boolean equals(Object obj) {
     if (obj instanceof DiagnosticWrapper) {
       DiagnosticWrapper that = (DiagnosticWrapper) obj;
-
+      
       if (that.message != null && this.message == null) {
         return false;
       }
