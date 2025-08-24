@@ -23,7 +23,7 @@ import com.tyron.completion.progress.ProgressManager;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.editor.Editor;
 import com.tyron.viewbinding.task.InjectViewBindingTask;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.theme.IRawTheme;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
