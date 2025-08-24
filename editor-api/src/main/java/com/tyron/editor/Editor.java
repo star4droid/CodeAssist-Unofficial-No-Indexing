@@ -5,8 +5,6 @@ import com.tyron.builder.project.Project;
 import java.io.File;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticContainer;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
 public interface Editor {
 
@@ -21,9 +19,9 @@ public interface Editor {
    *
    * @return mutable list of diagnostics
    */
-  DiagnosticContainer getDiagnostics();
+  List<DiagnosticWrapper> getDiagnostics();
 
-  void setDiagnostics(DiagnosticContainer diagnostics);
+  void setDiagnostics(List<DiagnosticWrapper> diagnostics);
 
   boolean isBackgroundAnalysisEnabled();
 
@@ -164,4 +162,4 @@ public interface Editor {
   void setAnalyzing(boolean analyzing);
 
   void requireCompletion();
-}
+} 
