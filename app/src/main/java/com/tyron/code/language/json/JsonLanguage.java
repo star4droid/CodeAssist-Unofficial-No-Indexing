@@ -42,7 +42,19 @@ public class JsonLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = format(text);
+            String format = "";
+          try {
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      try (StringWriter writer = new StringWriter()) {
+        JsonWriter jsonWriter = gson.newJsonWriter(writer);
+        jsonWriter.setIndent(useTab() ? "\t" : " ");
+        gson.toJson(JsonParser.parseString(text.toString()), jsonWriter);
+        format = writer.toString();
+      }
+    } catch (Throwable e) {
+      // format error, return the original string
+      format = text;
+          } 
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
                 text.insert(0, 0, format);
