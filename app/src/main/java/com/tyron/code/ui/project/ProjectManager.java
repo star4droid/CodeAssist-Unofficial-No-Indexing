@@ -121,8 +121,9 @@ public class ProjectManager {
     try {
       List<String> plugins = new ArrayList<>();
       List<String> unsupported_plugins = new ArrayList<>();
-
+      if(module.getPlugins()!=null){
       for (String plugin : module.getPlugins()) {
+        if(plugin!=null){
         if (plugin.equals("java-library")
             || plugin.equals("com.android.library")
             || plugin.equals("com.android.application")
@@ -133,6 +134,8 @@ public class ProjectManager {
         } else {
           unsupported_plugins.add(plugin);
         }
+        } 
+      } 
       }
 
       String pluginType = plugins.toString();
