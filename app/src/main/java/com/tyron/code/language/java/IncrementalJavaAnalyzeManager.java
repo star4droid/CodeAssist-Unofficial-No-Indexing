@@ -46,6 +46,8 @@ public class IncrementalJavaAnalyzeManager
       CharSequence line, LexerPosition state) {
     return null;
   }
+  @Override 
+  public void onAbandonState(S state){}     
 
   @Override
   public List<Span> generateSpansForLine(LineTokenizeResult<LexerPosition, Object> tokens) {
