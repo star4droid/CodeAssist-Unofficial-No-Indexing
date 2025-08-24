@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 
 public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
 
