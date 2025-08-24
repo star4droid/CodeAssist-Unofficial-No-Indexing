@@ -78,9 +78,10 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   private boolean mIsBackgroundAnalysisEnabled;
 
-//  private List<DiagnosticWrapper> mDiagnostics;
-  private DiagnosticContainer mDiagnostics;
-  private Consumer<DiagnosticContainer> mDiagnosticsListener;
+private List<DiagnosticWrapper> mDiagnostics;
+  private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener; 
+ // private DiagnosticContainer mDiagnostics;
+ // private Consumer<DiagnosticContainer> mDiagnosticsListener;
   private File mCurrentFile;
   private EditorViewModel mViewModel;
 
@@ -146,15 +147,20 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public void setColorScheme(@NonNull EditorColorScheme colors) {
     super.setColorScheme(colors);
   }
-  @Override 
-  public DiagnosticContainer getDiagnostics() {
+  @Override
+  public void setColorScheme(@NonNull EditorColorScheme colors) {
+    super.setColorScheme(colors);
+  }
+
+  @Override
+  public List<DiagnosticWrapper> getDiagnostics() {
     return mDiagnostics;
   }
- 
- @Override
-  public void setDiagnostics(DiagnosticContainer diagnostics) {
+
+  @Override
+  public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
-  
+
     AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
     if (manager instanceof DiagnosticTextmateAnalyzer) {
       ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
@@ -168,10 +174,13 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(/*manager, */styles);
+      setStyles(manager, styles);
     }
   }
 
+  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
+    mDiagnosticsListener = listener;
+  }
 
   public void setDiagnosticsListener(Consumer<DiagnosticContainer> listener) {
     mDiagnosticsListener = listener;
