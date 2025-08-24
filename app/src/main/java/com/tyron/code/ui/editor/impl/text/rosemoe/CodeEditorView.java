@@ -50,7 +50,7 @@ import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import io.github.rosemoe.sora.text.TextRange;
 //import io.github.rosemoe.sora.text.CharPosition;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticContainer;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 
 
 public class CodeEditorView extends CodeEditor implements Editor {
@@ -153,12 +153,12 @@ private List<DiagnosticWrapper> mDiagnostics;
   }
 
   @Override
-  public List<DiagnosticWrapper> getDiagnostics() {
+  public DiagnosticsContainer getDiagnostics() {
     return mDiagnostics;
   }
 
   @Override
-  public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
+  public void setDiagnostics(DiagnosticsContainer diagnostics) {
     mDiagnostics = diagnostics;
 
     AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
@@ -182,7 +182,7 @@ private List<DiagnosticWrapper> mDiagnostics;
     mDiagnosticsListener = listener;
   }
 
-  public void setDiagnosticsListener(Consumer<DiagnosticContainer> listener) {
+  public void setDiagnosticsListener(Consumer<DiagnoeticsContainer> listener) {
     mDiagnosticsListener = listener;
   }
 
