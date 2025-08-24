@@ -51,7 +51,7 @@ public class LanguageXML implements Language {
     if ("AndroidManifest.xml".equals(file.getName())) {
       format =
           XmlPrettyPrinter.prettyPrint(
-              String.valueOf(text), preferences, XmlFormatStyle.MANIFEST, "\n");
+              String.valueOf(text.toString()), preferences, XmlFormatStyle.MANIFEST, "\n");
     } else {
       if (ProjectUtils.isLayoutXMLFile(file)) {
         format =
@@ -64,7 +64,7 @@ public class LanguageXML implements Language {
       }
     }
     if (format == null) {
-      format = text;
+      format = text.toString();
     } 
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
@@ -113,7 +113,7 @@ public class LanguageXML implements Language {
     return true;
   }
 
-  @Override
+  
   public CharSequence format(CharSequence text) {
     XmlFormatPreferences preferences = XmlFormatPreferences.defaults();
     File file = mEditor.getCurrentFile();
