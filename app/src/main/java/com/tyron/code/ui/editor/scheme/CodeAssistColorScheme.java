@@ -36,7 +36,7 @@ public class CodeAssistColorScheme extends EditorColorScheme {
     if (scheme.mName == null) {
       throw new IOException("Scheme does not contain a name.");
     }
-    if (scheme.mColors == null) {
+    if (scheme.colors == null) {
       throw new IOException("Scheme does not have colors.");
     }
     return scheme;
