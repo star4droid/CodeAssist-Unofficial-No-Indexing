@@ -63,6 +63,7 @@ public class JavaLanguage implements Language, EditorFormatter {
 
    //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
     } catch (Exception e) {
+            format = text.toString();
     }
 
     if (format == null) {
