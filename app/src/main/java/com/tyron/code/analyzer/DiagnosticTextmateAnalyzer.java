@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
 
 public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
 
@@ -151,8 +152,14 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
       mReceiver = base;
       mConsumer = consumer;
     }
+    @Override 
+    public void setDiagnostics(@NonNull AnalyzeManager sourceManager, @Nullable DiagnosticsContainer diagnostics){
+      
+    }
   @Override 
-  public void updateBracketProvider(@NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider){}
+  public void updateBracketProvider(@NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider){
+    
+  }
  
     @Override
     public void setStyles(AnalyzeManager sourceManager, Styles styles) {
