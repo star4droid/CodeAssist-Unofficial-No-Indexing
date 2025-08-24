@@ -40,6 +40,9 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
     mEditor = editor;
     mStyleModifier = this::modifyStyles;
   }
+  @Override 
+  public void updateBracketProvider(@NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider){}
+ 
 
   protected void modifyStyles(Styles styles) {
     if (styles == null) {
