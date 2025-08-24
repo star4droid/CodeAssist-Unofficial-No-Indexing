@@ -38,7 +38,7 @@ public class IncrementalJavaAnalyzeManager
     return state.equals(another);
   }
 
-  @Override
+
   public LineTokenizeResult<LexerPosition, Object> tokenizeLine(
       CharSequence line, LexerPosition state) {
     return null;
