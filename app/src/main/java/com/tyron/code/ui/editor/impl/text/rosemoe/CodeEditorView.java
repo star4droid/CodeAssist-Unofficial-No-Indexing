@@ -78,8 +78,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   private boolean mIsBackgroundAnalysisEnabled;
 
-  private List<DiagnosticWrapper> mDiagnostics;
-  private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
+//  private List<DiagnosticWrapper> mDiagnostics;
+  private DiagnosticContainer mDiagnostics;
+  private Consumer<DiagnosticContainer> mDiagnosticsListener;
   private File mCurrentFile;
   private EditorViewModel mViewModel;
 
@@ -145,15 +146,15 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public void setColorScheme(@NonNull EditorColorScheme colors) {
     super.setColorScheme(colors);
   }
-
- /* public List<DiagnosticWrapper> getDiagnostics() {
+  @Override 
+  public DiagnosticContainer getDiagnostics() {
     return mDiagnostics;
   }
  
  @Override
-  public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
+  public void setDiagnostics(DiagnosticContainer diagnostics) {
     mDiagnostics = diagnostics;
-
+  
     AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
     if (manager instanceof DiagnosticTextmateAnalyzer) {
       ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
@@ -167,46 +168,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(manager, styles);
+      setStyles(/*manager*/, styles);
     }
   }
-*/
 
-/*@Override
-public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
-    // 1) clear & fill the container
-    DiagnosticsContainer container = new DiagnosticsContainer();
-    for (DiagnosticWrapper w : diagnostics) {
-        container.addDiagnostic(
-            new DiagnosticRegion(
-                w.getKind(),
-                w.getMessage(),
-                new TextRange(
-                    getCharPosition(w.getStart()),
-                    getCharPosition(w.getEnd())
-                )
-            )
-        );
-    }
-  super.setDiagnostics(container);
 
-    // 2) push into the analyzer
-    AnalyzeManager mgr = getEditorLanguage().getAnalyzeManager();
-    if (mgr instanceof DiagnosticTextmateAnalyzer) {
-        ((DiagnosticTextmateAnalyzer) mgr).setDiagnostics(this, diagnostics);
-        // NEW: also push the container
-        if (mgr instanceof StyleReceiver) {
-            ((StyleReceiver) mgr).setDiagnostics(mgr, container);
-        }
-    }
-
-    // 3) keep legacy listener
-    if (mDiagnosticsListener != null) {
-        mDiagnosticsListener.accept(diagnostics);
-    }
-}
-*/
-  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
+  public void setDiagnosticsListener(Consumer<DiagnosticContainer> listener) {
     mDiagnosticsListener = listener;
   }
 
