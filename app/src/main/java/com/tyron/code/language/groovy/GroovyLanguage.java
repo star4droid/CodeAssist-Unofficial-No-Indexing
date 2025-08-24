@@ -11,11 +11,39 @@ import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentReference;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
+import io.github.rosemoe.sora.text.TextRange;
+import io.github.rosemoe.sora.lang.format.AsyncFormatter;
+import io.github.rosemoe.sora.lang.format.Formatter;
 
 public class GroovyLanguage implements Language {
 
   private final Editor mEditor;
   private final GroovyAnalyzer mAnalyzer;
+  private final Formatter formatter = new AsyncFormatter() {
+        @Nullable
+        @Override
+        public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
+            String format = format(text);
+            if (!text.toString().equals(format)) {
+                text.delete(0, text.getLineCount() - 1);
+                text.insert(0, 0, format);
+            }
+            return cursorRange;
+        }
+
+        @Nullable
+        @Override
+        public TextRange formatRegionAsync(@NonNull Content text,
+                                           @NonNull TextRange rangeToFormat,
+                                           @NonNull TextRange cursorRange) {
+            return null;
+        }
+    };
+@NonNull
+    @Override
+    public Formatter getFormatter() {
+        return formatter;
+    }
 
   public GroovyLanguage(Editor editor) {
     mEditor = editor;
