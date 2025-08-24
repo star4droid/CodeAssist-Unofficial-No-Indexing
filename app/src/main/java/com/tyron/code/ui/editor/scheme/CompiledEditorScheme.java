@@ -74,6 +74,6 @@ public class CompiledEditorScheme extends EditorColorScheme {
   }
 
   private void setColorInternal(int id, int value) {
-    mColors.put(id, value);
+    colors.put(id, value);
   }
 }
