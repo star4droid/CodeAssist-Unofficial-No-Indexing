@@ -53,7 +53,7 @@ public class JsonLanguage implements Language {
       }
     } catch (Throwable e) {
       // format error, return the original string
-      format = text;
+      format = text.toString();
           } 
             if (!text.toString().equals(format)) {
                 text.delete(0, text.getLineCount() - 1);
@@ -141,7 +141,7 @@ public class JsonLanguage implements Language {
   }
 
   @SuppressLint("WrongThread")
-  @Override
+
   public CharSequence format(CharSequence text) {
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
