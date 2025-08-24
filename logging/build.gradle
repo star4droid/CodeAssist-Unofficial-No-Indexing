@@ -13,6 +13,7 @@ dependencies {
 
     // diagnostics
     implementation project(path: ':javac')
+	implementation project(path: ':code-editor')
 }
 
 spotless {
