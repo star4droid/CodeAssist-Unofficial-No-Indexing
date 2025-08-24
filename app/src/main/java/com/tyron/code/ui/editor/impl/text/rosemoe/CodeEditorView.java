@@ -152,10 +152,11 @@ private List<DiagnosticWrapper> mDiagnostics;
     super.setColorScheme(colors);
   }
 
-  @Override
+/*  @Override
   public DiagnosticsContainer getDiagnostics() {
     return mDiagnostics;
   }
+ */
 
   @Override
   public void setDiagnostics(DiagnosticsContainer diagnostics) {
@@ -178,9 +179,10 @@ private List<DiagnosticWrapper> mDiagnostics;
     }
   }
 
-  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
+/*  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
     mDiagnosticsListener = listener;
   }
+*/  
 
   public void setDiagnosticsListener(Consumer<DiagnoeticsContainer> listener) {
     mDiagnosticsListener = listener;
