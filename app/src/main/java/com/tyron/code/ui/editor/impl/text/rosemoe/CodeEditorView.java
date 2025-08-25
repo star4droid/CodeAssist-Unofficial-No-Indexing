@@ -48,6 +48,9 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+//import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.TextRange;
+
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
@@ -394,7 +397,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
                   final CharSequence formatted =
                       ((EditorFormatter) getEditorLanguage()).format(originalText, start, end);
                   if (formatted != null) {
-                    super.onFormatSucceed(originalText, formatted);
+                    TextRange tRange = new TextRange(getText().getIndexer().getCharPosition(start),
+                                                     getText().getIndexer().getCharPosition(end));
+                    super.onFormatSucceed(formatted, tRange);
                   } else {
                     // Handle null formatted text
                   }
