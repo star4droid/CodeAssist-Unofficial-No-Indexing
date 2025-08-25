@@ -531,7 +531,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
                     (int) it.getEndPosition(),
                     severitySupplier.apply(it.getKind())
             ))
-            .forEach(container::addRegion);
+            .forEach(container::addDiagnostic);
 
     // أرسلها للـ editor
      setDiagnostics(container);
