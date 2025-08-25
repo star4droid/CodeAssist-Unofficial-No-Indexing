@@ -167,7 +167,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(manager, styles);
+      setStyles(/*manager,*/ styles);
     }
   }
 
