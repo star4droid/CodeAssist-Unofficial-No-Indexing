@@ -62,7 +62,7 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
-  private static final Field sFormatThreadField;
+/*  private static final Field sFormatThreadField;
 
   static {
     try {
@@ -72,6 +72,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
       throw new Error(e);
     }
   }
+  */
 
   private final Set<Character> IGNORED_PAIR_ENDS =
       ImmutableSet.<Character>builder()
@@ -377,13 +378,14 @@ public class CodeEditorView extends CodeEditor implements Editor {
     getText().endBatchEdit();
   }
 
-  public boolean isFormatting() {
+/*  public boolean isFormatting() {
     try {
-      return sFormatThreadField.get(this) != null;
+      //return sFormatThreadField.get(this) != null;
     } catch (IllegalAccessException e) {
       return false;
     }
   }
+  */
 
   @Override
   public synchronized boolean formatCodeAsync() {
