@@ -56,7 +56,7 @@ import java.util.function.Function;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticContainer;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
 
@@ -177,7 +177,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
       setStyles(/*manager,*/ styles);
     }
-    convDiagonstics(diagnostics);
+    convDiagnostics(diagnostics);
   }
 
   public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
@@ -523,7 +523,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
         }
     };
 
-    DiagnosticContainer container = new DiagnosticContainer();
+    DiagnosticsContainer container = new DiagnosticsContainer();
 
     diagnostics.stream()
             .map(it -> new DiagnosticRegion(
