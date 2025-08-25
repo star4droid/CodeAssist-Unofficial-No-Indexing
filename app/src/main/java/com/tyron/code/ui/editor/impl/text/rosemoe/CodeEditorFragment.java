@@ -66,7 +66,7 @@ import io.github.rosemoe.sora.event.ClickEvent;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.LongPressEvent;
 import io.github.rosemoe.sora.lang.Language;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.DirectAccessProps;
