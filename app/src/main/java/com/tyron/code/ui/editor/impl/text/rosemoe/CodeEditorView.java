@@ -50,6 +50,14 @@ import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 //import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.TextRange;
+import java.util.Objects;
+import java.util.function.Function;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticContainer;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
 
 public class CodeEditorView extends CodeEditor implements Editor {
@@ -169,6 +177,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
       setStyles(/*manager,*/ styles);
     }
+    convDiagonstics(diagnostics);
   }
 
   public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
@@ -496,4 +505,37 @@ public class CodeEditorView extends CodeEditor implements Editor {
         mDiagnosticPaint.setColor(color.getColor(EditorColorScheme.PROBLEM_WARNING));
     }
   }
+
+
+  private void convDiagnostics(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
+
+    Function<Diagnostic.Kind, Short> severitySupplier = it -> {
+        switch (it) {
+            case ERROR:
+                return DiagnosticRegion.SEVERITY_ERROR;
+            case MANDATORY_WARNING:
+            case WARNING:
+                return DiagnosticRegion.SEVERITY_WARNING;
+            default:
+            case OTHER:
+            case NOTE:
+                return DiagnosticRegion.SEVERITY_NONE;
+        }
+    };
+
+    DiagnosticContainer container = new DiagnosticContainer();
+
+    diagnostics.stream()
+            .map(it -> new DiagnosticRegion(
+                    (int) it.getStartPosition(),
+                    (int) it.getEndPosition(),
+                    severitySupplier.apply(it.getKind())
+            ))
+            .forEach(container::addRegion);
+
+    // أرسلها للـ editor
+     setDiagnostics(container);
+  }
+
+  
 }
