@@ -48,10 +48,6 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import io.github.rosemoe.sora.text.TextRange;
-//import io.github.rosemoe.sora.text.CharPosition;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
-
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
@@ -78,10 +74,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   private boolean mIsBackgroundAnalysisEnabled;
 
-private List<DiagnosticWrapper> mDiagnostics;
-  private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener; 
- // private DiagnosticContainer mDiagnostics;
- // private Consumer<DiagnosticContainer> mDiagnosticsListener;
+  private List<DiagnosticWrapper> mDiagnostics;
+  private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
   private File mCurrentFile;
   private EditorViewModel mViewModel;
 
@@ -147,19 +141,14 @@ private List<DiagnosticWrapper> mDiagnostics;
   public void setColorScheme(@NonNull EditorColorScheme colors) {
     super.setColorScheme(colors);
   }
-  @Override
-  public void setColorScheme(@NonNull EditorColorScheme colors) {
-    super.setColorScheme(colors);
-  }
 
-/*  @Override
-  public DiagnosticsContainer getDiagnostics() {
+  @Override
+  public List<DiagnosticWrapper> getDiagnostics() {
     return mDiagnostics;
   }
- */
 
   @Override
-  public void setDiagnostics(DiagnosticsContainer diagnostics) {
+  public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
 
     AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
@@ -179,12 +168,7 @@ private List<DiagnosticWrapper> mDiagnostics;
     }
   }
 
-/*  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
-    mDiagnosticsListener = listener;
-  }
-*/  
-
-  public void setDiagnosticsListener(Consumer<DiagnoeticsContainer> listener) {
+  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
     mDiagnosticsListener = listener;
   }
 
@@ -410,8 +394,7 @@ private List<DiagnosticWrapper> mDiagnostics;
                   final CharSequence formatted =
                       ((EditorFormatter) getEditorLanguage()).format(originalText, start, end);
                   if (formatted != null) {
-                    TextRange oTextRange = new TextRange(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
-                    super.onFormatSucceed(formatted,oTextRange);
+                    super.onFormatSucceed(originalText, formatted);
                   } else {
                     // Handle null formatted text
                   }
