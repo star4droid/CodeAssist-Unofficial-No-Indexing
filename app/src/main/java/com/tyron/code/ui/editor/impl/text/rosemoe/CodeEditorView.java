@@ -507,7 +507,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
 
-  private void convDiagnostics(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
+  private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
 
     Function<Diagnostic.Kind, Short> severitySupplier = it -> {
         switch (it) {
