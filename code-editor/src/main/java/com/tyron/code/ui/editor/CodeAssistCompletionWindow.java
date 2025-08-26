@@ -63,42 +63,44 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
   }
 
   @Override
-  public void select(int pos) {
+  public boolean select(int pos) {
     if (pos > mAdapter.getCount()) {
-      return;
+      return false;
     }
 
     try {
-      super.select(pos);
+      return super.select(pos);
     } catch (Throwable e) {
       if (BuildConfig.DEBUG) {
         Log.e(TAG, "Failed to select item", e);
       }
     }
+    return false;
   }
 
   @Override
-  public void select() {
+  public boolean select() {
     try {
-      super.select();
+     return super.select();
     } catch (Throwable e) {
       if (BuildConfig.DEBUG) {
         Log.e(TAG, "Failed to select item", e);
       }
     }
+    return false;
   }
 
   @Override
   public void cancelCompletion() {
-    if (mThread != null) {
-      ProgressManager.getInstance().cancelThread(mThread);
+    if (completionThread != null) {
+      ProgressManager.getInstance().cancelThread(completionThread);
     }
     super.cancelCompletion();
   }
 
   @Override
   public void requireCompletion() {
-    if (mCancelShowUp || !isEnabled()) {
+    if (cancelShowUp || !isEnabled()) {
       return;
     }
     Content text = mEditor.getText();
@@ -106,13 +108,13 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
       hide();
       return;
     }
-    if (System.nanoTime() - mRequestTime < mEditor.getProps().cancelCompletionNs) {
+    if (System.nanoTime() - requestTime < mEditor.getProps().cancelCompletionNs) {
       hide();
-      mRequestTime = System.nanoTime();
+      requestTime = System.nanoTime();
       return;
     }
     cancelCompletion();
-    mRequestTime = System.nanoTime();
+    requestTime = System.nanoTime();
 
     setCurrent(-1);
 
@@ -127,7 +129,7 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
               mItems.addAll(newItems);
               mAdapter.notifyDataSetChanged();
               float newHeight = mAdapter.getItemHeight() * mAdapter.getCount();
-              setSize(getWidth(), (int) Math.min(newHeight, mMaxHeight));
+              setSize(getWidth(), (int) Math.min(newHeight, maxHeight));
               if (!isShowing()) {
                 show();
               }
@@ -138,10 +140,10 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
             mEditor.getEditorLanguage().getInterruptionLevel());
     reference.set(publisher.getItems());
 
-    mThread = new CompletionThread(mRequestTime, publisher);
-    mThread.setName("CompletionThread " + mRequestTime);
+    completionThread = new CompletionThread(requestTime, publisher);
+    completionThread.setName("CompletionThread " + requestTime);
     setLoading(true);
-    mThread.start();
+    completionThread.start();
   }
 
   private void setCurrent(int pos) {
@@ -153,4 +155,4 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
       throw new RuntimeException(e);
     }
   }
-}
+        } 
