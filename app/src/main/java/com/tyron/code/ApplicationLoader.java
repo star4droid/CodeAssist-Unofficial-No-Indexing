@@ -53,6 +53,9 @@ import com.tyron.selection.xml.XmlExpandSelectionProvider;
 import com.google.android.material.color.DynamicColors;
 import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
+
 
 public class ApplicationLoader extends Application {
 
@@ -97,6 +100,10 @@ public class ApplicationLoader extends Application {
         .apply();
 
     runStartup();
+    FileProviderRegistry.getInstance().addFileProvider(
+            AssetsFileResolver(
+                applicationContext.getAssetManager()
+            );
   }
 
   /**
