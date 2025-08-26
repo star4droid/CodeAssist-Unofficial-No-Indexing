@@ -109,10 +109,10 @@ public class EditorUtil {
             AssetManager assets = context.getAssets();
             IRawTheme rawTheme;
             if (light) {
-                rawTheme = ThemeReader.readThemeSync("QuietLight.tmTheme", assets.open(
+                rawTheme = RawThemeReader.readThemeSync("QuietLight.tmTheme", assets.open(
                         "textmate/QuietLight.tmTheme"));
             } else {
-                rawTheme = ThemeReader.readThemeSync("darcula.json",
+                rawTheme = RawThemeReader.readThemeSync("darcula.json",
                                                      assets.open("textmate/darcula.json"));
             }
             return createTheme(rawTheme);
@@ -149,7 +149,7 @@ public class EditorUtil {
         // Find word edges
         int startLine = line, endLine = line;
         ContentLine lineObj = editor.getText().getLine(line);
-        long edges = ICUUtils.getWordEdges(lineObj, column, false);
+        long edges = ICUUtils.getWordRange(lineObj, column, false);
         int startColumn = IntPair.getFirst(edges);
         int endColumn = IntPair.getSecond(edges);
         if (startColumn == endColumn) {
