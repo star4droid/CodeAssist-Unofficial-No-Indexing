@@ -152,6 +152,7 @@ public class JavaLanguage implements Language, EditorFormatter {
         formatted = text;
       }
 
+   //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
     } catch (Exception e) {
     }
 

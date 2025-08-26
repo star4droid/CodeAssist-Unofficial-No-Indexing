@@ -1,6 +1,7 @@
 name: Android CI Debug
 
 on:
+ 
   workflow_dispatch:
 
 jobs:

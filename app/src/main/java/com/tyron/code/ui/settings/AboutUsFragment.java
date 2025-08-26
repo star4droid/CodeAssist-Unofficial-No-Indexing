@@ -55,7 +55,7 @@ public class AboutUsFragment extends MaterialAboutFragment {
                     getDrawable(R.drawable.ic_baseline_open_in_new_24),
                     getString(R.string.app_source_title),
                     false,
-                    Uri.parse("https://github.com/Deenu488/CodeAssist-Unofficial")))
+                    Uri.parse("https://github.com/Wadamzmail/CodeAssist-Unofficial")))
             .addItem(
                 ConvenienceBuilder.createRateActionItem(
                     context,
@@ -89,7 +89,7 @@ public class AboutUsFragment extends MaterialAboutFragment {
             getDrawable(R.drawable.ic_baseline_menu_book_24),
             getString(R.string.app_name),
             "2024",
-            "Tyron, Deenu",
+            "Tyron, Deenu, Mutwakil Suliman (Wadamzmail)",
             OpenSourceLicense.GNU_GPL_3);
 
     return new MaterialAboutList.Builder()

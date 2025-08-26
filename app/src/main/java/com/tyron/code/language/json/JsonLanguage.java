@@ -159,4 +159,4 @@ public class JsonLanguage implements Language {
       return new NewlineHandleResult(sb, shiftLeft);
     }
   }
-}
+} 
