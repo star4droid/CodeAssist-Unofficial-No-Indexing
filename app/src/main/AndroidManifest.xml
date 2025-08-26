@@ -24,7 +24,16 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- run foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <!-- make the CPU awake so it doesn't stop while doing somethings -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- request battery optimization permission -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- notifications permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
     <application
         android:name="com.tyron.code.ApplicationLoader"
         android:allowBackup="true"
@@ -61,8 +70,7 @@
         <service
             android:name="com.tyron.code.service.CompilerService"
             android:enabled="true"
-            android:foregroundServiceType="systemExempted"
-            android:permission="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"
+            android:foregroundServiceType="dataSync"
             android:exported="false"/>
         <provider
             android:name="androidx.core.content.FileProvider"

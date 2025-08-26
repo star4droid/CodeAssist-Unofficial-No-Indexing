@@ -549,8 +549,13 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
           };
       String packageName = ((AndroidModule) module).getNameSpace();
       if (packageName != null) {
-        requireActivity().registerReceiver(mLogReceiver, new IntentFilter(packageName + ".LOG"));
-      } else {
+    IntentFilter filter = new IntentFilter(packageName + ".LOG");
+    requireActivity().registerReceiver(
+        mLogReceiver,
+        filter,
+        Context.RECEIVER_NOT_EXPORTED // safer by default
+    );
+} else {
         mLogReceiver = null;
       }
     }
