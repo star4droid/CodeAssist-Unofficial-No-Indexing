@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
 import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
-import org.eclipse.tm4e.core.theme.IRawThemeSetting;
+import org.eclipse.tm4e.core.theme.raw.IRawThemeSetting;
+import org.eclipse.tm4e.core.registry.IThemeSource;
+
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -25,6 +27,8 @@ import io.github.rosemoe.sora.text.ICUUtils;
 import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 
 public class EditorUtil {
 
@@ -35,8 +39,9 @@ public class EditorUtil {
     public static final String KEY_COMPLETION_WINDOW_STROKE = "completionWindowStroke";
 
     @NonNull
-    public static TextMateColorScheme createTheme(IRawTheme rawTheme) {
-        TextMateColorScheme scheme = TextMateColorScheme.create(rawTheme);
+    public static TextMateColorScheme createTheme(IThemeSource themeSource) {
+        TextMateColorScheme scheme = TextMateColorScheme.create(themeSource);
+        IRawTheme rawTheme = scheme.getRawTheme();
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
         if (settings != null && settings.size() >= 1) {
             RawTheme setting = (RawTheme) settings.iterator().next();
@@ -106,7 +111,7 @@ public class EditorUtil {
 
     public static TextMateColorScheme getDefaultColorScheme(Context context, boolean light) {
         try {
-            AssetManager assets = context.getAssets();
+            /*AssetManager assets = context.getAssets();
             IRawTheme rawTheme;
             if (light) {
                 rawTheme = RawThemeReader.readThemeSync("QuietLight.tmTheme", assets.open(
@@ -114,8 +119,18 @@ public class EditorUtil {
             } else {
                 rawTheme = RawThemeReader.readThemeSync("darcula.json",
                                                      assets.open("textmate/darcula.json"));
+            }*/
+             String path = "";
+            if(light){
+              path = "textmate/QuietLight.tmTheme";
+            }else{
+               path =  "textmate/darcula.json";
             }
-            return createTheme(rawTheme);
+           IThemeSource themeSource =   IThemeSource.fromInputStream(
+                        FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
+                    );
+           // return createTheme(rawTheme);
+            return createTheme(themeSource);
         } catch (Exception e) {
             // should not happen, the bundled theme should always work.
             throw new Error(e);
