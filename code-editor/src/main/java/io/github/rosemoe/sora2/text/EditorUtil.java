@@ -9,9 +9,9 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.eclipse.tm4e.core.internal.theme.ThemeRaw;
-import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
-import org.eclipse.tm4e.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.theme.IRawThemeSetting;
 
 import java.lang.reflect.Method;
@@ -39,8 +39,8 @@ public class EditorUtil {
         TextMateColorScheme scheme = TextMateColorScheme.create(rawTheme);
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
         if (settings != null && settings.size() >= 1) {
-            ThemeRaw setting = (ThemeRaw) settings.iterator().next();
-            setting = (ThemeRaw) setting.getSetting();
+            RawTheme setting = (RawTheme) settings.iterator().next();
+            setting = (RawTheme) setting.getSetting();
 
             Object blockLine = setting.get(KEY_BLOCK_LINE);
             if (blockLine != null) {
