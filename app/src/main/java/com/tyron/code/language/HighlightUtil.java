@@ -31,42 +31,42 @@ public class HighlightUtil {
                 ProgressManager.checkCanceled();
                 io.github.rosemoe.sora.lang.styling.Span span = spans.get(i);
                 increment = 1;
-                if (span.column >= end) {
+                if (span.getColumn() >= end) {
                     break;
                 }
-                int spanEnd = (i + 1 >= spans.size() ? Integer.MAX_VALUE : spans.get(i + 1).column);
+                int spanEnd = (i + 1 >= spans.size() ? Integer.MAX_VALUE : spans.get(i + 1).getColumn());
                 if (spanEnd >= start) {
                     int regionStartInSpan = Math.max(span.column, start);
                     int regionEndInSpan = Math.min(end, spanEnd);
-                    if (regionStartInSpan == span.column) {
+                    if (regionStartInSpan == span.getColumn()) {
                         if (regionEndInSpan != spanEnd) {
                             increment = 2;
                             io.github.rosemoe.sora.lang.styling.Span nSpan = span.copy();
-                            nSpan.column = regionEndInSpan;
+                            nSpan.setColumn(regionEndInSpan);
                             spans.add(i + 1, nSpan);
                         }
-                        span.underlineColor = newSpan.underlineColor;
-                        span.style = newSpan.style;
-                        span.renderer = newSpan.renderer;
+                        span.setUnderlineColor(newSpan.getUnderlineColor());
+                        span.setStyle(newSpan.getStyle());
+                        span.setRenderer(newSpan.getRenderer());
                     } else {
                         //regionStartInSpan > span.column
                         if (regionEndInSpan == spanEnd - 1) {
                             increment = 2;
                             io.github.rosemoe.sora.lang.styling.Span nSpan = span.copy();
-                            nSpan.column = regionStartInSpan;
+                            nSpan.setColumn(regionStartInSpan);
                             spans.add(i + 1, nSpan);
-                            span.underlineColor = newSpan.underlineColor;
-                            span.style = newSpan.style;
-                            span.renderer = newSpan.renderer;
+                            span.setUnderlineColor(newSpan.getUnderlineColor());
+                            span.setStyle(newSpan.getStyle());
+                            span.setRenderer(newSpan.getRenderer());
                         } else {
                             increment = 3;
                             io.github.rosemoe.sora.lang.styling.Span span1 = span.copy();
-                            span1.column = regionStartInSpan;
-                            span1.underlineColor = newSpan.underlineColor;
-                            span1.style = newSpan.style;
-                            span1.renderer = newSpan.renderer;
+                            span1.setColumn(regionEndInSpan);
+                            span1.setUnderlineColor(newSpan.getUnderlineColor());
+                            span1.setStyle(newSpan.getStyle());
+                            span1.setRenderer(newSpan.getRenderer());
                             io.github.rosemoe.sora.lang.styling.Span span2 = span.copy();
-                            span2.column = regionEndInSpan;
+                            span2.setColumn(regionEndInSpan);
                             spans.add(i + 1, span1);
                             spans.add(i + 2, span2);
                         }
