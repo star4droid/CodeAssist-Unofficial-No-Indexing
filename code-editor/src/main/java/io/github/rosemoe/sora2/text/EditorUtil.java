@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
 import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
-import org.eclipse.tm4e.core.theme.raw.IRawThemeSetting;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawThemeSetting;
 import org.eclipse.tm4e.core.registry.IThemeSource;
 
 
