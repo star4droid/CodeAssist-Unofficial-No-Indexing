@@ -39,7 +39,7 @@ public class EditorUtil {
     public static final String KEY_COMPLETION_WINDOW_STROKE = "completionWindowStroke";
 
     @NonNull
-    public static TextMateColorScheme createTheme(IThemeSource themeSource) {
+    public static TextMateColorScheme createTheme(IThemeSource themeSource) throws Exception {
         TextMateColorScheme scheme = TextMateColorScheme.create(themeSource);
         IRawTheme rawTheme = scheme.getRawTheme();
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
