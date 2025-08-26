@@ -100,10 +100,7 @@ public class ApplicationLoader extends Application {
         .apply();
 
     runStartup();
-    FileProviderRegistry.getInstance().addFileProvider(
-            AssetsFileResolver(
-                applicationContext.getAssetManager()
-            );
+    FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(applicationContext.getAssetManager());
   }
 
   /**
