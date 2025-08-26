@@ -29,7 +29,7 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
-
+ 
 public class EditorUtil {
 
     public static final String KEY_BACKGROUND = "background";
@@ -120,6 +120,7 @@ public class EditorUtil {
                 rawTheme = RawThemeReader.readThemeSync("darcula.json",
                                                      assets.open("textmate/darcula.json"));
             }*/
+           
              String path = "";
             if(light){
               path = "textmate/QuietLight.tmTheme";
