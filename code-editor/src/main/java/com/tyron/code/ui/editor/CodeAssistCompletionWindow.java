@@ -148,7 +148,7 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
 
   private void setCurrent(int pos) {
     try {
-      Field field = EditorAutoCompletion.class.getDeclaredField("mCurrent");
+      Field field = EditorAutoCompletion.class.getDeclaredField("currentSelection");
       field.setAccessible(true);
       field.set(this, pos);
     } catch (Throwable e) {
