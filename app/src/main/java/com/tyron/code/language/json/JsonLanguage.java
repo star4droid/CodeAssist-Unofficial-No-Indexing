@@ -221,14 +221,16 @@ public class JsonLanguage implements Language {
         if (line < 0 || line >= text.getLineCount()) return false;
 
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
 
-        String after  = text.subContent(
-                text.getCharIndex(line, position.column),
-                text.getCharIndex(line, text.getLine(line).length()))
-                .toString();
+
+        String after = text.subContent(
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
 
         return before.endsWith(start) && after.startsWith(end);
     }
@@ -241,18 +243,20 @@ public class JsonLanguage implements Language {
                                              int tabSize) {
         int line = position.line;
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
+
 
         String after = text.subContent(
-                text.getCharIndex(line, position.column),
-                text.getCharIndex(line, text.getLine(line).length()))
-                .toString();
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
 
         int indentBase = TextUtils.countLeadingSpaceCount(before, tabSize);
-        int advanceBefore = getIndentAdvance(beforeText);   // or your own helper
-        int advanceAfter  = getIndentAdvance(afterText);
+        int advanceBefore = getIndentAdvance(before);   // or your own helper
+        int advanceAfter  = getIndentAdvance(after);
 
         String indentBefore = TextUtils.createIndent(indentBase + advanceBefore, tabSize, false);
         String indentAfter  = TextUtils.createIndent(indentBase + advanceAfter,  tabSize, false);
