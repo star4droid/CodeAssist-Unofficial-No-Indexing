@@ -32,6 +32,9 @@ import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.Content;
 import androidx.annotation.Nullable;
+import io.github.rosemoe.sora.lang.styling.Styles;
+import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.Content;
 
 public class JsonLanguage implements Language {
 
@@ -170,7 +173,7 @@ public class JsonLanguage implements Language {
   @Override
   public void destroy() {}
 
-  class IndentHandler implements NewlineHandler {
+ /* class IndentHandler implements NewlineHandler {
 
     private final String start;
     private final String end;
@@ -199,5 +202,69 @@ public class JsonLanguage implements Language {
       int shiftLeft = text.length() + 1;
       return new NewlineHandleResult(sb, shiftLeft);
     }
-  }
+  }*/
+  class IndentHandler implements NewlineHandler {
+
+    private final String start;
+    private final String end;
+
+    IndentHandler(String start, String end) {
+        this.start = start;
+        this.end   = end;
+    }
+
+    @Override
+    public boolean matchesRequirement(@NonNull Content text,
+                                      @NonNull CharPosition position,
+                                      @Nullable Styles style) {
+        int line = position.line;
+        if (line < 0 || line >= text.getLineCount()) return false;
+
+        String before = text.subContent(
+                text.getCharIndex(line, 0),
+                text.getCharIndex(line, position.column))
+                .toString();
+
+        String after  = text.subContent(
+                text.getCharIndex(line, position.column),
+                text.getCharIndex(line, text.getLine(line).length()))
+                .toString();
+
+        return before.endsWith(start) && after.startsWith(end);
+    }
+
+    @Override
+    @NonNull
+    public NewlineHandleResult handleNewline(@NonNull Content text,
+                                             @NonNull CharPosition position,
+                                             @Nullable Styles style,
+                                             int tabSize) {
+        int line = position.line;
+        String before = text.subContent(
+                text.getCharIndex(line, 0),
+                text.getCharIndex(line, position.column))
+                .toString();
+
+        String after = text.subContent(
+                text.getCharIndex(line, position.column),
+                text.getCharIndex(line, text.getLine(line).length()))
+                .toString();
+
+        int indentBase = TextUtils.countLeadingSpaceCount(before, tabSize);
+        int advanceBefore = getIndentAdvance(beforeText);   // or your own helper
+        int advanceAfter  = getIndentAdvance(afterText);
+
+        String indentBefore = TextUtils.createIndent(indentBase + advanceBefore, tabSize, false);
+        String indentAfter  = TextUtils.createIndent(indentBase + advanceAfter,  tabSize, false);
+
+        StringBuilder insert = new StringBuilder("\n")
+                .append(indentBefore)
+                .append('\n')
+                .append(indentAfter);
+
+        int cursorShiftBack = indentAfter.length() + 1;
+        return new NewlineHandleResult(insert, cursorShiftBack);
+    }
+}
+ 
 }
