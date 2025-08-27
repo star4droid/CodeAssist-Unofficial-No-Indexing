@@ -36,6 +36,9 @@ import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.Content;
 import androidx.annotation.Nullable;
+import io.github.rosemoe.sora.lang.styling.Styles;
+import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.Content;
 
 public class KotlinLanguage implements Language {
 
@@ -209,25 +212,44 @@ public class KotlinLanguage implements Language {
   class BraceHandler implements NewlineHandler {
 
     @Override
-    public boolean matchesRequirement(String beforeText, String afterText) {
-      return beforeText.endsWith("{") && afterText.startsWith("}");
+    public boolean matchesRequirement(@NonNull Content text,
+                                      @NonNull CharPosition position,
+                                      @Nullable Styles style) {
+        int line = position.line;
+        if (line < 0 || line >= text.getLineCount()) return false;
+
+        String before = text.subContent(line, 0, line, position.column).toString();
+        String after  = text.subContent(line, position.column, line,
+                                        text.getLine(line).length()).toString();
+        return before.trim().endsWith("{") && after.trim().startsWith("}");
     }
 
     @Override
-    public NewlineHandleResult handleNewline(String beforeText, String afterText, int tabSize) {
-      int count = TextUtils.countLeadingSpaceCount(beforeText, tabSize);
-      int advanceBefore = getIndentAdvance(beforeText);
-      int advanceAfter = getIndentAdvance(afterText);
-      String text;
-      StringBuilder sb =
-          new StringBuilder("\n")
-              .append(TextUtils.createIndent(count + advanceBefore, tabSize, useTab()))
-              .append('\n')
-              .append(text = TextUtils.createIndent(count + advanceAfter, tabSize, useTab()));
-      int shiftLeft = text.length() + 1;
-      return new NewlineHandleResult(sb, shiftLeft);
+    @NonNull
+    public NewlineHandleResult handleNewline(@NonNull Content text,
+                                             @NonNull CharPosition position,
+                                             @Nullable Styles style,
+                                             int tabSize) {
+        int line = position.line;
+        String before = text.subContent(line, 0, line, position.column).toString();
+
+        int baseIndent   = TextUtils.countLeadingSpaceCount(before, tabSize);
+        int bodyIndent   = baseIndent + getIndentAdvance(before);
+        int closeIndent  = baseIndent + getIndentAdvance("");
+
+        String bodyLine  = TextUtils.createIndent(bodyIndent,  tabSize, false);
+        String closeLine = TextUtils.createIndent(closeIndent, tabSize, false);
+
+        StringBuilder sb = new StringBuilder("\n")
+                .append(bodyLine)
+                .append('\n')
+                .append(closeLine);
+
+        int shiftBack = closeLine.length() + 1;
+        return new NewlineHandleResult(sb, shiftBack);
     }
-  }
+}
+
 
   private List<String> listFiles(Path directory, String extension) throws IOException {
     return Files.walk(directory)
