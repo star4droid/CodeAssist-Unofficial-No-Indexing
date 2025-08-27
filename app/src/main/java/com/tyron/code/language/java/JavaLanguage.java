@@ -239,7 +239,7 @@ public class JavaLanguage implements Language, EditorFormatter {
   @Override
   public void destroy() {}
 
-  final class CallParenHandler implements NewlineHandler {
+  class CallParenHandler implements NewlineHandler {
 
     @Override
     public boolean matchesRequirement(@NonNull Content text,
@@ -281,6 +281,41 @@ public class JavaLanguage implements Language, EditorFormatter {
         int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
         int advance = getIndentAdvance(before) + 8; // +8 = 4*2
         String indentStr = TextUtils.createIndent(indent + advance, tabSize, false);
+
+        return new NewlineHandleResult(new StringBuilder("\n").append(indentStr), 0);
+    }
+}
+  
+final class TwoIndentHandler implements NewlineHandler {
+
+    @Override
+    public boolean matchesRequirement(@NonNull Content text,
+                                      @NonNull CharPosition position,
+                                      @Nullable Styles style) {
+        int line = position.line;
+        if (line < 0 || line >= text.getLineCount()) return false;
+
+        String before = text.subContent(line, 0, line, position.column).toString();
+        String after  = text.subContent(line, position.column, line,
+                                        text.getLine(line).length()).toString();
+
+        return !before.replace("\r", "").trim().startsWith(".") &&
+               before.trim().endsWith(")") &&
+               !after.trim().startsWith(";");
+    }
+
+    @Override
+    @NonNull
+    public NewlineHandleResult handleNewline(@NonNull Content text,
+                                             @NonNull CharPosition position,
+                                             @Nullable Styles style,
+                                             int tabSize) {
+        int line = position.line;
+        String before = text.subContent(line, 0, line, position.column).toString();
+
+        int indent      = TextUtils.countLeadingSpaceCount(before, tabSize);
+        int extraIndent = 8;                       // 4 * 2
+        String indentStr = TextUtils.createIndent(indent + extraIndent, tabSize, false);
 
         return new NewlineHandleResult(new StringBuilder("\n").append(indentStr), 0);
     }
