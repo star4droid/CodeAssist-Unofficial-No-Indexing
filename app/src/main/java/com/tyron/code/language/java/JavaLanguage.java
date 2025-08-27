@@ -248,10 +248,11 @@ public class JavaLanguage implements Language, EditorFormatter {
         int line = position.line;
         if (line < 0 || line >= text.getLineCount()) return false;
 
-        String after = text.subContent(
-        line, position.column,
-        line, text.getLine(line).length())
+        String before = text.subContent(
+        line, 0,
+        line, position.column)
         .toString();
+
 
         String after = text.subContent(
         line, position.column,
