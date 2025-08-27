@@ -248,15 +248,16 @@ public class JavaLanguage implements Language, EditorFormatter {
         int line = position.line;
         if (line < 0 || line >= text.getLineCount()) return false;
 
-        String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        String after = text.subContent(
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
 
         String after = text.subContent(
-                text.getCharIndex(line, position.column),
-                text.getCharIndex(line, text.getLine(line).length()))
-                .toString();
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
 
         return before.replace("\r", "").trim().startsWith(".") == false
                 && before.trim().endsWith(")")
@@ -271,9 +272,10 @@ public class JavaLanguage implements Language, EditorFormatter {
                                              int tabSize) {
         int line = position.line;
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
+
 
         int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
         int advance = getIndentAdvance(before) + 8; // +8 = 4*2
@@ -294,14 +296,16 @@ public class JavaLanguage implements Language, EditorFormatter {
         if (line < 0 || line >= text.getLineCount()) return false;
 
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
+
 
         String after = text.subContent(
-                text.getCharIndex(line, position.column),
-                text.getCharIndex(line, text.getLine(line).length()))
-                .toString();
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
 
         return before.trim().endsWith("{") && after.trim().startsWith("}");
     }
@@ -315,14 +319,16 @@ public class JavaLanguage implements Language, EditorFormatter {
         int line = position.line;
 
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
 
-        String after  = text.subContent(
-                text.getCharIndex(line, position.column),
-                text.getCharIndex(line, text.getLine(line).length()))
-                .toString();
+
+        String after = text.subContent(
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
 
         int indentBase = TextUtils.countLeadingSpaceCount(before, tabSize);
         int advanceBefore = getIndentAdvance(before); // or your helper
@@ -354,9 +360,10 @@ public class JavaLanguage implements Language, EditorFormatter {
         if (line < 0 || line >= text.getLineCount()) return false;
 
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
+
         return before.trim().startsWith("/**");
     }
 
@@ -368,9 +375,9 @@ public class JavaLanguage implements Language, EditorFormatter {
                                              int tabSize) {
         int line = position.line;
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
 
         int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
 
@@ -402,9 +409,10 @@ public class JavaLanguage implements Language, EditorFormatter {
         if (line < 0 || line >= text.getLineCount()) return false;
 
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
+
         String trimmed = before.trim();
         return trimmed.startsWith("*") && !trimmed.startsWith("*/");
     }
@@ -417,9 +425,10 @@ public class JavaLanguage implements Language, EditorFormatter {
                                              int tabSize) {
         int line = position.line;
         String before = text.subContent(
-                text.getCharIndex(line, 0),
-                text.getCharIndex(line, position.column))
-                .toString();
+        line, 0,
+        line, position.column)
+        .toString();
+
 
         int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
         StringBuilder sb = new StringBuilder("\n")
