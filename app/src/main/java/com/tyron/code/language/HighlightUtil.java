@@ -38,7 +38,7 @@ public class HighlightUtil {
                 }
                 int spanEnd = (i + 1 >= spans.size() ? Integer.MAX_VALUE : spans.get(i + 1).getColumn());
                 if (spanEnd >= start) {
-                    int regionStartInSpan = Math.max(span.column, start);
+                    int regionStartInSpan = Math.max(span.getColumn(), start);
                     int regionEndInSpan = Math.min(end, spanEnd);
                     if (regionStartInSpan == span.getColumn()) {
                         if (regionEndInSpan != spanEnd) {
