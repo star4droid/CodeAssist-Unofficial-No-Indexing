@@ -24,13 +24,18 @@ import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
-import org.eclipse.tm4e.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.registry.IThemeSource;
+
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+ 
 
 public class EditorSettingsFragment extends PreferenceFragmentCompat {
 
@@ -134,10 +139,11 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
     return ProgressManager.getInstance()
         .computeNonCancelableAsync(
             () -> {
-              IRawTheme rawTheme =
-                  ThemeReader.readThemeSync(
-                      file.getAbsolutePath(), FileUtils.openInputStream(file));
-              return Futures.immediateFuture(EditorUtil.createTheme(rawTheme));
+               String path = file.getAbsolutePath();
+              IThemeSource themeSource =   IThemeSource.fromInputStream(
+                        FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
+                    );
+              return Futures.immediateFuture(EditorUtil.createTheme(themeSource));
             });
   }
 }
