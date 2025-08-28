@@ -13,7 +13,7 @@ import io.github.rosemoe.sora.lang.analysis.StyleReceiver;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentReference;
-import org.eclipse.tm4e.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -153,6 +153,10 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
       mReceiver = base;
       mConsumer = consumer;
     }
+    @Override 
+    public void setStyles(@NonNull AnalyzeManager sourceManager, @Nullable Styles styles, @Nullable Runnable action){}
+    @Override 
+    public void updateBracketProvider(@NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider){}
     @Override 
     public void setDiagnostics(@NonNull AnalyzeManager sourceManager, @Nullable DiagnosticsContainer diagnostics){
       
