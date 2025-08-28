@@ -19,7 +19,7 @@ import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.Editor;
 import com.tyron.kotlin_completion.CompletionEngine;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-import org.eclipse.tm4e.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
