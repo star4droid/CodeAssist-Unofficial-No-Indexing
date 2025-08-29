@@ -3,7 +3,7 @@ package com.tyron.code.language.textmate;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigRegExp;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigResult;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigString;
-import org.eclipse.tm4e.languageconfiguration.internal.supports.Folding;
+import org.eclipse.tm4e.languageconfiguration.internal.model.FoldingRules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import io.github.rosemoe.sora.text.Content;
 public class CodeBlockUtils {
 
     @SuppressWarnings("rawtype")
-    public static FoldingRegions computeRanges(Content model, int tabSize , boolean offSide, Folding markers, int foldingRangesLimit, BaseIncrementalAnalyzeManager.CodeBlockAnalyzeDelegate delegate) throws Exception {
+    public static FoldingRegions computeRanges(Content model, int tabSize , boolean offSide, FoldingRules markers, int foldingRangesLimit, BaseIncrementalAnalyzeManager.CodeBlockAnalyzeDelegate delegate) throws Exception {
 
         RangesCollector result = new RangesCollector();
 
@@ -47,7 +47,7 @@ public class CodeBlockUtils {
                 continue; // only whitespace
             }
             OnigResult m;
-            if (pattern != null && (m = pattern.search(new OnigString(lineContent), 0)) != null) {
+            if (pattern != null && (m = pattern.search(OnigString.of(lineContent), 0)) != null) {
                 // folding pattern match
                 if (m.count() >= 2) { // start pattern match
                     // discard all regions until the folding pattern
