@@ -284,11 +284,11 @@ public class CodeEditorView extends CodeEditor implements Editor {
       if (startIndex - 1 >= 0) {
         char deleteChar = text.charAt(startIndex - 1);
         char afterChar = text.charAt(startIndex);
-        SymbolPairMatch.Replacement replacement = null;
+        SymbolPairMatch.SymbolPair replacement = null;
 
         SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
         if (pairs != null) {
-          replacement = pairs.getCompletion(deleteChar);
+          replacement = pairs.matchBestPairBySingleChar(deleteChar);
         }
         if (replacement != null) {
           if (("" + deleteChar + afterChar + "").equals(replacement.text)) {
@@ -484,6 +484,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
   }
+  @Override 
+ public void moveSelectionRight(){}
 
   private void drawSquigglyLine(Canvas canvas, float startX, float startY, float endX, float endY) {
     float waveSize = getDpUnit() * 3;
