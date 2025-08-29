@@ -62,7 +62,7 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
   }
 
   private long getStyle(SemanticToken token) {
-    List<ThemeTrieElementRule> match = getTheme().match(token.getTokenType().toString());
+    List<ThemeTrieElementRule> match = getTheme().match(token.getTokenType());
     if (!match.isEmpty()) {
       ThemeTrieElementRule next = match.iterator().next();
       int foreground = next.foreground;
