@@ -23,9 +23,9 @@ import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.core.languageconfiguration.ILanguageConfiguration;
-import org.eclipse.tm4e.core.languageconfiguration.internal.model.LanguageConfigurator;
-import org.eclipse.tm4e.core.languageconfiguration.internal.model.FoldingRules;
+import org.eclipse.tm4e.languageconfiguration.ILanguageConfiguration;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.languageconfiguration.internal.model.FoldingRules;
 import io.github.rosemoe.sora.util.ArrayList;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import java.io.InputStream;
@@ -56,8 +56,8 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
     this.theme = Theme.createFromRawTheme(theme);
     this.grammar = registry.loadGrammarFromPathSync(grammarName, grammarIns);
     if (languageConfiguration != null) {
-      LanguageConfigurator languageConfigurator = new LanguageConfigurator(languageConfiguration);
-      configuration = languageConfigurator.getLanguageConfiguration();
+      LanguageConfiguration languageConfigurator = new LanguageConfiguration(languageConfiguration);
+      configuration = languageConfiguration.getLanguageConfiguration();
     } else {
       configuration = null;
     }
@@ -77,7 +77,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
           CodeBlockUtils.computeRanges(
               model,
               editor.getTabCount(),
-              folding.getOffSide(),
+              folding.offSide,
               folding,
               MAX_FOLDING_REGIONS_FOR_INDENT_LIMIT,
               delegate);
