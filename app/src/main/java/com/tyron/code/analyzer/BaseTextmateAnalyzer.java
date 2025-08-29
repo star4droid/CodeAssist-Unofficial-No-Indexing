@@ -17,7 +17,7 @@ import io.github.rosemoe.sora.text.ContentReference;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
 import org.eclipse.tm4e.core.grammar.IToken;
-import org.eclipse.tm4e.core.grammar.StackElementMetadata;
+import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
@@ -146,8 +146,8 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
         tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
       }
       int metadata = lineTokens.getTokens()[2 * i + 1];
-      int foreground = StackElementMetadata.getForeground(metadata);
-      int fontStyle = StackElementMetadata.getFontStyle(metadata);
+      int foreground = EncodedTokenAttributes.getForeground(metadata);
+      int fontStyle = EncodedTokenAttributes.getFontStyle(metadata);
       Span span =
           Span.obtain(
               startIndex,
@@ -161,7 +161,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
       if ((fontStyle & FontStyle.Underline) != 0) {
         String color = theme.getColor(foreground);
         if (color != null) {
-          span.getUnderlineColor() = Color.parseColor(color);
+          span.setUnderlineColor(Color.parseColor(color));
         }
       }
 
@@ -190,9 +190,9 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
     super.reset(content, extraArguments);
   }
 
-  public void updateTheme(IRawTheme theme) {
-    registry.setTheme(theme);
-    this.theme = Theme.createFromRawTheme(theme);
+  public void updateTheme(IRawTheme theme,ArrayList<String> colorMap) {
+    this.theme = Theme.createFromRawTheme(theme, colorMap);
+    registry.setTheme(getTheme()); 
   }
 
   protected Theme getTheme() {
