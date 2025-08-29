@@ -1,6 +1,7 @@
 package com.tyron.code.analyzer.semantic;
 
 import androidx.annotation.NonNull;
+import org.eclipse.tm4e.core.internal.grammar.ScopeStack;
 
 public class SemanticToken {
   private final TokenType tokenType;
@@ -15,7 +16,7 @@ public class SemanticToken {
     this.tokenModifiers = tokenModifiers;
   }
 
-  public TokenType getTokenType() {
+  public ScopeStack getTokenType() {
     return tokenType;
   }
 
