@@ -23,9 +23,9 @@ import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.languageconfiguration.ILanguageConfiguration;
-import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfigurator;
-import org.eclipse.tm4e.languageconfiguration.internal.model.FoldingRules;
+import org.eclipse.tm4e.core.languageconfiguration.ILanguageConfiguration;
+import org.eclipse.tm4e.core.languageconfiguration.internal.model.LanguageConfigurator;
+import org.eclipse.tm4e.core.languageconfiguration.internal.model.FoldingRules;
 import io.github.rosemoe.sora.util.ArrayList;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import java.io.InputStream;
@@ -93,7 +93,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
           // It's safe here to use raw data because the Content is only held by this
           // thread
           int length = model.getColumnCount(startLine);
-          char[] chars = model.getLine(startLine).getRawData();
+          char[] chars = model.getLine(startLine).getBackingCharArray();
 
           codeBlock.startColumn =
               IndentRange.computeStartColumn(
