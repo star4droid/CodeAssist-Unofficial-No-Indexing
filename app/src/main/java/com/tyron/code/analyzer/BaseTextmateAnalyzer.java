@@ -139,13 +139,15 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
     ITokenizeLineResult lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
-    int tokensLength = lineTokens.getTokens().length / 2;
+    IToken[] ltokens = lineTokens.getTokens();
+
+    int tokensLength = ltokens.length / 2;
     for (int i = 0; i < tokensLength; i++) {
-      int startIndex = lineTokens.getTokens()[2 * i].getStartIndex();
+      int startIndex = ltokens[2 * i].getStartIndex();
       if (i == 0 && startIndex != 0) {
         tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
       }
-      int metadata = lineTokens.getTokens()[2 * i + 1];
+      int metadata = ltokens[2 * i + 1];
       int foreground = EncodedTokenAttributes.getForeground(metadata);
       int fontStyle = EncodedTokenAttributes.getFontStyle(metadata);
       Span span =
@@ -167,7 +169,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
 
       tokens.add(span);
     }
-    return new Result<>(lineTokens.getRuleStack(), null, tokens);
+    return new Result<StateStack,Span>(lineTokens.getRuleStack(), null, tokens);
   }
 
   @Override
