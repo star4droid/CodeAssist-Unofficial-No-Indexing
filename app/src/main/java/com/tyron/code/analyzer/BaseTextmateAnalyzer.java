@@ -16,7 +16,7 @@ import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentReference;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
-import org.eclipse.tm4e.core.grammar.IStateStack;
+import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.grammar.StackElementMetadata;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
 import org.eclipse.tm4e.core.registry.Registry;
@@ -138,10 +138,10 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
   public Result<StateStack, Span> tokenizeLine(CharSequence lineC, StateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
-    ITokenizeLineResult lineTokens = grammar.tokenizeLine(line, state);
+    ITokenizeLineResult lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
     int tokensLength = lineTokens.getTokens().length / 2;
     for (int i = 0; i < tokensLength; i++) {
-      int startIndex = lineTokens.getTokens()[2 * i];
+      int startIndex = lineTokens.getTokens()[2 * i].getStartIndex();
       if (i == 0 && startIndex != 0) {
         tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
       }
