@@ -1,6 +1,7 @@
 package com.tyron.code.analyzer;
 
 import android.graphics.Color;
+import java.time.Duration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.tyron.code.language.textmate.BaseIncrementalAnalyzeManager;
@@ -15,11 +16,12 @@ import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentReference;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
-import org.eclipse.tm4e.core.grammar.StackElement;
+import org.eclipse.tm4e.core.grammar.IStateStack;
 import org.eclipse.tm4e.core.grammar.StackElementMetadata;
+import org.eclipse.tm4e.core.internal.grammar.StateStack;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
-import org.eclipse.tm4e.core.internal.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.Theme;
 import org.eclipse.tm4e.languageconfiguration.ILanguageConfiguration;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfigurator;
@@ -31,7 +33,7 @@ import java.io.Reader;
 import java.util.List;
 
 /** A text mate analyzer which does not use a TextMateLanguage */
-public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackElement, Span> {
+public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateStack, Span> {
 
   /** Maximum for code block count */
   public static int MAX_FOLDING_REGIONS_FOR_INDENT_LIMIT = 5000;
@@ -40,7 +42,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   private final IGrammar grammar;
   private Theme theme;
   private final Editor editor;
-  private final ILanguageConfiguration configuration;
+  private final LanguageConfiguration configuration;
 
   public BaseTextmateAnalyzer(
       Editor editor,
@@ -66,7 +68,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
     if (configuration == null) {
       return;
     }
-    Folding folding = configuration.getFolding();
+    FoldingRules folding = configuration.getFolding();
     if (folding == null) {
       return;
     }
@@ -107,22 +109,22 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   }
 
   @Override
-  public StackElement getInitialState() {
+  public StateStack getInitialState() {
     return null;
   }
 
   @Override 
-  public void onAddState(StackElement state){}
+  public void onAddState(StateStack state){}
 
   @Override 
-  public void onAbandonState(StackElement state){}
+  public void onAbandonState(StateStack state){}
 
   @Override 
-  public LineTokenizeResult<StackElement, Span> tokenizeLine(CharSequence line, StackElement state, int lineIndex){
+  public LineTokenizeResult<StateStack, Span> tokenizeLine(CharSequence line, StateStack state, int lineIndex){
     return null;
   } 
   @Override
-  public boolean stateEquals(StackElement state, StackElement another) {
+  public boolean stateEquals(StateStack state, StateStack another) {
     if (state == null && another == null) {
       return true;
     }
@@ -133,7 +135,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   }
 
   @Override
-  public Result<StackElement, Span> tokenizeLine(CharSequence lineC, StackElement state) {
+  public Result<StateStack, Span> tokenizeLine(CharSequence lineC, StateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
     ITokenizeLineResult lineTokens = grammar.tokenizeLine(line, state);
@@ -159,7 +161,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
       if ((fontStyle & FontStyle.Underline) != 0) {
         String color = theme.getColor(foreground);
         if (color != null) {
-          span.underlineColor = Color.parseColor(color);
+          span.getUnderlineColor() = Color.parseColor(color);
         }
       }
 
@@ -169,7 +171,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   }
 
   @Override
-  public List<Span> generateSpansForLine(LineTokenizeResult<StackElement, Span> tokens) {
+  public List<Span> generateSpansForLine(LineTokenizeResult<StateStack, Span> tokens) {
     return null;
   }
 
