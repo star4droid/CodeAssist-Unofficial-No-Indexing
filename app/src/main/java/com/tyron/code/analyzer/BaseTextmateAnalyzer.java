@@ -138,7 +138,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
   public Result<StateStack, Span> tokenizeLine(CharSequence lineC, StateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
-    ITokenizeLineResult lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
+    ITokenizeLineResult<IToken> lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
     IToken[] ltokens = lineTokens.getTokens();
 
     int tokensLength = ltokens.length / 2;
