@@ -19,6 +19,7 @@ import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
 import org.eclipse.tm4e.core.grammar.IStateStack;
 import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
+import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
@@ -43,11 +44,6 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
   private Theme theme;
   private final Editor editor;
   private final LanguageConfiguration configuration;
-  private static final int FOREGROUND_MASK = 0x01FF8000;
-private static final int FOREGROUND_OFFSET = 15;
-private static final int FONT_STYLE_MASK = 0x00007800;
-private static final int FONT_STYLE_OFFSET = 11;
-
 
   public BaseTextmateAnalyzer(
       Editor editor,
@@ -150,8 +146,8 @@ public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack st
     for (int i = 0, len = raw.length / 2; i < len; i++) {
         int startIndex = raw[2 * i];
         int metadata   = raw[2 * i + 1];
-        int foreground = (metadata & FOREGROUND_MASK) >>> FOREGROUND_OFFSET;
-        int fontStyle  = (metadata & FONT_STYLE_MASK)  >>> FONT_STYLE_OFFSET;
+        int foreground = EncodedTokenAttributes.getForeground(metadata);
+      int fontStyle = EncodedTokenAttributes.getFontStyle(metadata);
 
         Span span = Span.obtain(
                 startIndex,
