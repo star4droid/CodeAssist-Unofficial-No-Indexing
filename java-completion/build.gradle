@@ -40,6 +40,13 @@ android {
     }
 }
 
+configurations {
+    jdkCompiler {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
 dependencies {
 
     implementation project(path: ':actions-api')
@@ -71,5 +78,20 @@ dependencies {
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(path: ':android-stubs')
+
+	if (org.gradle.internal.jvm.Jvm.current().toolsJar != null) {
+        // JDK 8
+        jdkCompiler files(org.gradle.internal.jvm.Jvm.current().toolsJar)
+    } else {
+        // JDK 11/17/21 modular image
+        jdkCompiler files("${System.getProperty('java.home')}/jmods/jdk.compiler.jmod")
+	}
 	 
 }
+
+android.libraryVariants.configureEach { variant ->
+    variant.javaCompileProvider.configure {
+        options.bootstrapClasspath += configurations.jdkCompiler
+    }
+}
+
