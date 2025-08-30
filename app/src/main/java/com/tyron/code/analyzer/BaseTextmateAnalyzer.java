@@ -15,7 +15,8 @@ import io.github.rosemoe.sora.langs.textmate.folding.IndentRange;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentReference;
 import org.eclipse.tm4e.core.grammar.IGrammar;
-import org.eclipse.tm4e.core.internal.grammar.TokenizeLineResult;
+import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
+import org.eclipse.tm4e.core.grammar.IStateStack;
 import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
@@ -24,7 +25,6 @@ import org.eclipse.tm4e.core.registry.IGrammerSource;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.languageconfiguration.ILanguageConfiguration;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 import org.eclipse.tm4e.languageconfiguration.internal.model.FoldingRules;
 import io.github.rosemoe.sora.util.ArrayList;
@@ -34,7 +34,7 @@ import java.io.Reader;
 import java.util.List;
 
 /** A text mate analyzer which does not use a TextMateLanguage */
-public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateStack, Span> {
+public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateStack, Span> {
 
   /** Maximum for code block count */
   public static int MAX_FOLDING_REGIONS_FOR_INDENT_LIMIT = 5000;
@@ -110,22 +110,22 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
   }
 
   @Override
-  public StateStack getInitialState() {
+  public IStateStack getInitialState() {
     return null;
   }
 
   @Override 
-  public void onAddState(StateStack state){}
+  public void onAddState(IStateStack state){}
 
   @Override 
-  public void onAbandonState(StateStack state){}
+  public void onAbandonState(IStateStack state){}
 
   @Override 
-  public LineTokenizeResult<StateStack, Span> tokenizeLine(CharSequence line, StateStack state, int lineIndex){
+  public LineTokenizeResult<IStateStack, Span> tokenizeLine(CharSequence line, IStateStack state, int lineIndex){
     return null;
   } 
   @Override
-  public boolean stateEquals(StateStack state, StateStack another) {
+  public boolean stateEquals(IStateStack state, IStateStack another) {
     if (state == null && another == null) {
       return true;
     }
@@ -136,10 +136,10 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
   }
 
   @Override
-  public Result<StateStack, Span> tokenizeLine(CharSequence lineC, StateStack state) {
+  public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
-    TokenizeLineResult<IToken> lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
+    ITokenizeLineResult<IToken> lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
     IToken[] ltokens = lineTokens.getTokens();
 
     int tokensLength = ltokens.length / 2;
@@ -170,11 +170,11 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
 
       tokens.add(span);
     }
-    return new Result<StateStack,Span>(lineTokens.getRuleStack(), null, tokens);
+    return new Result<IStateStack,Span>(lineTokens.getRuleStack(), null, tokens);
   }
 
   @Override
-  public List<Span> generateSpansForLine(LineTokenizeResult<StateStack, Span> tokens) {
+  public List<Span> generateSpansForLine(LineTokenizeResult<IStateStack, Span> tokens) {
     return null;
   }
 
