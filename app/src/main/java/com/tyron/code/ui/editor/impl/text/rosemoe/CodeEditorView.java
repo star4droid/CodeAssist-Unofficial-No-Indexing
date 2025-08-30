@@ -486,6 +486,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
   @Override 
  public void moveSelectionRight(){}
+  @Override 
+public  void moveSelectionUp(){} 
+  @Override 
+public  void moveSelectionDown(){}
+  @Override 
+public  void moveSelectionLeft(){}
 
   private void drawSquigglyLine(Canvas canvas, float startX, float startY, float endX, float endY) {
     float waveSize = getDpUnit() * 3;
