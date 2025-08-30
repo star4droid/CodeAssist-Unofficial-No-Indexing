@@ -20,6 +20,7 @@ import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
 import org.eclipse.tm4e.core.registry.Registry;
+import org.eclipse.tm4e.core.registry.IGrammerSource;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.Theme;
@@ -50,11 +51,12 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
-      throws Exception {
-    registry.setTheme(theme);
+      throws Exception {   
     this.editor = editor;
-    this.theme = Theme.createFromRawTheme(theme);
-    this.grammar = registry.loadGrammarFromPathSync(grammarName, grammarIns);
+    this.theme = Theme.createFromRawTheme(theme,java.util.Collections.emptyList());
+     registry.setTheme(this.theme);
+        registry.addGrammer(IGrammerSource.fromInputStream(grammerIns,grammerName, null),null,null,null);
+    this.grammar = registry.grammerForScopeName(grammarName);
     if (languageConfiguration != null) {
       configuration = LanguageConfiguration.load(languageConfiguration);
     } else {
