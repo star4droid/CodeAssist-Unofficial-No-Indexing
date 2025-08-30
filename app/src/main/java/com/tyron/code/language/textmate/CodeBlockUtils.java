@@ -24,7 +24,7 @@ public class CodeBlockUtils {
 
         OnigRegExp pattern = null;
         if (markers != null) {
-            pattern = new OnigRegExp("(" + markers.getMarkersStart() + ")|(?:" + markers.getMarkersEnd() + ")");
+            pattern = new OnigRegExp("(" + markers.markersStart.toString() + ")|(?:" + markers.markersEnd.toString() + ")");
         }
 
         List<PreviousRegion> previousRegions = new ArrayList<>();
@@ -35,7 +35,7 @@ public class CodeBlockUtils {
         for (line = model.getLineCount() - 1; line >= 0 && !delegate.isCancelled(); line--) {
             String lineContent = model.getLineString(line);
             int indent = IndentRange
-                    .computeIndentLevel(model.getLine(line).getRawData(), model.getColumnCount(line), tabSize);
+                    .computeIndentLevel(model.getLine(line).getBackingCharArray(), model.getColumnCount(line), tabSize);
             PreviousRegion previous = previousRegions.get(previousRegions.size() - 1);
             if (indent == -1) {
                 if (offSide) {
