@@ -200,7 +200,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
   }
 
   private void addAnnotation(JCTree.JCIdent identifier) {
-    ScopeStack tokenType = null; //TokenType.UNKNOWN;
+    ScopeStack tokenType = ScopeStack.from("token.error-token");//TokenType.UNKNOWN;
 
     Element element = trees.getElement(getCurrentPath());
     if (element != null) {
