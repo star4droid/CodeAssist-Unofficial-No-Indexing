@@ -71,8 +71,6 @@ dependencies {
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(path: ':android-stubs')
-	
-    compileOnly 'org.openjdk:jdk.compiler:17'
 
 
 }
@@ -85,4 +83,14 @@ tasks.withType(JavaCompile).configureEach {
         "--add-exports", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
         "--add-exports", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"
     ]
+}
+
+afterEvaluate {
+    def tools = org.gradle.internal.jvm.Jvm.current().toolsJar
+    if (tools != null) {
+        dependencies.add('compileOnly', files(tools))
+    } else {
+        // JDK 11+ modular
+        dependencies.add('compileOnly', files("${System.getProperty('java.home')}/../lib/tools.jar"))
+    }
 }
