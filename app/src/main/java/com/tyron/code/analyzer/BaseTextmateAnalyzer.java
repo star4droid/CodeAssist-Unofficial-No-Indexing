@@ -56,8 +56,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StateSta
     this.theme = Theme.createFromRawTheme(theme);
     this.grammar = registry.loadGrammarFromPathSync(grammarName, grammarIns);
     if (languageConfiguration != null) {
-      LanguageConfiguration languageConfigurator = new LanguageConfiguration(languageConfiguration);
-      configuration = languageConfiguration.getLanguageConfiguration();
+      configuration = LanguageConfiguration.load(languageConfiguration);
     } else {
       configuration = null;
     }
