@@ -141,31 +141,24 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
 public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
-
-    
     ITokenizeLineResult<int[]> lineTokens =
             grammar.tokenizeLine2(line, state, java.time.Duration.ofMillis(10));
     int[] raw = lineTokens.getTokens();
-
     for (int i = 0, len = raw.length / 2; i < len; i++) {
         int startIndex = raw[2 * i];
-        if (i == 0 && startIndex != 0) {
-            tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
-        }
-
         int metadata   = raw[2 * i + 1];
-        int foreground = EncodedTokenDataConsts.getForeground(metadata);
-        int fontStyle  = EncodedTokenDataConsts.getFontStyle(metadata);
-
+        int foreground = (metadata & EncodedTokenDataConsts.FOREGROUND_MASK)
+                         >>> EncodedTokenDataConsts.FOREGROUND_OFFSET;
+        int fontStyle  = (metadata & EncodedTokenDataConsts.FONT_STYLE_MASK)
+                         >>> EncodedTokenDataConsts.FONT_STYLE_OFFSET;
         Span span = Span.obtain(
                 startIndex,
                 TextStyle.makeStyle(
                         foreground + 255,
                         0,
-                        (fontStyle & FontStyle.Bold)   != 0,
+                        (fontStyle & FontStyle.Bold) != 0,
                         (fontStyle & FontStyle.Italic) != 0,
                         false));
-
         if ((fontStyle & FontStyle.Underline) != 0) {
             String color = theme.getColor(foreground);
             if (color != null) {
@@ -174,9 +167,9 @@ public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack st
         }
         tokens.add(span);
     }
-
     return new Result<>(lineTokens.getRuleStack(), null, tokens);
 }
+
 
   @Override
   public List<Span> generateSpansForLine(LineTokenizeResult<IStateStack, Span> tokens) {
