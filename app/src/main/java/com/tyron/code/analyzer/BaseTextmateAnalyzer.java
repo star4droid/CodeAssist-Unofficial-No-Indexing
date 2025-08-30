@@ -20,7 +20,7 @@ import org.eclipse.tm4e.core.grammar.IStateStack;
 import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
-import org.eclipse.tm4e.core.internal.grammar.EncodedTokenDataConsts;
+import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenDataConsts;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
