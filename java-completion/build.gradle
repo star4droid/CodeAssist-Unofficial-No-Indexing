@@ -7,15 +7,15 @@ apply plugin: 'com.diffplug.spotless'
 
 android {
     compileSdk 31
-	namespace "com.tyron.completion.java"
-	
-	spotless {
-		java {
-			target "**/*.java"
-			googleJavaFormat()
-			}
-		}
-		
+    namespace "com.tyron.completion.java"
+
+    spotless {
+        java {
+            target "**/*.java"
+            googleJavaFormat()
+        }
+    }
+
     defaultConfig {
         minSdk 26
         targetSdk 31
@@ -30,13 +30,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    
+
     buildFeatures {
-        buildConfig true	    
+        buildConfig true
     }
 }
 
@@ -48,45 +49,50 @@ configurations {
 }
 
 dependencies {
-
-    implementation project(path: ':actions-api')
-    implementation project(path: ':editor-api')
-    implementation project(path: ':treeview')
-    implementation project(path: ':kotlin-completion')
+    implementation project(':actions-api')
+    implementation project(':editor-api')
+    implementation project(':treeview')
+    implementation project(':kotlin-completion')
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "com.google.truth:truth:1.4.4"
-    testImplementation "org.robolectric:robolectric:4.13"
+    testImplementation 'com.google.truth:truth:1.4.4'
+    testImplementation 'org.robolectric:robolectric:4.13'
     testImplementation 'androidx.test:core:1.4.0'
-    testImplementation project(path: ':javac')
+    testImplementation project(':javac')
+
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
-    // code generation
     api 'com.github.javaparser:javaparser-core:3.26.1'
-    
+
     implementation 'androidx.annotation:annotation:1.8.2'
 
-    implementation project(path: ':common')
-    implementation project(path: ':completion-api')
-    implementation project(path: ':language-api')
+    implementation project(':common')
+    implementation project(':completion-api')
+    implementation project(':language-api')
 
-    implementation project(path: ':javac')
-    implementation project(path: ':logging')
+    implementation project(':javac')
+    implementation project(':logging')
 
-    api project(path: ':build-logic')
+    api project(':build-logic')
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
-    compileOnly project(path: ':android-stubs')
+    compileOnly project(':android-stubs')
 
-	if (org.gradle.internal.jvm.Jvm.current().toolsJar != null) {
-        // JDK 8
-        jdkCompiler files(org.gradle.internal.jvm.Jvm.current().toolsJar)
-    } else {
-        // JDK 11/17/21 modular image
-        jdkCompiler files("${System.getProperty('java.home')}/jmods/jdk.compiler.jmod")
-	}
-	 
+    /* ----------------------------------------------------------
+     * JDK compiler classes for javac – runner-proof
+     * ---------------------------------------------------------- */
+    def jdkHome = System.getProperty('java.home')
+    def toolsCandidates = [
+        "$jdkHome/../lib/tools.jar",          // JDK 8 layout
+        "$jdkHome/lib/tools.jar",             // some other images
+        "$jdkHome/jmods/jdk.compiler.jmod"    // JDK 11+ Ubuntu layout
+    ]
+    def toolsFile = toolsCandidates.find { new File(it).exists() }
+    if (toolsFile == null) {
+        throw new GradleException("Cannot locate JDK compiler classes. JAVA_HOME=$jdkHome")
+    }
+    jdkCompiler files(toolsFile)
 }
 
 android.libraryVariants.configureEach { variant ->
@@ -94,4 +100,4 @@ android.libraryVariants.configureEach { variant ->
         options.bootstrapClasspath += configurations.jdkCompiler
     }
 }
-
+ 
