@@ -291,7 +291,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
           replacement = pairs.matchBestPairBySingleChar(deleteChar);
         }
         if (replacement != null) {
-          if (("" + deleteChar + afterChar + "").equals(replacement.text)) {
+          if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
             text.delete(startIndex - 1, startIndex + 1);
             return;
           }
