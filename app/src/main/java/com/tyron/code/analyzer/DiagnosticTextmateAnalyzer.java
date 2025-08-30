@@ -161,10 +161,6 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
     public void setDiagnostics(@NonNull AnalyzeManager sourceManager, @Nullable DiagnosticsContainer diagnostics){
       
     }
-  @Override 
-  public void updateBracketProvider(@NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider){
-    
-  }
  
     @Override
     public void setStyles(AnalyzeManager sourceManager, Styles styles) {
