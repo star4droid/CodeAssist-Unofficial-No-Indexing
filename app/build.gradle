@@ -103,7 +103,7 @@ dependencies {
     implementation project(path: ':xml-repository')
     implementation project(path: ':java-completion')
     // not used for compilation, but for analysis
-    implementation project(path: ':javac')
+    compileOnly project(path: ':javac')
 
     implementation project(path: ':language-api')
 
