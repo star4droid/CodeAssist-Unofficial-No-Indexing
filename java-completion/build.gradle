@@ -71,6 +71,10 @@ dependencies {
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(path: ':android-stubs')
+	
+    compileOnly 'org.openjdk:jdk.compiler:17'
+
+
 }
 
 tasks.withType(JavaCompile).configureEach {
