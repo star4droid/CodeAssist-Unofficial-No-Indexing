@@ -14,6 +14,7 @@ import org.eclipse.tm4e.core.internal.theme.ThemeTrieElementRule;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
+import org.eclipse.tm4e.core.internal.theme.StyleAttributes;
 
 public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer {
 
@@ -62,18 +63,19 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
   }
 
   private long getStyle(SemanticToken token) {
-    List<ThemeTrieElementRule> match = getTheme().match(token.getTokenType());
-    if (!match.isEmpty()) {
-      ThemeTrieElementRule next = match.iterator().next();
-      int foreground = next.foreground;
-      int fontStyle = next.fontStyle;
-      return TextStyle.makeStyle(
-          foreground + 255,
-          0,
-          (fontStyle & FontStyle.Bold) == FontStyle.Bold,
-          (fontStyle & FontStyle.Italic) == FontStyle.Italic,
-          false);
+    StyleAttributes style = getTheme().match(token.getTokenType());
+    if (style != null) {
+        int foreground = style.foregroundId;
+        int fontStyle  = style.fontStyle;
+
+        return TextStyle.makeStyle(
+                foreground + 255,
+                0,
+                (fontStyle & FontStyle.Bold)   != 0,
+                (fontStyle & FontStyle.Italic) != 0,
+                false);
     }
-    return 0;
-  }
+    return 0L;
+}
+
 }
