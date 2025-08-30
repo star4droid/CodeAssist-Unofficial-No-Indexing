@@ -20,6 +20,7 @@ import org.eclipse.tm4e.core.grammar.IStateStack;
 import org.eclipse.tm4e.core.grammar.IToken;
 import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.internal.grammar.StateStack;
+import org.eclipse.tm4e.core.internal.grammar.EncodedTokenDataConsts;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
@@ -137,42 +138,45 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
   }
 
   @Override
-  public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack state) {
+public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
-    ITokenizeLineResult<IToken[]> lineTokens = grammar.tokenizeLine(line, state, Duration.ofMillis(10));
-    IToken[] ltokens = lineTokens.getTokens();
 
-    int tokensLength = ltokens.length / 2;
-    for (int i = 0; i < tokensLength; i++) {
-      int startIndex = ltokens[2 * i].getStartIndex();
-      if (i == 0 && startIndex != 0) {
-        tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
-      }
-      int metadata = ltokens[2 * i + 1];
-      int foreground = EncodedTokenAttributes.getForeground(metadata);
-      int fontStyle = EncodedTokenAttributes.getFontStyle(metadata);
-      Span span =
-          Span.obtain(
-              startIndex,
-              TextStyle.makeStyle(
-                  foreground + 255,
-                  0,
-                  (fontStyle & FontStyle.Bold) != 0,
-                  (fontStyle & FontStyle.Italic) != 0,
-                  false));
+    
+    ITokenizeLineResult<int[]> lineTokens =
+            grammar.tokenizeLine2(line, state, java.time.Duration.ofMillis(10));
+    int[] raw = lineTokens.getTokens();
 
-      if ((fontStyle & FontStyle.Underline) != 0) {
-        String color = theme.getColor(foreground);
-        if (color != null) {
-          span.setUnderlineColor(Color.parseColor(color));
+    for (int i = 0, len = raw.length / 2; i < len; i++) {
+        int startIndex = raw[2 * i];
+        if (i == 0 && startIndex != 0) {
+            tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
         }
-      }
 
-      tokens.add(span);
+        int metadata   = raw[2 * i + 1];
+        int foreground = EncodedTokenDataConsts.getForeground(metadata);
+        int fontStyle  = EncodedTokenDataConsts.getFontStyle(metadata);
+
+        Span span = Span.obtain(
+                startIndex,
+                TextStyle.makeStyle(
+                        foreground + 255,
+                        0,
+                        (fontStyle & FontStyle.Bold)   != 0,
+                        (fontStyle & FontStyle.Italic) != 0,
+                        false));
+
+        if ((fontStyle & FontStyle.Underline) != 0) {
+            String color = theme.getColor(foreground);
+            if (color != null) {
+                span.setUnderlineColor(Color.parseColor(color));
+            }
+        }
+        tokens.add(span);
     }
-    return new Result<IStateStack,Span>(lineTokens.getRuleStack(), null, tokens);
-  }
+
+    return new Result<>(lineTokens.getRuleStack(), null, tokens);
+}
 
   @Override
   public List<Span> generateSpansForLine(LineTokenizeResult<IStateStack, Span> tokens) {
