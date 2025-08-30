@@ -64,7 +64,7 @@ dependencies {
     implementation project(':completion-api')
     implementation project(':language-api')
 
-    implementation project(':javac')
+    compileOnly project(':javac')
     implementation project(':logging')
 
     api project(':build-logic')
