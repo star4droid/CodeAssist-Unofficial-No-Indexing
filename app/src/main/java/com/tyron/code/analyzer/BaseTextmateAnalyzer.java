@@ -55,9 +55,10 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
     this.editor = editor;
     this.theme = Theme.createFromRawTheme(theme,new io.github.rosemoe.sora.util.ArrayList<String>());
      registry.setTheme(this.theme);
-        registry.addGrammer(IGrammarSource.fromInputStream(grammarIns,grammarName, null));
+      
+        registry.addGrammar(IGrammarSource.fromInputStream(grammarIns,grammarName, null));
     this.grammar = registry.grammarForScopeName(grammarName);
-    if (languageConfiguration != null) {
+        if (languageConfiguration != null) {
       configuration = LanguageConfiguration.load(languageConfiguration);
     } else {
       configuration = null;
