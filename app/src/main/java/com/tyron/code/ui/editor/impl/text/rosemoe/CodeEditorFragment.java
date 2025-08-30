@@ -423,7 +423,7 @@ public class CodeEditorFragment extends Fragment
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
                   ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
-                      .updateTheme(result.getRawTheme());
+                      .updateTheme(result.getRawTheme(),java.util.Collections.emptyList());
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }
