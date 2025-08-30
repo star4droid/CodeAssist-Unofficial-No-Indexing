@@ -32,19 +32,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
         buildConfig true
-    }
-}
-
-configurations {
-    jdkCompiler {
-        canBeConsumed = false
-        canBeResolved = true
     }
 }
 
@@ -78,26 +71,4 @@ dependencies {
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(':android-stubs')
-
-    /* ----------------------------------------------------------
-     * JDK compiler classes for javac – runner-proof
-     * ---------------------------------------------------------- */
-    def jdkHome = System.getProperty('java.home')
-    def toolsCandidates = [
-        "$jdkHome/../lib/tools.jar",          // JDK 8 layout
-        "$jdkHome/lib/tools.jar",             // some other images
-        "$jdkHome/jmods/jdk.compiler.jmod"    // JDK 11+ Ubuntu layout
-    ]
-    def toolsFile = toolsCandidates.find { new File(it).exists() }
-    if (toolsFile == null) {
-        throw new GradleException("Cannot locate JDK compiler classes. JAVA_HOME=$jdkHome")
-    }
-    jdkCompiler files(toolsFile)
 }
-
-android.libraryVariants.configureEach { variant ->
-    variant.javaCompileProvider.configure {
-        options.bootstrapClasspath += configurations.jdkCompiler
-    }
-}
- 
