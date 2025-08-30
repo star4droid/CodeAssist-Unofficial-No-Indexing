@@ -31,7 +31,7 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
     
@@ -39,7 +39,9 @@ android {
         buildConfig true	    
     }
 }
-
+configurations {
+    jdkCompiler 
+}
 dependencies {
 
     implementation project(path: ':actions-api')
@@ -71,5 +73,17 @@ dependencies {
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(path: ':android-stubs')
+	if(org.gradle.internal.jvm.Jvm.current().toolsJar != null) {
+        jdkCompiler files(org.gradle.internal.jvm.Jvm.current().toolsJar)
+    } else {
+        // JDK 11/17 modular image
+        jdkCompiler files("${System.getProperty('java.home')}/jmods/jdk.compiler.jmod")
+	}
 }
 
+android.libraryVariants.configureEach { variant ->
+    variant.javaCompileProvider.configure {
+        // Add the JDK compiler classes to the real compiler classpath
+        options.bootstrapClasspath += configurations.jdkCompiler
+    }
+}
