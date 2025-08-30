@@ -72,15 +72,17 @@ dependencies {
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(path: ':android-stubs')
 
-
+if(org.gradle.internal.jvm.Jvm.current().toolsJar != null) {
+        jdkCompiler files(org.gradle.internal.jvm.Jvm.current().toolsJar)
+    } else {
+        // JDK 11/17 modular image
+        jdkCompiler files("${System.getProperty('java.home')}/jmods/jdk.compiler.jmod")
+}
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-        "--add-exports", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-        "--add-exports", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-        "--add-exports", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-        "--add-exports", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-        "--add-exports", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"
-    ]
+android.libraryVariants.configureEach { variant ->
+    variant.javaCompileProvider.configure {
+        // Add the JDK compiler classes to the real compiler classpath
+        options.bootstrapClasspath += configurations.jdkCompiler
+    }
 }
