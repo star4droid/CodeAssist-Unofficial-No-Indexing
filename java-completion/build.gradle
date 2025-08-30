@@ -84,13 +84,3 @@ tasks.withType(JavaCompile).configureEach {
         "--add-exports", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"
     ]
 }
-
-afterEvaluate {
-    def tools = org.gradle.internal.jvm.Jvm.current().toolsJar
-    if (tools != null) {
-        dependencies.add('compileOnly', files(tools))
-    } else {
-        // JDK 11+ modular
-        dependencies.add('compileOnly', files("${System.getProperty('java.home')}/../lib/tools.jar"))
-    }
-}
