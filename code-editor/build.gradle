@@ -6,7 +6,7 @@ apply plugin: 'com.diffplug.spotless'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-	//namespace "io.github.rosemoe.sora2"
+	namespace "io.github.rosemoe.sora2"
 	
 	spotless {
 		java {
@@ -32,7 +32,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-		coreLibraryDesugaringEnabled true
+		//coreLibraryDesugaringEnabled true
     }
 
     buildFeatures {
