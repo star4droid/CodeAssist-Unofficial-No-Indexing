@@ -4,8 +4,8 @@ plugins {
 apply plugin: 'com.diffplug.spotless'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
@@ -15,7 +15,7 @@ dependencies {
 	api files('libs/javac.jar')
     api files('libs/nb-javac-17.0.0.0-api.jar')
     api files('libs/nb-javac-17.0.0.0.jar')
-    implementation files('libs/jrt-fs.jar')
+    api files('libs/jrt-fs.jar')
 }
 
 spotless {
