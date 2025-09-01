@@ -82,7 +82,7 @@ android {
         exclude "META-INF/eclipse.inf"
         pickFirst "META-INF/native-image/reflect-config.json"
 		
-        exclude 'com/sun/tools/javac/resources/legacy.properties'
+        //exclude 'com/sun/tools/javac/resources/legacy.properties'
 		
     }
 }
@@ -107,7 +107,7 @@ dependencies {
     implementation project(path: ':java-completion')
 	
     // not used for compilation, but for analysis
-    //implementation project(path: ':javac')
+    implementation project(path: ':javac')
 
     implementation project(path: ':language-api')
 
