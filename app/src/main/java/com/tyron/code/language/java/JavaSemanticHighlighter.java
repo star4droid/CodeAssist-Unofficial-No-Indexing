@@ -46,7 +46,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
   public JavaSemanticHighlighter(JavacTask task) {
    // this.trees = Trees.instance(task);
-    this.trees = JavacTreesUtil.getJavacTrees(CompilationTask.class, task);
+    this.trees = JavacTreesUtil.instance( task);
     this.pos = trees.getSourcePositions();
     this.elements = task.getElements();
     this.tokens = new ArrayList<>();
