@@ -11,7 +11,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import com.sun.source.util.JavaTask;
 import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
@@ -58,6 +57,7 @@ import kotlin.jvm.functions.Function0;
 import org.codeassist.unofficial.BuildConfig;
 import java.lang.reflect.Method;
 import javax.tools.JavaCompiler.CompilationTask;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
