@@ -230,7 +230,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
 
     if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
      // Trees trees = Trees.instance(task.task);
-      Trees trees = JavacTreesUtil.getJavacTrees(CompilationTask.class, task.task);
+      Trees trees = JavacTreesUtil.instance(task.task);
       SourcePositions positions = trees.getSourcePositions();
 
       JCDiagnostic jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
