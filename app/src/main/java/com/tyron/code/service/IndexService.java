@@ -64,7 +64,7 @@ public class IndexService extends Service {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
       startForeground(NOTIFICATION_ID, notification);
     } else {
-      startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
+      startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPE_DATA_SYNC);
     }
 
     return START_STICKY;
