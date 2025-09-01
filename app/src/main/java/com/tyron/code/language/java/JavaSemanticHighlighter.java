@@ -30,6 +30,8 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import org.eclipse.tm4e.core.internal.grammar.ScopeStack;
+import javax.tools.JavaCompiler.CompilationTask;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
@@ -43,7 +45,8 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
   private List<SemanticToken> tokens;
 
   public JavaSemanticHighlighter(JavacTask task) {
-    this.trees = Trees.instance(task);
+   // this.trees = Trees.instance(task);
+    this.trees = JavacTreesUtil.getJavacTrees(CompilationTask.class, task);
     this.pos = trees.getSourcePositions();
     this.elements = task.getElements();
     this.tokens = new ArrayList<>();
