@@ -225,7 +225,8 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     DiagnosticWrapper wrapped = new DiagnosticWrapper(diagnostic);
 
     if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
-      Trees trees = Trees.instance(task.task);
+     // Trees trees = Trees.instance(task.task);
+      Trees trees = (JavaTask) task.task;
       SourcePositions positions = trees.getSourcePositions();
 
       JCDiagnostic jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
