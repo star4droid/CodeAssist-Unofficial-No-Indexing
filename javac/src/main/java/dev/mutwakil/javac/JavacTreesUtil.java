@@ -1,6 +1,7 @@
 package dev.mutwakil.javac;
 import com.sun.source.util.Trees;
 import java.lang.reflect.Method;
+import javax.tools.JavaCompiler.CompilationTask;
 
 public final class JavacTreesUtil {
 
@@ -14,6 +15,14 @@ public final class JavacTreesUtil {
      * @param arg     actual argument instance
      * @return        a Trees instance for the current compiler
      */
+    public static Trees instance(CompilationTask task) {
+        String taskClassName = task.getClass().getName();
+        if (!taskClassName.equals("com.sun.tools.javac.api.JavacTaskImpl")
+                && !taskClassName.equals("com.sun.tools.javac.api.BasicJavacTask"))
+            throw new IllegalArgumentException();
+        return getJavacTrees(CompilationTask.class, task);
+    }
+    
     public static Trees getJavacTrees(Class<?> argType, Object arg) throws Exception {
         try {
             ClassLoader cl = arg.getClass().getClassLoader();
