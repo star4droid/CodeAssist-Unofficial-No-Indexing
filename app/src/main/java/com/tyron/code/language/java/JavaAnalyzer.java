@@ -11,7 +11,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import com.sun.source.util.JavacTask;
+import com.sun.source.util.JavaTask;
 import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
