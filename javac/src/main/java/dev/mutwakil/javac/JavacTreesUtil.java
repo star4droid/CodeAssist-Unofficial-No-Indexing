@@ -23,7 +23,7 @@ public final class JavacTreesUtil {
         return getJavacTrees(CompilationTask.class, task);
     }
     
-    public static Trees getJavacTrees(Class<?> argType, Object arg) throws Exception {
+    public static Trees getJavacTrees(Class<?> argType, Object arg){
         try {
             ClassLoader cl = arg.getClass().getClassLoader();
             Class<?> javacTrees = Class.forName("com.sun.tools.javac.api.JavacTrees", false, cl);
