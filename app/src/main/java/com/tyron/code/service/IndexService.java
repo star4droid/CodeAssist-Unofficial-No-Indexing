@@ -1,6 +1,6 @@
 package com.tyron.code.service;
 
-import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED;
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC;
 
 import android.app.Notification;
 import android.app.Service;
