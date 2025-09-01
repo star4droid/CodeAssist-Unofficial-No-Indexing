@@ -56,6 +56,8 @@ import javax.tools.JavaFileObject;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import org.codeassist.unofficial.BuildConfig;
+import java.lang.reflect.Method;
+
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
 
