@@ -227,7 +227,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
 
     if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
      // Trees trees = Trees.instance(task.task);
-      Trees trees = (JavaTask) task.task;
+      Trees trees = getJavacTrees(CompilationTask.class, task.task);
       SourcePositions positions = trees.getSourcePositions();
 
       JCDiagnostic jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
@@ -269,4 +269,16 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     }
     return wrapped;
   }
+
+    public static Trees getJavacTrees(Class<?> argType, Object arg) {
+        try {
+            ClassLoader cl = arg.getClass().getClassLoader();
+            Class<?> c = Class.forName("com.sun.tools.javac.api.JavacTrees", false, cl);
+            argType = Class.forName(argType.getName(), false, cl);
+            Method m = c.getMethod("instance", argType);
+            return (Trees) m.invoke(null, arg);
+        } catch ( ReflectiveOperationException e) {
+           // throw new AssertionError(e);
+        }
+    }
 }
