@@ -53,7 +53,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
       IRawTheme theme)
       throws Exception {   
     this.editor = editor;
-    this.theme = Theme.createFromRawTheme(theme,new io.github.rosemoe.sora.util.ArrayList<String>());
+    this.theme = Theme.createFromRawTheme(theme,null);
      registry.setTheme(this.theme);
       
         registry.addGrammar(IGrammarSource.fromInputStream(grammarIns,grammarName, null));
