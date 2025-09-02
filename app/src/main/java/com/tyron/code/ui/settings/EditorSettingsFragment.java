@@ -27,6 +27,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.registry.IThemeSource;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
@@ -143,7 +144,9 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
               IThemeSource themeSource =   IThemeSource.fromInputStream(
                         FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
                     );
-              return Futures.immediateFuture(EditorUtil.createTheme(themeSource));
+             ThemeModel themeModel = new ThemeModel(themeSource);
+         themeModel.load();
+              return Futures.immediateFuture(EditorUtil.createTheme(themeModel));
             });
   }
 }
