@@ -100,7 +100,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
   public CodeEditorView(Context context, AttributeSet attrs) {
-    this(DataContext.wrap(context), attrs, R.attr.codeEditorStyle);
+    this(DataContext.wrap(context), attrs,0);
   }
 
   public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr) {
