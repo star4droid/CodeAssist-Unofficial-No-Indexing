@@ -48,6 +48,7 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import org.codeassist.unofficial.R;
 //import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.TextRange;
 import java.util.Objects;
@@ -99,7 +100,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
   public CodeEditorView(Context context, AttributeSet attrs) {
-    this(DataContext.wrap(context), attrs, 0);
+    this(DataContext.wrap(context), attrs, R.attr.codeEditorStyle);
   }
 
   public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr) {
