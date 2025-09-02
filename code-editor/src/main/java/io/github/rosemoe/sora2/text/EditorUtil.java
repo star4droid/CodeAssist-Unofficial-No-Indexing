@@ -41,7 +41,7 @@ public class EditorUtil {
     @NonNull
     public static TextMateColorScheme createTheme(IThemeSource themeSource) throws Exception {
         TextMateColorScheme scheme = TextMateColorScheme.create(themeSource);
-        IRawTheme rawTheme = scheme.getRawTheme();
+        RawTheme rawTheme = scheme.getRawTheme();
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
         if (settings != null && settings.size() >= 1) {
             RawTheme setting = (RawTheme) settings.iterator().next();
