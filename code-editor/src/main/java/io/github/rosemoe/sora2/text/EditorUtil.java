@@ -14,6 +14,7 @@ import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawThemeSetting;
 import org.eclipse.tm4e.core.registry.IThemeSource;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 
 
 import java.lang.reflect.Method;
@@ -39,8 +40,9 @@ public class EditorUtil {
     public static final String KEY_COMPLETION_WINDOW_STROKE = "completionWindowStroke";
 
     @NonNull
-    public static TextMateColorScheme createTheme(IThemeSource themeSource) throws Exception {
-        TextMateColorScheme scheme = TextMateColorScheme.create(themeSource);
+    public static TextMateColorScheme createTheme(ThemeModel themeModel) throws Exception {
+        TextMateColorScheme scheme = TextMateColorScheme.create(themeModel);
+        scheme.setTheme(themeModel);
         IRawTheme rawTheme = scheme.getRawTheme();
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
         if (settings != null && settings.size() >= 1) {
@@ -131,7 +133,9 @@ public class EditorUtil {
                         FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
                     );
            // return createTheme(rawTheme);
-            return createTheme(themeSource);
+         ThemeModel themeModel = new ThemeModel(themeSource);
+         themeModel.load();
+            return createTheme(themeModel);
         } catch (Exception e) {
             // should not happen, the bundled theme should always work.
             throw new Error(e);
