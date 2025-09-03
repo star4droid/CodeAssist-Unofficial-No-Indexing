@@ -143,12 +143,12 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
         .computeNonCancelableAsync(
             () -> {
                String path = file.getAbsolutePath();
-              /*IThemeSource themeSource =   IThemeSource.fromInputStream(
+              IThemeSource themeSource =   IThemeSource.fromInputStream(
                         FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
                     );
              ThemeModel themeModel = new ThemeModel(themeSource);
-         themeModel.load();*/
-             ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
+         themeModel.load();
+             /*ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
 String name = ""; // name of theme
 String themeAssetsPath = path;
 ThemeModel model = new ThemeModel(
@@ -160,7 +160,8 @@ ThemeModel model = new ThemeModel(
 // If the theme is dark
 // model.setDark(true);
 themeRegistry.loadTheme(model);
-              return Futures.immediateFuture(EditorUtil.createTheme(themeRegistry));
+             */
+              return Futures.immediateFuture(EditorUtil.createTheme(themeModel));
             });
   }
 }
