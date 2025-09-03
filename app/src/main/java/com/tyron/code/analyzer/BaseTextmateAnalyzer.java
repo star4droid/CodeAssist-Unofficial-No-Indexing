@@ -48,6 +48,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
   public BaseTextmateAnalyzer(
       Editor editor,
       String grammarName,
+      String scopeName,
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
@@ -57,12 +58,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
      registry.setTheme(this.theme);
       
         registry.addGrammar(IGrammarSource.fromInputStream(grammarIns,grammarName, null));
-    this.grammar = registry.grammarForScopeName(grammarName);
-if (grammar == null) {
-    Log.e("Analyzer", "Grammar not found for scope: " + grammarName);
-} else {
-    Log.i("Analyzer", "Grammar loaded: " + grammar.getScopeName());
-} 
+    this.grammar = registry.grammarForScopeName(scopeName);
        // this.grammar = registry.loadGrammar(grammarName);
         if (languageConfiguration != null) {
       configuration = LanguageConfiguration.load(languageConfiguration);
