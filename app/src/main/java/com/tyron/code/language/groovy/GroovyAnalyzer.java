@@ -20,12 +20,11 @@ public class GroovyAnalyzer extends BaseTextmateAnalyzer {
   public GroovyAnalyzer(
       Editor editor,
       String grammarName,
-      String scopeName, 
       InputStream open,
       InputStreamReader config,
       IRawTheme rawTheme)
       throws Exception {
-    super(editor, grammarName,scopeName, open, config, rawTheme);
+    super(editor, grammarName, open, config, rawTheme);
   }
 
   public static GroovyAnalyzer create(Editor editor) {
