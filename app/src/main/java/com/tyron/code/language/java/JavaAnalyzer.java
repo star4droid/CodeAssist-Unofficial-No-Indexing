@@ -75,7 +75,6 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
         return new JavaAnalyzer(
             editor,
             GRAMMAR_NAME,
-             SCOPENAME,
             assetManager.open(LANGUAGE_PATH),
             config,
             ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
