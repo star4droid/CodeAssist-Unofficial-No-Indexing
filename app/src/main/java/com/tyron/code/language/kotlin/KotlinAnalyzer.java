@@ -54,7 +54,6 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
         return new KotlinAnalyzer(
             editor,
             GRAMMAR_NAME,
-            SCOPENAME,
             assetManager.open(LANGUAGE_PATH),
             config,
             ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
@@ -71,7 +70,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
   }
 
   @Override
