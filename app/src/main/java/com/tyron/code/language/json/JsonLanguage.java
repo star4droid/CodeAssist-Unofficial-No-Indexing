@@ -87,6 +87,7 @@ public class JsonLanguage implements Language {
           new BaseTextmateAnalyzer(
               editor,
               "json.tmLanguage.json",
+               "source.json",
               assetManager.open("textmate/json" + "/syntaxes/json" + ".tmLanguage.json"),
               new InputStreamReader(assetManager.open("textmate/json/language-configuration.json")),
               ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
