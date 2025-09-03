@@ -36,6 +36,8 @@ import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+ 
  
 
 public class EditorSettingsFragment extends PreferenceFragmentCompat {
@@ -141,12 +143,24 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
         .computeNonCancelableAsync(
             () -> {
                String path = file.getAbsolutePath();
-              IThemeSource themeSource =   IThemeSource.fromInputStream(
+              /*IThemeSource themeSource =   IThemeSource.fromInputStream(
                         FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
                     );
              ThemeModel themeModel = new ThemeModel(themeSource);
-         themeModel.load();
-              return Futures.immediateFuture(EditorUtil.createTheme(themeModel));
+         themeModel.load();*/
+             ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
+String name = ""; // name of theme
+String themeAssetsPath = path;
+ThemeModel model = new ThemeModel(
+        IThemeSource.fromInputStream(
+            FileProviderRegistry.getInstance().tryGetInputStream(themeAssetsPath), themeAssetsPath, null
+        ), 
+        name
+    );
+// If the theme is dark
+// model.setDark(true);
+themeRegistry.loadTheme(model);
+              return Futures.immediateFuture(EditorUtil.createTheme(themeRegistry));
             });
   }
 }
