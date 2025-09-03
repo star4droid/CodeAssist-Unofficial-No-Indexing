@@ -41,9 +41,9 @@ public class EditorUtil {
     public static final String KEY_COMPLETION_WINDOW_STROKE = "completionWindowStroke";
 
     @NonNull
-    public static TextMateColorScheme createTheme(ThemeRegistry themeModel) throws Exception {
+    public static TextMateColorScheme createTheme(ThemeModel themeModel) throws Exception {
         TextMateColorScheme scheme = TextMateColorScheme.create(themeModel);
-        //scheme.setTheme(themeModel);
+        scheme.setTheme(themeModel);
         IRawTheme rawTheme = scheme.getRawTheme();
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
         if (settings != null && settings.size() >= 1) {
@@ -130,14 +130,15 @@ public class EditorUtil {
             }else{
                path =  "textmate/darcula.json";
             }
-          /* IThemeSource themeSource =   IThemeSource.fromInputStream(
+          IThemeSource themeSource =   IThemeSource.fromInputStream(
                         FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
                     );
            // return createTheme(rawTheme);
          ThemeModel themeModel = new ThemeModel(themeSource);
+         themeModel.setDark(!light);
          themeModel.load();
-        */
-         ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
+        
+         /*ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
 String name = light?"quietlight":"darcula"; // name of theme
 String themeAssetsPath =path;
 ThemeModel model = new ThemeModel(
@@ -149,7 +150,8 @@ ThemeModel model = new ThemeModel(
 // If the theme is dark
  model.setDark(!light);
 themeRegistry.loadTheme(model);
-            return createTheme(themeRegistry);
+         */
+            return createTheme(themeModel);
         } catch (Exception e) {
             // should not happen, the bundled theme should always work.
             throw new Error(e);
