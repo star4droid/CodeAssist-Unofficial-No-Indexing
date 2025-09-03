@@ -65,6 +65,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
+  private static final String SCOPENAME="source.java";
 
   public static JavaAnalyzer create(Editor editor) {
     try {
@@ -74,6 +75,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
         return new JavaAnalyzer(
             editor,
             GRAMMAR_NAME,
+             SCOPENAME,
             assetManager.open(LANGUAGE_PATH),
             config,
             ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
