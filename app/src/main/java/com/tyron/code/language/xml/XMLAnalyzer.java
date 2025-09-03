@@ -67,7 +67,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
 
     mEditorReference = new WeakReference<>(editor);
   }
