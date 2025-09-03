@@ -48,7 +48,6 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateSt
   public BaseTextmateAnalyzer(
       Editor editor,
       String grammarName,
-      String scopeName,
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
