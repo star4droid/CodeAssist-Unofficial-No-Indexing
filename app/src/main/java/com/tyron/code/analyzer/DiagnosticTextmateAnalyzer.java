@@ -34,12 +34,11 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
   public DiagnosticTextmateAnalyzer(
       Editor editor,
       String grammarName,
-      String scopeName,
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName,scopeName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName, grammarIns, languageConfiguration, theme);
     mEditor = editor;
     mStyleModifier = this::modifyStyles;
   }
