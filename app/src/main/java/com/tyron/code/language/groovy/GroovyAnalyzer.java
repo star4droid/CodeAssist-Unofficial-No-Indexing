@@ -15,15 +15,17 @@ public class GroovyAnalyzer extends BaseTextmateAnalyzer {
   private static final String GRAMMAR_NAME = "groovy.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/groovy/syntaxes/groovy.tmLanguage";
   private static final String CONFIG_PATH = "textmate/groovy/language-configuration.json";
+  private static final String SCOPENAME="source.gradle";
 
   public GroovyAnalyzer(
       Editor editor,
       String grammarName,
+      String scopeName, 
       InputStream open,
       InputStreamReader config,
       IRawTheme rawTheme)
       throws Exception {
-    super(editor, grammarName, open, config, rawTheme);
+    super(editor, grammarName,scopeName, open, config, rawTheme);
   }
 
   public static GroovyAnalyzer create(Editor editor) {
