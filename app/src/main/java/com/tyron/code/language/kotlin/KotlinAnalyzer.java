@@ -67,11 +67,12 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
   public KotlinAnalyzer(
       Editor editor,
       String grammarName,
+    String scopeName,
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,scopeName, grammarIns, languageConfiguration, theme);
   }
 
   @Override
