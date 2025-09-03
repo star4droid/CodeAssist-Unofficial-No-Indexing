@@ -24,7 +24,7 @@ public class GroovyAnalyzer extends BaseTextmateAnalyzer {
       InputStreamReader config,
       IRawTheme rawTheme)
       throws Exception {
-    super(editor, grammarName,scopeName, open, config, rawTheme);
+    super(editor, grammarName,SCOPENAME, open, config, rawTheme);
   }
 
   public static GroovyAnalyzer create(Editor editor) {
