@@ -44,6 +44,7 @@ import org.codeassist.unofficial.BuildConfig;
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private boolean mAnalyzerEnabled = false;
+  private static final String SCOPENAME ="source.xml";
 
   private static final Debouncer sDebouncer =
       new Debouncer(
@@ -67,7 +68,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
 
     mEditorReference = new WeakReference<>(editor);
   }
