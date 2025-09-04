@@ -1,4 +1,4 @@
-name: Android CI Debug
+name: Push Release
 
 on:
   workflow_dispatch:
