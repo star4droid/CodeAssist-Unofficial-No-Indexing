@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -24,10 +23,15 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run:  ./gradlew clean && ./gradlew assembleDebug
+        run: ./gradlew clean && ./gradlew assembleDebug
 
-      - name: Upload debug apk
-        uses: actions/upload-artifact@v4
+      - name: Upload APK to GitHub Release
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: apk-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/outputs/apk/debug/app-debug.apk
+          asset_name: app-debug.apk
+          asset_content_type: application/vnd.android.package-archive
