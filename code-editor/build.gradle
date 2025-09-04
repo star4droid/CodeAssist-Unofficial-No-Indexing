@@ -32,6 +32,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+		//coreLibraryDesugaringEnabled true
     }
 
     buildFeatures {
@@ -53,12 +54,13 @@ dependencies {
     implementation project(path: ':java-completion')
     implementation project(path: ':common')
 
-    api 'io.github.Rosemoe.sora-editor:editor:0.11.4'
-    api 'io.github.Rosemoe.sora-editor:language-textmate:0.11.4'
-	//api 'io.github.rosemoe:editor:0.23.7'
-  //  api 'io.github.rosemoe:language-textmate:0.23.7'
+ //   api 'io.github.Rosemoe.sora-editor:editor:0.15.1'
+  //  api 'io.github.Rosemoe.sora-editor:language-textmate:0.15.1'
+	api 'io.github.rosemoe:editor:0.23.7'
+    api 'io.github.rosemoe:language-textmate:0.23.7'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+	//coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }

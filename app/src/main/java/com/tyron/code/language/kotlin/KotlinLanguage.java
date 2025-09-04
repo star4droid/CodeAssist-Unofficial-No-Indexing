@@ -31,11 +31,65 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
+import io.github.rosemoe.sora.text.TextRange;
+import io.github.rosemoe.sora.lang.format.AsyncFormatter;
+import io.github.rosemoe.sora.lang.format.Formatter;
+import io.github.rosemoe.sora.text.Content;
+import androidx.annotation.Nullable;
+import io.github.rosemoe.sora.lang.styling.Styles;
+import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.Content;
 
 public class KotlinLanguage implements Language {
 
   private final Editor mEditor;
   private final KotlinAnalyzer mAnalyzer;
+  private final Formatter formatter = new AsyncFormatter() {
+        @Nullable
+        @Override
+        public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
+            String format = null;
+          ByteArrayOutputStream out = new ByteArrayOutputStream();
+    ByteArrayOutputStream err = new ByteArrayOutputStream();
+
+    com.facebook.ktfmt.cli.Main main =
+        new com.facebook.ktfmt.cli.Main(
+            new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)),
+            new PrintStream(out),
+            new PrintStream(err),
+            new String[] {"-"});
+    int exitCode = main.run();
+
+    format= out.toString();
+
+    if (exitCode != 0) {
+      format = text.toString();
+    }
+
+    if (format == null) {
+      format = text.toString();
+    }
+  
+            if (!text.toString().equals(format)) {
+                text.delete(0, text.getLineCount() - 1);
+                text.insert(0, 0, format);
+            }
+            return cursorRange;
+        }
+
+        @Nullable
+        @Override
+        public TextRange formatRegionAsync(@NonNull Content text,
+                                           @NonNull TextRange rangeToFormat,
+                                           @NonNull TextRange cursorRange) {
+            return null;
+        }
+    };
+@NonNull
+    @Override
+    public Formatter getFormatter() {
+        return formatter;
+    }
 
   public KotlinLanguage(Editor editor) {
     mEditor = editor;
@@ -113,7 +167,6 @@ public class KotlinLanguage implements Language {
     return true;
   }
 
-  @Override
   public CharSequence format(CharSequence text) {
 
     CharSequence formatted = null;
@@ -159,25 +212,44 @@ public class KotlinLanguage implements Language {
   class BraceHandler implements NewlineHandler {
 
     @Override
-    public boolean matchesRequirement(String beforeText, String afterText) {
-      return beforeText.endsWith("{") && afterText.startsWith("}");
+    public boolean matchesRequirement(@NonNull Content text,
+                                      @NonNull CharPosition position,
+                                      @Nullable Styles style) {
+        int line = position.line;
+        if (line < 0 || line >= text.getLineCount()) return false;
+
+        String before = text.subContent(line, 0, line, position.column).toString();
+        String after  = text.subContent(line, position.column, line,
+                                        text.getLine(line).length()).toString();
+        return before.trim().endsWith("{") && after.trim().startsWith("}");
     }
 
     @Override
-    public NewlineHandleResult handleNewline(String beforeText, String afterText, int tabSize) {
-      int count = TextUtils.countLeadingSpaceCount(beforeText, tabSize);
-      int advanceBefore = getIndentAdvance(beforeText);
-      int advanceAfter = getIndentAdvance(afterText);
-      String text;
-      StringBuilder sb =
-          new StringBuilder("\n")
-              .append(TextUtils.createIndent(count + advanceBefore, tabSize, useTab()))
-              .append('\n')
-              .append(text = TextUtils.createIndent(count + advanceAfter, tabSize, useTab()));
-      int shiftLeft = text.length() + 1;
-      return new NewlineHandleResult(sb, shiftLeft);
+    @NonNull
+    public NewlineHandleResult handleNewline(@NonNull Content text,
+                                             @NonNull CharPosition position,
+                                             @Nullable Styles style,
+                                             int tabSize) {
+        int line = position.line;
+        String before = text.subContent(line, 0, line, position.column).toString();
+
+        int baseIndent   = TextUtils.countLeadingSpaceCount(before, tabSize);
+        int bodyIndent   = baseIndent + getIndentAdvance(before);
+        int closeIndent  = baseIndent + getIndentAdvance("");
+
+        String bodyLine  = TextUtils.createIndent(bodyIndent,  tabSize, false);
+        String closeLine = TextUtils.createIndent(closeIndent, tabSize, false);
+
+        StringBuilder sb = new StringBuilder("\n")
+                .append(bodyLine)
+                .append('\n')
+                .append(closeLine);
+
+        int shiftBack = closeLine.length() + 1;
+        return new NewlineHandleResult(sb, shiftBack);
     }
-  }
+}
+
 
   private List<String> listFiles(Path directory, String extension) throws IOException {
     return Files.walk(directory)

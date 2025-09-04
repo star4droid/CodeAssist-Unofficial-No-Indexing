@@ -29,6 +29,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import org.eclipse.tm4e.core.internal.grammar.ScopeStack;
+import javax.tools.JavaCompiler.CompilationTask;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
@@ -42,7 +45,8 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
   private List<SemanticToken> tokens;
 
   public JavaSemanticHighlighter(JavacTask task) {
-    this.trees = Trees.instance(task);
+   // this.trees = Trees.instance(task);
+    this.trees = JavacTreesUtil.instance( task);
     this.pos = trees.getSourcePositions();
     this.elements = task.getElements();
     this.tokens = new ArrayList<>();
@@ -133,11 +137,11 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
     return INCREASING.immutableSortedCopy(tokens);
   }
 
-  private void addToken(int offset, int length, TokenType tokenType, int modifiers) {
+  private void addToken(int offset, int length, ScopeStack tokenType, int modifiers) {
     tokens.add(new SemanticToken(offset, length, tokenType, modifiers));
   }
 
-  private void addToken(JCTree node, TokenType tokenType, int modifiers) {
+  private void addToken(JCTree node, ScopeStack tokenType, int modifiers) {
     addToken(node.getStartPosition(), node.getStartPosition(), tokenType, modifiers);
   }
 
@@ -172,7 +176,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
   private void addMemberSelect(JCTree.JCIdent identifier) {
     Element element = trees.getElement(getCurrentPath());
-    TokenType applicableType = JavaTokenTypes.getApplicableType(element);
+    ScopeStack applicableType = JavaTokenTypes.getApplicableType(element);
     if (applicableType == null) {
       return;
     }
@@ -199,7 +203,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
   }
 
   private void addAnnotation(JCTree.JCIdent identifier) {
-    TokenType tokenType = TokenType.UNKNOWN;
+    ScopeStack tokenType = ScopeStack.from("token.error-token");//TokenType.UNKNOWN;
 
     Element element = trees.getElement(getCurrentPath());
     if (element != null) {
@@ -230,7 +234,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
     }
     int end = start + element.getSimpleName().length();
 
-    TokenType applicableType = JavaTokenTypes.getApplicableType(element);
+    ScopeStack applicableType = JavaTokenTypes.getApplicableType(element);
     if (applicableType != null) {
       addToken(start, end - start, applicableType, TokenModifier.checkJavaModifiers(element));
     }
@@ -259,7 +263,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
     long realEnd = pos.getEndPosition(cu, methodTree);
     if (realEnd != -1) {
-      TokenType type;
+      ScopeStack type;
       if (isConstructor) {
         type = JavaTokenTypes.CONSTRUCTOR;
       } else {
@@ -276,7 +280,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
     int start = tree.getPreferredPosition();
     int end = start + t.getName().length();
     Element element = trees.getElement(getCurrentPath());
-    TokenType applicableType = JavaTokenTypes.getApplicableType(element);
+    ScopeStack applicableType = JavaTokenTypes.getApplicableType(element);
     if (applicableType != null) {
       if (element.getModifiers().contains(Modifier.FINAL)) {
         addToken(
@@ -301,7 +305,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
       return super.visitMethodInvocation(t, b);
     }
     int start = end - element.getSimpleName().length();
-    TokenType type = JavaTokenTypes.METHOD_CALL;
+    ScopeStack type = JavaTokenTypes.METHOD_CALL;
     if (element.getKind() == ElementKind.CONSTRUCTOR) {
       start = method.getStartPosition();
       end = start + "super".length();

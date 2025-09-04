@@ -1,6 +1,7 @@
 package com.tyron.code.analyzer;
 
 import android.graphics.Color;
+import java.time.Duration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.tyron.code.language.textmate.BaseIncrementalAnalyzeManager;
@@ -13,17 +14,19 @@ import io.github.rosemoe.sora.langs.textmate.folding.FoldingRegions;
 import io.github.rosemoe.sora.langs.textmate.folding.IndentRange;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentReference;
-import io.github.rosemoe.sora.textmate.core.grammar.IGrammar;
-import io.github.rosemoe.sora.textmate.core.grammar.ITokenizeLineResult2;
-import io.github.rosemoe.sora.textmate.core.grammar.StackElement;
-import io.github.rosemoe.sora.textmate.core.internal.grammar.StackElementMetadata;
-import io.github.rosemoe.sora.textmate.core.registry.Registry;
-import io.github.rosemoe.sora.textmate.core.theme.FontStyle;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
-import io.github.rosemoe.sora.textmate.core.theme.Theme;
-import io.github.rosemoe.sora.textmate.languageconfiguration.ILanguageConfiguration;
-import io.github.rosemoe.sora.textmate.languageconfiguration.internal.LanguageConfigurator;
-import io.github.rosemoe.sora.textmate.languageconfiguration.internal.supports.Folding;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import org.eclipse.tm4e.core.grammar.ITokenizeLineResult;
+import org.eclipse.tm4e.core.grammar.IStateStack;
+import org.eclipse.tm4e.core.grammar.IToken;
+import org.eclipse.tm4e.core.internal.grammar.StateStack;
+import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
+import org.eclipse.tm4e.core.registry.Registry;
+import org.eclipse.tm4e.core.registry.IGrammarSource;
+import org.eclipse.tm4e.core.internal.theme.FontStyle;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.languageconfiguration.internal.model.FoldingRules;
 import io.github.rosemoe.sora.util.ArrayList;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import java.io.InputStream;
@@ -31,7 +34,7 @@ import java.io.Reader;
 import java.util.List;
 
 /** A text mate analyzer which does not use a TextMateLanguage */
-public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackElement, Span> {
+public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<IStateStack, Span> {
 
   /** Maximum for code block count */
   public static int MAX_FOLDING_REGIONS_FOR_INDENT_LIMIT = 5000;
@@ -40,22 +43,25 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   private final IGrammar grammar;
   private Theme theme;
   private final Editor editor;
-  private final ILanguageConfiguration configuration;
+  private final LanguageConfiguration configuration;
 
   public BaseTextmateAnalyzer(
       Editor editor,
       String grammarName,
+      String scopeName,
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
-      throws Exception {
-    registry.setTheme(theme);
+      throws Exception {   
     this.editor = editor;
-    this.theme = Theme.createFromRawTheme(theme);
-    this.grammar = registry.loadGrammarFromPathSync(grammarName, grammarIns);
-    if (languageConfiguration != null) {
-      LanguageConfigurator languageConfigurator = new LanguageConfigurator(languageConfiguration);
-      configuration = languageConfigurator.getLanguageConfiguration();
+    this.theme = Theme.createFromRawTheme(theme,null);
+     registry.setTheme(this.theme);
+      
+        registry.addGrammar(IGrammarSource.fromInputStream(grammarIns,grammarName, null));
+    this.grammar = registry.grammarForScopeName(scopeName);
+       // this.grammar = registry.loadGrammar(grammarName);
+        if (languageConfiguration != null) {
+      configuration = LanguageConfiguration.load(languageConfiguration);
     } else {
       configuration = null;
     }
@@ -66,7 +72,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
     if (configuration == null) {
       return;
     }
-    Folding folding = configuration.getFolding();
+    FoldingRules folding = configuration.getFolding();
     if (folding == null) {
       return;
     }
@@ -75,7 +81,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
           CodeBlockUtils.computeRanges(
               model,
               editor.getTabCount(),
-              folding.getOffSide(),
+              folding.offSide,
               folding,
               MAX_FOLDING_REGIONS_FOR_INDENT_LIMIT,
               delegate);
@@ -91,7 +97,7 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
           // It's safe here to use raw data because the Content is only held by this
           // thread
           int length = model.getColumnCount(startLine);
-          char[] chars = model.getLine(startLine).getRawData();
+          char[] chars = model.getLine(startLine).getBackingCharArray();
 
           codeBlock.startColumn =
               IndentRange.computeStartColumn(
@@ -107,12 +113,22 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   }
 
   @Override
-  public StackElement getInitialState() {
+  public IStateStack getInitialState() {
     return null;
   }
 
+  @Override 
+  public void onAddState(IStateStack state){}
+
+  @Override 
+  public void onAbandonState(IStateStack state){}
+
+  @Override 
+  public LineTokenizeResult<IStateStack, Span> tokenizeLine(CharSequence line, IStateStack state, int lineIndex){
+    return null;
+  } 
   @Override
-  public boolean stateEquals(StackElement state, StackElement another) {
+  public boolean stateEquals(IStateStack state, IStateStack another) {
     if (state == null && another == null) {
       return true;
     }
@@ -123,43 +139,40 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
   }
 
   @Override
-  public Result<StackElement, Span> tokenizeLine(CharSequence lineC, StackElement state) {
+public Result<IStateStack, Span> tokenizeLine(CharSequence lineC, IStateStack state) {
     String line = lineC.toString();
     ArrayList<Span> tokens = new ArrayList<>();
-    ITokenizeLineResult2 lineTokens = grammar.tokenizeLine2(line, state);
-    int tokensLength = lineTokens.getTokens().length / 2;
-    for (int i = 0; i < tokensLength; i++) {
-      int startIndex = lineTokens.getTokens()[2 * i];
-      if (i == 0 && startIndex != 0) {
-        tokens.add(Span.obtain(0, EditorColorScheme.TEXT_NORMAL));
-      }
-      int metadata = lineTokens.getTokens()[2 * i + 1];
-      int foreground = StackElementMetadata.getForeground(metadata);
-      int fontStyle = StackElementMetadata.getFontStyle(metadata);
-      Span span =
-          Span.obtain(
-              startIndex,
-              TextStyle.makeStyle(
-                  foreground + 255,
-                  0,
-                  (fontStyle & FontStyle.Bold) != 0,
-                  (fontStyle & FontStyle.Italic) != 0,
-                  false));
+    ITokenizeLineResult<int[]> lineTokens =
+            grammar.tokenizeLine2(line, state, java.time.Duration.ofMillis(10));
+    int[] raw = lineTokens.getTokens();
+    for (int i = 0, len = raw.length / 2; i < len; i++) {
+        int startIndex = raw[2 * i];
+        int metadata   = raw[2 * i + 1];
+        int foreground = EncodedTokenAttributes.getForeground(metadata);
+      int fontStyle = EncodedTokenAttributes.getFontStyle(metadata);
 
-      if ((fontStyle & FontStyle.Underline) != 0) {
-        String color = theme.getColor(foreground);
-        if (color != null) {
-          span.underlineColor = Color.parseColor(color);
+        Span span = Span.obtain(
+                startIndex,
+                TextStyle.makeStyle(
+                        foreground + 255,
+                        0,
+                        (fontStyle & FontStyle.Bold) != 0,
+                        (fontStyle & FontStyle.Italic) != 0,
+                        false));
+        if ((fontStyle & FontStyle.Underline) != 0) {
+            String color = theme.getColor(foreground);
+            if (color != null) {
+                span.setUnderlineColor(Color.parseColor(color));
+            }
         }
-      }
-
-      tokens.add(span);
+        tokens.add(span);
     }
     return new Result<>(lineTokens.getRuleStack(), null, tokens);
-  }
+}
+
 
   @Override
-  public List<Span> generateSpansForLine(LineTokenizeResult<StackElement, Span> tokens) {
+  public List<Span> generateSpansForLine(LineTokenizeResult<IStateStack, Span> tokens) {
     return null;
   }
 
@@ -178,9 +191,9 @@ public class BaseTextmateAnalyzer extends BaseIncrementalAnalyzeManager<StackEle
     super.reset(content, extraArguments);
   }
 
-  public void updateTheme(IRawTheme theme) {
-    registry.setTheme(theme);
-    this.theme = Theme.createFromRawTheme(theme);
+  public void updateTheme(IRawTheme theme,ArrayList<String> colorMap) {
+    this.theme = Theme.createFromRawTheme(theme, colorMap);
+    registry.setTheme(getTheme()); 
   }
 
   protected Theme getTheme() {

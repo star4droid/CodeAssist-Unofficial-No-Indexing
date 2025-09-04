@@ -42,7 +42,10 @@ import com.tyron.code.util.ApkInstaller;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.editor.Caret;
 import com.tyron.fileeditor.api.FileEditorManager;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
+
+
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.ArrayList;
@@ -453,4 +456,8 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       return new File(path);
     }
   }
+
   }
+
+        }
+
