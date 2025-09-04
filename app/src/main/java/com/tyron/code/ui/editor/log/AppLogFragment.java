@@ -457,7 +457,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     }
   }
 
-  }
+  
 
-        }
+}
 
