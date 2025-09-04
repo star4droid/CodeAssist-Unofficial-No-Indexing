@@ -275,3 +275,4 @@ public class JsonLanguage implements Language {
         return new NewlineHandleResult(insert, cursorShiftBack);
     }
 }
+} 
