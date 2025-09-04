@@ -50,6 +50,7 @@
             android:name="com.tyron.code.service.IndexService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
+
             android:exported="false"/>
         <activity
             android:name="com.tyron.code.ui.settings.SettingsActivity"
