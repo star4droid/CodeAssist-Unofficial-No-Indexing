@@ -52,6 +52,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class EditHelper {
   final JavacTask task;
@@ -61,7 +62,7 @@ public class EditHelper {
   }
 
   public TextEdit removeTree(CompilationUnitTree root, Tree remove) {
-    SourcePositions pos = Trees.instance(task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task).getSourcePositions();
     LineMap lines = root.getLineMap();
     long start = pos.getStartPosition(root, remove);
     long end = pos.getEndPosition(root, remove);
@@ -354,7 +355,7 @@ public class EditHelper {
   }
 
   private static int indentInternal(JavacTask task, CompilationUnitTree root, Tree leaf) {
-    SourcePositions pos = Trees.instance(task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task).getSourcePositions();
     LineMap lines = root.getLineMap();
     long startClass = pos.getStartPosition(root, leaf);
     long line = lines.getLineNumber(startClass);
@@ -392,7 +393,7 @@ public class EditHelper {
   }
 
   public static Position insertBefore(JavacTask task, CompilationUnitTree root, Tree member) {
-    SourcePositions pos = Trees.instance(task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task).getSourcePositions();
     LineMap lines = root.getLineMap();
     long start = pos.getStartPosition(root, member);
     int line = (int) lines.getLineNumber(start);
@@ -400,7 +401,7 @@ public class EditHelper {
   }
 
   public static Position insertAfter(JavacTask task, CompilationUnitTree root, Tree member) {
-    SourcePositions pos = Trees.instance(task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task).getSourcePositions();
     LineMap lines = root.getLineMap();
     long end = pos.getEndPosition(root, member);
     int line = (int) lines.getLineNumber(end);
@@ -409,7 +410,7 @@ public class EditHelper {
 
   public static Position insertAtEndOfClass(
       JavacTask task, CompilationUnitTree root, ClassTree leaf) {
-    SourcePositions pos = Trees.instance(task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task).getSourcePositions();
     LineMap lines = root.getLineMap();
     long end = pos.getEndPosition(root, leaf);
     int line = (int) lines.getLineNumber(end);
