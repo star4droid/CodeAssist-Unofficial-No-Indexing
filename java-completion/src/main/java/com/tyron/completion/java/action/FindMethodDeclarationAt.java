@@ -13,7 +13,7 @@ public class FindMethodDeclarationAt extends TreeScanner<MethodTree, Long> {
   private CompilationUnitTree mCompilationUnit;
 
   public FindMethodDeclarationAt(JavacTask task) {
-    mPos = Trees.instance(task).getSourcePositions();
+    mPos = JavacTreesUtil.instance(task).getSourcePositions();
   }
 
   @Override
