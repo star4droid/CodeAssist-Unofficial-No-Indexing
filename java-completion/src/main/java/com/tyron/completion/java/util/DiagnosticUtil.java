@@ -23,6 +23,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class DiagnosticUtil {
 
@@ -185,7 +186,7 @@ public class DiagnosticUtil {
 
   @NonNull
   public static MethodPtr findMethod(CompileTask task, long position) {
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     Tree tree = new FindMethodDeclarationAt(task.task).scan(task.root(), position);
     TreePath path = trees.getPath(task.root(), tree);
     ExecutableElement method = (ExecutableElement) trees.getElement(path);
