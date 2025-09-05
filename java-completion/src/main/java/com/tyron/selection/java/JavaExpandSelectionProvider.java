@@ -13,7 +13,7 @@ import com.tyron.editor.selection.ExpandSelectionProvider;
 import java.io.File;
 import java.time.Instant;
 import org.jetbrains.annotations.Nullable;
-import dev.mutwakil.javac.JavaTreesUtil;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class JavaExpandSelectionProvider extends ExpandSelectionProvider {
 
