@@ -40,7 +40,7 @@ public class FindCurrentPath extends TreePathScanner<TreePath, Pair<Long, Long>>
 
   public FindCurrentPath(JavacTask task) {
     this.task = task;
-    mPos = Trees.instance(task).getSourcePositions();
+    mPos = JavacTreesUtil.instance(task).getSourcePositions();
   }
 
   public TreePath scan(Tree tree, long start) {
