@@ -11,6 +11,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Elements;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class ScopeHelper {
   // TODO is this still necessary? Test speed. We could get rid of the extra static-imports step.
@@ -33,7 +34,7 @@ public class ScopeHelper {
 
   public static List<Element> scopeMembers(
       CompileTask task, Scope inner, Predicate<CharSequence> filter) {
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     Elements elements = task.task.getElements();
     boolean isStatic = false;
     List<Element> list = new ArrayList<>();
