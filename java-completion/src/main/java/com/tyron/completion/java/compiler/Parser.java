@@ -242,7 +242,7 @@ public class Parser {
   }
 
   public String prune(long cursor) {
-    SourcePositions pos = Trees.instance(task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task).getSourcePositions();
     StringBuilder buffer = new StringBuilder(contents);
     long[] cursors = {cursor};
     return prune(root, pos, buffer, cursors, true);
