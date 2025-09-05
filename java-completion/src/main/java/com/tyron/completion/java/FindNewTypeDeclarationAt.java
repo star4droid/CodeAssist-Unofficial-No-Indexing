@@ -14,7 +14,7 @@ public class FindNewTypeDeclarationAt extends TreeScanner<ClassTree, Long> {
   private final CompilationUnitTree root;
 
   public FindNewTypeDeclarationAt(JavacTask task, CompilationUnitTree root) {
-    this.pos = Trees.instance(task).getSourcePositions();
+    this.pos = JavacTreesUtil.instance(task).getSourcePositions();
     this.root = root;
   }
 
