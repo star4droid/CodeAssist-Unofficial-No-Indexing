@@ -27,6 +27,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import org.apache.commons.io.FileUtils;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 @SuppressWarnings("NewApi")
 public class CompileBatch implements AutoCloseable {
@@ -48,7 +49,7 @@ public class CompileBatch implements AutoCloseable {
     this.parent = parent;
     this.borrow = batchTask(parent, files);
     this.task = borrow.task;
-    this.trees = Trees.instance(borrow.task);
+    this.trees = JavacTreesUtil.instance(borrow.task);
     this.elements = borrow.task.getElements();
     this.types = borrow.task.getTypes();
     this.roots = new ArrayList<>();
