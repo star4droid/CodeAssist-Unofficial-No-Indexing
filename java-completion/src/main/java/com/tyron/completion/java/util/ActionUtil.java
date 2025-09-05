@@ -77,6 +77,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class ActionUtil {
 
@@ -379,7 +380,7 @@ public class ActionUtil {
     if (scan == null) {
       return false;
     }
-    Scope scope = Trees.instance(parse.task).getScope(scan);
+    Scope scope = JavacTreesUtil.instance(parse.task).getScope(scan);
     Iterable<? extends Element> localElements = scope.getLocalElements();
     for (Element element : localElements) {
       if (name.contentEquals(element.getSimpleName())) {
@@ -390,7 +391,7 @@ public class ActionUtil {
   }
 
   public static boolean containsVariableAtScope(String name, CompileTask parse, TreePath path) {
-    Scope scope = Trees.instance(parse.task).getScope(path);
+    Scope scope = JavacTreesUtil.instance(parse.task).getScope(path);
     Iterable<? extends Element> localElements = scope.getLocalElements();
     for (Element element : localElements) {
       if (element.getKind() != ElementKind.LOCAL_VARIABLE && !element.getKind().isField()) {
