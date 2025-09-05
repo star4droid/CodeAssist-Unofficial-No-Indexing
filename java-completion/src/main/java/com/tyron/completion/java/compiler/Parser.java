@@ -28,6 +28,7 @@ import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class Parser {
 
@@ -70,7 +71,7 @@ public class Parser {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    this.trees = Trees.instance(task);
+    this.trees = JavacTreesUtil.instance(task);
   }
 
   public static Parser parseFile(Project project, Path file) {
