@@ -43,7 +43,7 @@ public class AddException implements JavaRewrite {
             return CANCELLED;
           }
 
-          Trees trees = Trees.instance(task.task);
+          Trees trees = JavacTreesUtil.instance(task.task);
           ExecutableElement methodElement =
               FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
           MethodTree methodTree = trees.getTree(methodElement);
