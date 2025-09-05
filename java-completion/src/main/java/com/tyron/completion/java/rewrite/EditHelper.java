@@ -340,7 +340,7 @@ public class EditHelper {
       classTree().inside(NewClassTree.class).withParent(method());
 
   public static int indent(JavacTask task, CompilationUnitTree root, Tree leaf) {
-    Trees trees = Trees.instance(task);
+    Trees trees = JavacTreesUtil.instance(task);
     ProcessingContext context = new ProcessingContext();
     context.put("trees", trees);
     context.put("root", root);
