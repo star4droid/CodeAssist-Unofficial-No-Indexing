@@ -41,6 +41,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class ImplementAbstractMethods implements JavaRewrite {
 
