@@ -13,6 +13,7 @@ import com.tyron.completion.model.TextEdit;
 import java.nio.file.Path;
 import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class AddException implements JavaRewrite {
 
