@@ -6,6 +6,7 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
 import com.sun.source.util.Trees;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class FindMethodDeclarationAt extends TreeScanner<MethodTree, Long> {
 
