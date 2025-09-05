@@ -89,7 +89,7 @@ public class HoverProvider {
 
   private String docs(ParseTask task, Tree tree) {
     TreePath path = JavacTreesUtil.instance(task.task).getPath(task.root, tree);
-    DocCommentTree docTree = DocTrees.instance(task.task).getDocCommentTree(path);
+    DocCommentTree docTree = ((DocTrees)JavacTreesUtil.instance(task.task)).getDocCommentTree(path);
     if (docTree == null) return "";
     // TODO: format this
     return docTree.toString();
