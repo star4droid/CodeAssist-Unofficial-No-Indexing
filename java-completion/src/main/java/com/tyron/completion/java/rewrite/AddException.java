@@ -13,6 +13,7 @@ import com.tyron.completion.model.TextEdit;
 import java.nio.file.Path;
 import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class AddException implements JavaRewrite {
 
@@ -43,7 +44,7 @@ public class AddException implements JavaRewrite {
             return CANCELLED;
           }
 
-          Trees trees = Trees.instance(task.task);
+          Trees trees = JavacTreesUtil.instance(task.task);
           ExecutableElement methodElement =
               FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
           MethodTree methodTree = trees.getTree(methodElement);

@@ -8,12 +8,13 @@ import com.tyron.editor.Editor;
 import io.github.rosemoe.sora.lang.styling.Span;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.lang.styling.TextStyle;
-import io.github.rosemoe.sora.textmate.core.theme.FontStyle;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
-import io.github.rosemoe.sora.textmate.core.theme.ThemeTrieElementRule;
+import org.eclipse.tm4e.core.internal.theme.FontStyle;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.ThemeTrieElementRule;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
+import org.eclipse.tm4e.core.internal.theme.StyleAttributes;
 
 public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer {
 
@@ -22,11 +23,12 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
   public SemanticAnalyzeManager(
       Editor editor,
       String grammarName,
+      String scopeName,
       InputStream grammarIns,
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,scopeName, grammarIns, languageConfiguration, theme);
   }
 
   public abstract List<SemanticToken> analyzeSpansAsync(CharSequence contents);
@@ -62,18 +64,19 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
   }
 
   private long getStyle(SemanticToken token) {
-    List<ThemeTrieElementRule> match = getTheme().match(token.getTokenType().toString());
-    if (!match.isEmpty()) {
-      ThemeTrieElementRule next = match.iterator().next();
-      int foreground = next.foreground;
-      int fontStyle = next.fontStyle;
-      return TextStyle.makeStyle(
-          foreground + 255,
-          0,
-          (fontStyle & FontStyle.Bold) == FontStyle.Bold,
-          (fontStyle & FontStyle.Italic) == FontStyle.Italic,
-          false);
+    StyleAttributes style = getTheme().match(token.getTokenType());
+    if (style != null) {
+        int foreground = style.foregroundId;
+        int fontStyle  = style.fontStyle;
+
+        return TextStyle.makeStyle(
+                foreground + 255,
+                0,
+                (fontStyle & FontStyle.Bold)   != 0,
+                (fontStyle & FontStyle.Italic) != 0,
+                false);
     }
-    return 0;
-  }
+    return 0L;
+}
+
 }

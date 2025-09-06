@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class AddImport implements JavaRewrite {
 
@@ -86,14 +87,14 @@ public class AddImport implements JavaRewrite {
   }
 
   private Position insertBefore(ParseTask task, Tree i) {
-    SourcePositions pos = Trees.instance(task.task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task.task).getSourcePositions();
     long offset = pos.getStartPosition(task.root, i);
     int line = (int) task.root.getLineMap().getLineNumber(offset);
     return new Position(line - 1, 0);
   }
 
   private Position insertAfter(ParseTask task, Tree i) {
-    SourcePositions pos = Trees.instance(task.task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task.task).getSourcePositions();
     long offset = pos.getStartPosition(task.root, i);
     int line = (int) task.root.getLineMap().getLineNumber(offset);
     return new Position(line, 0);

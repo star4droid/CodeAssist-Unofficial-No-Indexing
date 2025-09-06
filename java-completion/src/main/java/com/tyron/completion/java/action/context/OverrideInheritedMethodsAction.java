@@ -66,6 +66,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Elements;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class OverrideInheritedMethodsAction extends AnAction {
 
@@ -218,7 +219,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
     CompilerContainer container = compiler.compile(Collections.singletonList(file));
     return container.get(
         task -> {
-          Trees trees = Trees.instance(task.task);
+          Trees trees = JavacTreesUtil.instance(task.task);
           Element classElement = trees.getElement(currentPath);
           Elements elements = task.task.getElements();
           List<MethodPtr> methodPtrs = new ArrayList<>();

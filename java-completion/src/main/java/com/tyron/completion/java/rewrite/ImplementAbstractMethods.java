@@ -41,6 +41,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class ImplementAbstractMethods implements JavaRewrite {
 
@@ -94,7 +95,7 @@ public class ImplementAbstractMethods implements JavaRewrite {
       CompilerProvider compiler, CompileTask task, Path file) {
     Elements elements = task.task.getElements();
     Types types = task.task.getTypes();
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     List<TextEdit> edits = new ArrayList<>();
     List<TextEdit> importEdits = new ArrayList<>();
     Set<String> typesToImport = new HashSet<>();

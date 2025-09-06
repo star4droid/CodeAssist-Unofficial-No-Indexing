@@ -13,6 +13,7 @@ import com.tyron.editor.selection.ExpandSelectionProvider;
 import java.io.File;
 import java.time.Instant;
 import org.jetbrains.annotations.Nullable;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class JavaExpandSelectionProvider extends ExpandSelectionProvider {
 
@@ -32,7 +33,7 @@ public class JavaExpandSelectionProvider extends ExpandSelectionProvider {
     int cursorStart = editor.getCaret().getStart();
     int cursorEnd = editor.getCaret().getEnd();
 
-    SourcePositions positions = Trees.instance(parser.task).getSourcePositions();
+    SourcePositions positions = JavacTreesUtil.instance(parser.task).getSourcePositions();
     TreePath path = findCurrentPath.scan(parser.root, cursorStart, cursorEnd);
     if (path == null) {
       return null;

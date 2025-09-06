@@ -19,7 +19,7 @@ public interface Editor {
    *
    * @return mutable list of diagnostics
    */
-  List<DiagnosticWrapper> getDiagnostics();
+//  List<DiagnosticWrapper> getDiagnostics();
 
   void setDiagnostics(List<DiagnosticWrapper> diagnostics);
 
@@ -162,4 +162,4 @@ public interface Editor {
   void setAnalyzing(boolean analyzing);
 
   void requireCompletion();
-}
+} 

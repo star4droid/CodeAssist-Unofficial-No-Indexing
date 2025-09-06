@@ -19,11 +19,11 @@ public class CodeAssistCompletionAdapter extends EditorCompletionAdapter {
 
   public void setItems(EditorAutoCompletion window, List<CompletionItem> items) {
     try {
-      Field itemsField = EditorCompletionAdapter.class.getDeclaredField("mItems");
+      Field itemsField = EditorCompletionAdapter.class.getDeclaredField("items");
       itemsField.setAccessible(true);
       itemsField.set(this, items);
 
-      Field windowField = ReflectionUtil.getDeclaredField(EditorCompletionAdapter.class, "mWindow");
+      Field windowField = ReflectionUtil.getDeclaredField(EditorCompletionAdapter.class, "window");
       if (windowField != null) {
         windowField.setAccessible(true);
         windowField.set(this, window);

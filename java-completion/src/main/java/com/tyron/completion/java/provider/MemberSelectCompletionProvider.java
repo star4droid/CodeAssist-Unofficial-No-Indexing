@@ -30,6 +30,7 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class MemberSelectCompletionProvider extends BaseCompletionProvider {
 
@@ -136,7 +137,7 @@ public class MemberSelectCompletionProvider extends BaseCompletionProvider {
       String partial,
       boolean endsWithParen) {
     checkCanceled();
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     TypeElement typeElement = (TypeElement) type.asElement();
 
     HashMap<String, List<ExecutableElement>> methods = new HashMap<>();

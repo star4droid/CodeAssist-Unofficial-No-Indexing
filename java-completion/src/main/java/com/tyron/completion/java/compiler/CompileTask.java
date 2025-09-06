@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class CompileTask implements AutoCloseable {
 
@@ -23,7 +24,7 @@ public class CompileTask implements AutoCloseable {
   public CompileTask(CompileBatch batch) {
     mCompileBatch = batch;
     this.task = batch.task;
-    this.trees = Trees.instance(task);
+    this.trees = JavacTreesUtil.instance(task);
 
     this.roots = batch.roots;
     this.diagnostics = batch.parent.getDiagnostics();

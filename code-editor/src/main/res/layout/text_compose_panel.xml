@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~    CodeEditor - the awesome code editor for Android
-  ~    Copyright (C) 2020-2021  Rosemoe
+  ~    sora-editor - the awesome code editor for Android
+  ~    https://github.com/Rosemoe/sora-editor
+  ~    Copyright (C) 2020-2024  Rosemoe
   ~
   ~     This library is free software; you can redistribute it and/or
   ~     modify it under the terms of the GNU Lesser General Public
@@ -27,11 +28,13 @@
 	android:layout_width="wrap_content"
 	android:layout_height="match_parent"
 	android:orientation="horizontal"
-	android:gravity="center_vertical">
+	android:gravity="center_vertical"
+	android:id="@+id/panel_root">
 
 	<HorizontalScrollView
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content">
+		android:layout_width="wrap_content"
+		android:id="@+id/panel_hv">
 
 		<LinearLayout
 			android:layout_height="match_parent"
@@ -39,45 +42,48 @@
 			android:orientation="horizontal"
 			android:gravity="center_vertical">
 
-			<Button
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:text="@string/selectAll"
-				android:textColor="#FF000000"
-				android:textSize="12sp"
-				android:id="@+id/panel_btn_select_all"/>
+			<ImageButton
+				android:id="@+id/panel_btn_select_all"
+				android:layout_width="45dp"
+				android:layout_height="45dp"
+				android:contentDescription="@android:string/selectAll"
+				android:src="@drawable/round_select_all_20"
+				android:background="?android:attr/selectableItemBackground" />
 
-			<Button
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:text="@string/copy"
-				android:textColor="#FF000000"
-				android:textSize="12sp"
-				android:id="@+id/panel_btn_copy"/>
+			<ImageButton
+				android:id="@+id/panel_btn_copy"
+				android:layout_width="45dp"
+				android:layout_height="45dp"
+				android:contentDescription="@android:string/copy"
+				android:src="@drawable/round_content_copy_20"
+				android:background="?android:attr/selectableItemBackground" />
 
-			<Button
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:text="@string/paste"
-				android:textColor="#FF000000"
-				android:textSize="12sp"
-				android:id="@+id/panel_btn_paste"/>
+			<ImageButton
+				android:id="@+id/panel_btn_paste"
+				android:layout_width="45dp"
+				android:layout_height="45dp"
+				android:contentDescription="@android:string/paste"
+				android:src="@drawable/round_content_paste_20"
+				android:background="?android:attr/selectableItemBackground" />
 
-			<Button
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:text="@string/cut"
-				android:textColor="#FF000000"
-				android:textSize="12sp"
-				android:id="@+id/panel_btn_cut"/>
+			<ImageButton
+				android:id="@+id/panel_btn_long_select"
+				android:layout_width="45dp"
+				android:layout_height="45dp"
+				android:contentDescription="@string/sora_editor_long_select"
+				android:src="@drawable/editor_text_select_start"
+				android:background="?android:attr/selectableItemBackground" />
+
+			<ImageButton
+				android:id="@+id/panel_btn_cut"
+				android:layout_width="45dp"
+				android:layout_height="45dp"
+				android:contentDescription="@android:string/cut"
+				android:src="@drawable/round_content_cut_20"
+				android:background="?android:attr/selectableItemBackground" />
 
 		</LinearLayout>
 
 	</HorizontalScrollView>
 
 </LinearLayout>
-

@@ -26,6 +26,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class MemberReferenceCompletionProvider extends BaseCompletionProvider {
 
@@ -42,7 +43,7 @@ public class MemberReferenceCompletionProvider extends BaseCompletionProvider {
       boolean endsWithParen) {
     checkCanceled();
 
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     MemberReferenceTree select = (MemberReferenceTree) path.getLeaf();
     path = new TreePath(path, select.getQualifierExpression());
     Element element = trees.getElement(path);
@@ -92,7 +93,7 @@ public class MemberReferenceCompletionProvider extends BaseCompletionProvider {
       String partial) {
     checkCanceled();
 
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     TypeElement typeElement = (TypeElement) type.asElement();
     for (Element member : task.task.getElements().getAllMembers(typeElement)) {
       if (FuzzySearch.partialRatio(String.valueOf(member.getSimpleName()), partial) < 70) {

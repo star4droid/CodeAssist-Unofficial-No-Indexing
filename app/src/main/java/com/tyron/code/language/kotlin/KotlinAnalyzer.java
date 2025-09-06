@@ -18,8 +18,8 @@ import com.tyron.common.util.ExecutionResult;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.Editor;
 import com.tyron.kotlin_completion.CompletionEngine;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +44,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
   private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
   private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
+  private static final String SCOPENAME ="source.kt";
 
   public static KotlinAnalyzer create(Editor editor) {
     try {
@@ -69,7 +70,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
   }
 
   @Override

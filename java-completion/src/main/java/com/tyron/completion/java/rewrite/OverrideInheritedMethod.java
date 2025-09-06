@@ -35,6 +35,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class OverrideInheritedMethod implements JavaRewrite {
 
@@ -89,7 +90,7 @@ public class OverrideInheritedMethod implements JavaRewrite {
     return container.get(
         task -> {
           Types types = task.task.getTypes();
-          Trees trees = Trees.instance(task.task);
+          Trees trees = JavacTreesUtil.instance(task.task);
           ExecutableElement superMethod =
               FindHelper.findMethod(task, superClassName, methodName, erasedParameterTypes);
           if (superMethod == null) {
@@ -165,7 +166,7 @@ public class OverrideInheritedMethod implements JavaRewrite {
   }
 
   private Position nextMember(ParseTask task, ClassTree parent) {
-    SourcePositions pos = Trees.instance(task.task).getSourcePositions();
+    SourcePositions pos = JavacTreesUtil.instance(task.task).getSourcePositions();
     if (parent != null) {
       for (Tree member : parent.getMembers()) {
         long start = pos.getStartPosition(task.root, member);

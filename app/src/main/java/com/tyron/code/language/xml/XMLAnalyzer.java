@@ -23,7 +23,7 @@ import com.tyron.completion.progress.ProgressManager;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.editor.Editor;
 import com.tyron.viewbinding.task.InjectViewBindingTask;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +44,7 @@ import org.codeassist.unofficial.BuildConfig;
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private boolean mAnalyzerEnabled = false;
+  private static final String SCOPENAME ="source.xml";
 
   private static final Debouncer sDebouncer =
       new Debouncer(
@@ -67,7 +68,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       Reader languageConfiguration,
       IRawTheme theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
 
     mEditorReference = new WeakReference<>(editor);
   }
