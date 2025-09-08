@@ -231,7 +231,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void commitText(CharSequence text) {
-    super.commitText(text);
+   try{ super.commitText(text);}catch(Exception e){e.printStackTrace();}
   }
 
   @Override
