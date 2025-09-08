@@ -1,8 +1,6 @@
-> [!WARNING]
-> 
-> This project is deprecated.
-> Join Telegram Channel for more informations :- https://t.me/kodtikide_app
- 
+> [!WELCOME]
+> This is an Active Repo for CodeAssist Pro.
+
 <p align='center'>
  <img width='300px%' height='300px' src='https://github.com/Wadamzmail/CodeAssist-Unofficial/blob/main/logo-dark.png#gh-dark-mode-only' >
 <img width='300px' height='300px' src='https://github.com/Wadamzmail/CodeAssist-Unofficial/blob/main/logo-light.png#gh-light-mode-only'>
