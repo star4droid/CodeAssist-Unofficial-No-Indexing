@@ -17,6 +17,7 @@ dependencies {
 
     compileOnly project(path: ':android-stubs')
     compileOnly project(path: ':kotlinc')
+	compileOnly project(path: ':javac')
 }
 
 spotless {
