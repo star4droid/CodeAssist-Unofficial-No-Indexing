@@ -35,6 +35,8 @@ import androidx.annotation.Nullable;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 
 public class JavaLanguage implements Language, EditorFormatter {
 
@@ -46,7 +48,7 @@ public class JavaLanguage implements Language, EditorFormatter {
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
             String format = null;
-          try {
+        /*  try {
 
       StringWriter out = new StringWriter();
       StringWriter err = new StringWriter();
@@ -67,7 +69,12 @@ public class JavaLanguage implements Language, EditorFormatter {
    //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
     } catch (Exception e) {
             format = text.toString();
-    }
+    }*/
+     try{
+     format = new Formatter().formatSource(text.toString());
+     }catch(FormatterException e){
+         throw new Error(e.fillInStackTrace());
+     }     
 
     if (format == null) {
       format = text.toString();
@@ -193,7 +200,7 @@ public class JavaLanguage implements Language, EditorFormatter {
 
     CharSequence formatted = null;
 
-    try {
+    /*try {
 
       StringWriter out = new StringWriter();
       StringWriter err = new StringWriter();
@@ -213,7 +220,12 @@ public class JavaLanguage implements Language, EditorFormatter {
 
    //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
     } catch (Exception e) {
-    }
+    }*/
+    try{
+     formatted = new Formatter().formatSource(text.toString());
+     }catch(FormatterException e){
+         throw new Error(e.fillInStackTrace());
+    } 
 
     if (formatted == null) {
       formatted = text;
