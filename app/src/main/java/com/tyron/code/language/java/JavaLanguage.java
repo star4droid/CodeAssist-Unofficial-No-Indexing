@@ -35,7 +35,7 @@ import androidx.annotation.Nullable;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
-import com.google.googlejavaformat.java.Formatter;
+//import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 
 public class JavaLanguage implements Language, EditorFormatter {
@@ -71,7 +71,7 @@ public class JavaLanguage implements Language, EditorFormatter {
             format = text.toString();
     }*/
      try{
-     format = new Formatter().formatSource(text.toString());
+     format = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
      }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
      }     
@@ -222,7 +222,7 @@ public class JavaLanguage implements Language, EditorFormatter {
     } catch (Exception e) {
     }*/
     try{
-     formatted = new Formatter().formatSource(text.toString());
+     formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
      }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
     } 
