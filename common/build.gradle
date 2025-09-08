@@ -8,7 +8,7 @@ apply plugin: 'com.diffplug.spotless'
 dependencies {
     testImplementation 'junit:junit:4.+'
 
-    implementation 'androidx.annotation:annotation:1.8.2'
+    api 'androidx.annotation:annotation:1.8.2'
      //api 'com.google.guava:guava:33.3.0-jre'
 	api 'com.google.guava:guava:33.4.8-jre'
     compileOnlyApi 'com.google.code.gson:gson:2.11.0'
