@@ -16,11 +16,12 @@ public final class JavacTreesUtil {
      * @return        a Trees instance for the current compiler
      */
     public static Trees instance(CompilationTask task) {
-        String taskClassName = task.getClass().getName();
+       /* String taskClassName = task.getClass().getName();
         if (!taskClassName.equals("com.sun.tools.javac.api.JavacTaskImpl")
                 && !taskClassName.equals("com.sun.tools.javac.api.BasicJavacTask"))
             throw new IllegalArgumentException();
-        return getJavacTrees(CompilationTask.class, task);
+        return getJavacTrees(CompilationTask.class, task);*/
+        return Trees.instance(task);
     }
     
     public static Trees getJavacTrees(Class<?> argType, Object arg){
