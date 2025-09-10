@@ -43,6 +43,5 @@ compileJava {
 							 "--add-exports=java.compiler/javax.lang.model.element=ALL-UNNAMED",
 							 "--add-exports=java.compiler/javax.lang.model.type=ALL-UNNAMED",
 							 "--add-exports=java.compiler/javax.lang.model.util=ALL-UNNAMED",
-							 "--add-exports=java.compiler/javax.tools=ALL-UNNAMED",
-							 "--add-exports=java.compiler/javax.annotation.concurrent=ALL-UNNAMED"]
+							 "--add-exports=java.compiler/javax.tools=ALL-UNNAMED"]
 }
