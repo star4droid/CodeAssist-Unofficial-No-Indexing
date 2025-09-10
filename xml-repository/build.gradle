@@ -37,5 +37,12 @@ compileJava {
                              "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
                              "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
                              "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-                             "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"]
+                             "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.annotation.processing=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.lang.model=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.lang.model.element=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.lang.model.type=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.lang.model.util=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.tools=ALL-UNNAMED",
+							 "--add-exports=java.compiler/javax.annotation.concurrent=ALL-UNNAMED"]
 }
