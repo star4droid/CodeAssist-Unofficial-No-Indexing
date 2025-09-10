@@ -19,6 +19,8 @@ dependencies {
 	implementation("org.checkerframework:checker-qual:3.50.0")
 	implementation 'androidx.annotation:annotation:1.8.2'
  // api 'com.google.googlejavaformat:google-java-format:1.28.0'
+	// https://mvnrepository.com/artifact/org.checkerframework/checker-qual
+   implementation("org.checkerframework:checker-qual:3.50.0")
 }
 
 spotless {
