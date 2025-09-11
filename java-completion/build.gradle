@@ -71,6 +71,8 @@ dependencies {
 
     compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
     compileOnly project(':android-stubs')
+    // https://mvnrepository.com/artifact/org.checkerframework/checker-qual
+    implementation("org.checkerframework:checker-qual:3.50.0")
 }
 
 /*compileJava {

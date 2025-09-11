@@ -311,7 +311,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       handler.postDelayed(
           () -> {
             SpannableStringBuilder combinedText = new SpannableStringBuilder();
-
+            actionFab.setVisibility(View.GONE);
             if (texts != null) {
               // Create a copy of the list to avoid ConcurrentModificationException
               List<DiagnosticWrapper> diagnostics = new ArrayList<>(texts);
@@ -337,7 +337,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                       actionFab.setVisibility(View.VISIBLE);
                       actionFab.setImageResource(R.drawable.apk_install);
                     } else {
-                      actionFab.setVisibility(View.GONE);
+                     // actionFab.setVisibility(View.GONE);
                     }
 
                     combinedText.append(msg);
