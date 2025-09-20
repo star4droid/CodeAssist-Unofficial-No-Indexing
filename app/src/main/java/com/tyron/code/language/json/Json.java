@@ -14,7 +14,7 @@ public class Json implements Language {
 
     @Override
     public io.github.rosemoe.sora.lang.Language get(Editor editor) {
-        return LanguageManager.createTextMateLanguage("text.json",
+        return LanguageManager.createTextMateLanguage("source.json",
                 "textmate/json" + "/syntaxes/json" + ".tmLanguage.json",
                 "textmate/json/language-configuration.json", editor);
     }
