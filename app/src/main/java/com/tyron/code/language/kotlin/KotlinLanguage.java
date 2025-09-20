@@ -39,11 +39,19 @@ import androidx.annotation.Nullable;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
+import com.tyron.code.language.LanguageManager;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+
 
 public class KotlinLanguage implements Language {
 
   private final Editor mEditor;
   private final KotlinAnalyzer mAnalyzer;
+  private final TextMateLanguage delegate;
+   private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
+    private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
+    private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
+  private static final String SCOPENAME ="source.kt";
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -94,18 +102,21 @@ public class KotlinLanguage implements Language {
   public KotlinLanguage(Editor editor) {
     mEditor = editor;
     AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-    mAnalyzer = KotlinAnalyzer.create(editor);
+    delegate = LanguageManager.createTextMateLanguage(SCOPENAME,
+                LANGUAGE_PATH,
+                CONFIG_PATH,
+                editor);
   }
 
-  @NonNull
-  @Override
-  public AnalyzeManager getAnalyzeManager() {
-    return mAnalyzer;
-  }
+    @NonNull
+    @Override
+    public AnalyzeManager getAnalyzeManager() {
+        return delegate.getAnalyzeManager();
+    }
 
   @Override
   public int getInterruptionLevel() {
-    return INTERRUPTION_LEVEL_SLIGHT;
+    return delegate.getInterruptionLevel();
   }
 
   @Override
@@ -196,7 +207,7 @@ public class KotlinLanguage implements Language {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return new SymbolPairMatch.DefaultSymbolPairs();
+    return delegate.getSymbolPairs();
   }
 
   @Override
@@ -205,7 +216,9 @@ public class KotlinLanguage implements Language {
   }
 
   @Override
-  public void destroy() {}
+    public void destroy() {
+        delegate.destroy();
+    }
 
   private final NewlineHandler[] handlers = new NewlineHandler[] {new BraceHandler()};
 
