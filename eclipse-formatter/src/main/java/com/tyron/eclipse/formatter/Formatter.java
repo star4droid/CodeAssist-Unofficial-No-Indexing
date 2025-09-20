@@ -31,6 +31,10 @@ public class Formatter {
         return format(source, indentLevel, 0, source.length());
     }
 
+    public static String formatRange(String source, int start, int length) {
+        return format(source, 0, start, length);
+    }
+
     public static String format(String source, int start, int length) {
         return format(source, 0, start, length);
     }
