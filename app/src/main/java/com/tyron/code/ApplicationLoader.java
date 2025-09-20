@@ -55,6 +55,7 @@ import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 
 
 public class ApplicationLoader extends Application {
@@ -101,6 +102,9 @@ public class ApplicationLoader extends Application {
 
     runStartup();
     FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(applicationContext.getAssets()));
+    try{
+    GrammarRegistry.getInstance().loadGrammars("textmate/languages.json");
+    }catch(Exception e) {}
   }
 
   /**
