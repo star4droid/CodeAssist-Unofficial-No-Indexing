@@ -96,7 +96,7 @@ public class LanguageManager {
                     grammarAssetPath,
                     StandardCharsets.UTF_8),
             null, 0, null);*/
-    grammarReg.loadGrammars(grammarAssetPath);
+  //  grammarReg.loadGrammars(grammarAssetPath);
 
     /* 3. register language-configuration (folding, brackets, etc.) */
     LanguageConfiguration config =
