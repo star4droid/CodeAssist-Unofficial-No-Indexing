@@ -16,11 +16,13 @@ import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.Content;
 import androidx.annotation.Nullable;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 
 public class GroovyLanguage implements Language {
 
   private final Editor mEditor;
   private final GroovyAnalyzer mAnalyzer;
+  private final TextMateLanguage delegate;
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -44,24 +46,28 @@ public class GroovyLanguage implements Language {
 @NonNull
     @Override
     public Formatter getFormatter() {
-        return formatter;
+        return delegate.getFormatter();
     }
 
-  public GroovyLanguage(Editor editor) {
-    mEditor = editor;
-    mAnalyzer = GroovyAnalyzer.create(editor);
-  }
+  
 
-  @NonNull
-  @Override
-  public AnalyzeManager getAnalyzeManager() {
-    return mAnalyzer;
-  }
 
-  @Override
-  public int getInterruptionLevel() {
-    return INTERRUPTION_LEVEL_STRONG;
-  }
+    public GroovyLanguage(Editor editor) {
+        this.editor = editor;
+        delegate = LanguageManager.createTextMateLanguage(GRAMMAR_NAME, LANGUAGE_PATH, CONFIG_PATH, editor);
+    }
+
+    @NonNull
+    @Override
+    public AnalyzeManager getAnalyzeManager() {
+        return delegate.getAnalyzeManager();
+    }
+
+    @Override
+    public int getInterruptionLevel() {
+        return delegate.getInterruptionLevel();
+    }
+
 
   @Override
   public void requireAutoComplete(
@@ -72,13 +78,13 @@ public class GroovyLanguage implements Language {
       throws CompletionCancelledException {}
 
   @Override
-  public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
-    return 0;
+  public int getIndentAdvance(@NonNull ContentReference contnt, int line, int column) {
+    return delegate.getIndentAdvance(content, line, column);
   }
 
   @Override
   public boolean useTab() {
-    return true;
+    return delegate.useTab();
   }
 
   
@@ -88,7 +94,7 @@ public class GroovyLanguage implements Language {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return null;
+    return delegate.getSymbolPairs();
   }
 
   @Override
@@ -97,5 +103,7 @@ public class GroovyLanguage implements Language {
   }
 
   @Override
-  public void destroy() {}
+    public void destroy() {
+        delegate.destroy();
+    }
 }
