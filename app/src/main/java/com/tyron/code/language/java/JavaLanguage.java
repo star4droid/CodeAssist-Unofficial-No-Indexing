@@ -79,7 +79,7 @@ public class JavaLanguage implements Language, EditorFormatter {
     }*/
      try{
     // format = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-       String format = com.tyron.eclipse.formatter.Formatter.format(text.toString(),
+       String format = com.tyron.eclipse.formatter.Formatter.formatRange(text.toString(),
                     cursorRange.getStartIndex(),
                     cursorRange.getEndIndex() - cursorRange.getStartIndex());
        }catch(FormatterException e){
