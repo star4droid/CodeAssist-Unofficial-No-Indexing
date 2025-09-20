@@ -44,7 +44,7 @@ public class JavaLanguage implements Language, EditorFormatter {
 
   private final Editor mEditor;
 
-  private final BaseTextmateAnalyzer mAnalyzer;
+  private BaseTextmateAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
