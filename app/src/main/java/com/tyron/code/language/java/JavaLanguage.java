@@ -37,12 +37,18 @@ import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
 //import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 
 public class JavaLanguage implements Language, EditorFormatter {
 
   private final Editor mEditor;
 
   private final BaseTextmateAnalyzer mAnalyzer;
+  private final TextMateLanguage delegate;
+  private static final String GRAMMAR_NAME = "java.tmLanguage.json";
+  private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
+  private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
+  private static final String SCOPENAME="source.java";
     private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -71,7 +77,7 @@ public class JavaLanguage implements Language, EditorFormatter {
             format = text.toString();
     }*/
      try{
-     format = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+    // format = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
      }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
      }     
@@ -101,8 +107,8 @@ public class JavaLanguage implements Language, EditorFormatter {
     }
 
   public JavaLanguage(Editor editor) {
-    mEditor = editor;
-    mAnalyzer = JavaAnalyzer.create(editor);
+        this.mEditor = editor;
+        delegate = LanguageManager.createTextMateLanguage(SCOPENAME, LANGUAGE_PATH, CONFIG_PATH, editor);
   }
 
   public boolean isAutoCompleteChar(char p1) {
@@ -142,7 +148,7 @@ public class JavaLanguage implements Language, EditorFormatter {
   @NonNull
   @Override
   public AnalyzeManager getAnalyzeManager() {
-    return mAnalyzer;
+    return delegate.getAnalyzeManager();
   }
 
   @Override
@@ -222,7 +228,9 @@ public class JavaLanguage implements Language, EditorFormatter {
     } catch (Exception e) {
     }*/
     try{
-     formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+     //formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+      formatted = com.tyron.eclipse.formatter.Formatter.format(contents.toString(), start,
+                end - start);
      }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
     } 
@@ -235,7 +243,7 @@ public class JavaLanguage implements Language, EditorFormatter {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return new SymbolPairMatch.DefaultSymbolPairs();
+    return delegate.getSymbolPairs();
   }
 
   private final NewlineHandler[] newLineHandlers =
