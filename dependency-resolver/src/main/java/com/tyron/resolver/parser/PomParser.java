@@ -100,7 +100,7 @@ public class PomParser {
     return pom;
   }
 
-  private String getTextContent(Node child) {
+ /* private String getTextContent(Node child) {
     String value = child.getTextContent();
     Matcher matcher = VARIABLE_PATTERN.matcher(value);
     if (matcher.matches()) {
@@ -111,6 +111,26 @@ public class PomParser {
       }
     }
     return value;
+  }*/
+  private String getTextContent(Node child) {
+    String value = child.getTextContent();
+    Matcher matcher = VARIABLE_PATTERN.matcher(value);
+    StringBuffer buffer = new StringBuffer();
+
+    while (matcher.find()) {
+        String name = matcher.group(1);
+        String property = mProperties.get(name);
+        if (property == null && parent != null) {
+            property = parent.getProperty(name);
+        }
+        if (property == null) {
+            property = matcher.group(0);
+        }
+        matcher.appendReplacement(buffer, Matcher.quoteReplacement(property));
+    }
+    matcher.appendTail(buffer);
+
+    return buffer.toString();
   }
 
   private Pom parseParent(Element element) {
