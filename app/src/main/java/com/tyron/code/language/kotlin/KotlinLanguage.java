@@ -150,12 +150,13 @@ public class KotlinLanguage implements Language {
 
   @Override
   public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
-    String text = content.getLine(line).substring(0, column);
-    return getIndentAdvance(text);
+  /*  String text = content.getLine(line).substring(0, column);
+    return getIndentAdvance(text);*/
+    return delegate.getIndentAdvance(content,line,column);
   }
 
   public int getIndentAdvance(String p1) {
-    KotlinLexer lexer = new KotlinLexer(CharStreams.fromString(p1));
+  /*  KotlinLexer lexer = new KotlinLexer(CharStreams.fromString(p1));
     Token token;
     int advance = 0;
     while ((token = lexer.nextToken()) != null) {
@@ -166,16 +167,17 @@ public class KotlinLanguage implements Language {
         advance++;
         /*case RBRACE:
         advance--;
-        break;*/
+        break;*
       }
     }
     advance = Math.max(0, advance);
-    return advance * 4;
+    return advance * 4;*/
+     return delegate.getIndentAdvance();
   }
 
   @Override
   public boolean useTab() {
-    return true;
+    return delegate.useTab();
   }
 
   public CharSequence format(CharSequence text) {
