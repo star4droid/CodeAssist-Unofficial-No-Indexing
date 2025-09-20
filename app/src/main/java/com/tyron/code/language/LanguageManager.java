@@ -99,11 +99,11 @@ public class LanguageManager {
   //  grammarReg.loadGrammars(grammarAssetPath);
 
     /* 3. register language-configuration (folding, brackets, etc.) */
-    LanguageConfiguration config =
+  /*  LanguageConfiguration config =
             LanguageConfiguration.load(
                     new InputStreamReader(
                             assets.open(configAssetPath),
-                            StandardCharsets.UTF_8));
+                            StandardCharsets.UTF_8));*/
 
     /* 4. create the language */
     TextMateLanguage lang =
@@ -116,7 +116,7 @@ public class LanguageManager {
     //lang.setLanguageConfiguration(config);
 
     return lang;
-    } catch(IOException e) {
+    } catch(Exception e) {
       return TextMateLanguage.create(scopeName,false);
     }
 }
