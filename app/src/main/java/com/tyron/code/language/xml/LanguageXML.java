@@ -44,7 +44,7 @@ public class LanguageXML implements Language {
 
   private final Editor mEditor;
 
-  private final BaseTextmateAnalyzer mAnalyzer;
+  private BaseTextmateAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
