@@ -79,7 +79,10 @@ public class JavaLanguage implements Language, EditorFormatter {
     }*/
      try{
     // format = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-     }catch(FormatterException e){
+       String format = com.tyron.eclipse.formatter.Formatter.format(text.toString(),
+                    cursorRange.getStartIndex(),
+                    cursorRange.getEndIndex() - cursorRange.getStartIndex());
+       }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
      }     
 
@@ -230,8 +233,7 @@ public class JavaLanguage implements Language, EditorFormatter {
     }*/
     try{
      //formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-      formatted = com.tyron.eclipse.formatter.Formatter.format(contents.toString(), start,
-                end - start);
+      formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
      }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
     } 
