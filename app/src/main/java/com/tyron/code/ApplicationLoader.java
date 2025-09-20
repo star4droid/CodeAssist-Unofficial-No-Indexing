@@ -100,11 +100,14 @@ public class ApplicationLoader extends Application {
         .trackActivities(true)
         .apply();
 
-    runStartup();
+    
     FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(applicationContext.getAssets()));
     try{
     GrammarRegistry.getInstance().loadGrammars("textmate/languages.json");
-    }catch(Exception e) {}
+    }catch(Exception e) {
+      throw new RuntimeException(e);
+    }
+    runStartup();
   }
 
   /**
