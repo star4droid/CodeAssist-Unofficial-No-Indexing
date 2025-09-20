@@ -51,7 +51,7 @@ public class KotlinLanguage implements Language {
    private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
     private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
     private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
-  private static final String SCOPENAME ="source.kt";
+  private static final String SCOPENAME ="source.kotlin";
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
