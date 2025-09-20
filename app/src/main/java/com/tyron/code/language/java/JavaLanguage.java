@@ -54,7 +54,7 @@ public class JavaLanguage implements Language, EditorFormatter {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = null;
+            String formatted = null;
         /*  try {
 
       StringWriter out = new StringWriter();
@@ -67,31 +67,31 @@ public class JavaLanguage implements Language, EditorFormatter {
               new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)));
       int exitCode = main.format("-");
 
-      format = out.toString();
+      formatted = out.toString();
 
       if (exitCode != 0) {
-        format = text.toString();
+        formatted = text.toString();
       }
 
    //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
     } catch (Exception e) {
-            format = text.toString();
+            formatted = text.toString();
     }*/
      try{
-    // format = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-       String format = com.tyron.eclipse.formatter.Formatter.formatRange(text.toString(),
+    // formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+         formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),
                     cursorRange.getStartIndex(),
                     cursorRange.getEndIndex() - cursorRange.getStartIndex());
        }catch(FormatterException e){
          throw new Error(e.fillInStackTrace());
      }     
 
-    if (format == null) {
-      format = text.toString();
+    if (formatted == null) {
+      formatted = text.toString();
     } 
-            if (!text.toString().equals(format)) {
+            if (!text.toString().equals(formatted)) {
                 text.delete(0, text.getLineCount() - 1);
-                text.insert(0, 0, format);
+                text.insert(0, 0, formatted);
             }
             return cursorRange;
         }
