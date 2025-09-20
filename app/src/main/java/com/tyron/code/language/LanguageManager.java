@@ -117,7 +117,7 @@ public class LanguageManager {
 
     return lang;
     } catch(IOException e) {
-      return new EmptyLanguage();
+      return TextMateLanguage.create(scopeName,false);
     }
 }
 
