@@ -22,7 +22,7 @@ import com.tyron.code.language.LanguageManager;
 public class GroovyLanguage implements Language {
 
   private final Editor mEditor;
-  private final GroovyAnalyzer mAnalyzer;
+  private GroovyAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
     private static final String GRAMMAR_NAME = "groovy.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/groovy/syntaxes/groovy.tmLanguage";
