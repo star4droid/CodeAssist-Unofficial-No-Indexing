@@ -87,7 +87,8 @@ public class IncrementalJavaFormatTask extends Task<JavaModule> {
           String text = new String(Files.readAllBytes(mJava.toPath()));
           String formatted = null;
           try{
-       formatted =  new Formatter().formatSource(text.toString());
+      // formatted =  new Formatter().formatSource(text.toString());
+        formatted = com.tyron.eclipse.formatter.Formatter.format(text,0,text.length());   
      }catch(FormatterException e){
          getLogger().debug("Error: " + mJava.getAbsolutePath() + " " + Throwables.getStackTraceAsString(e));
             throw new CompilationFailedException(TAG + " error");
