@@ -156,7 +156,7 @@ public class KotlinLanguage implements Language {
   }
 
   public int getIndentAdvance(String p1) {
-  /*  KotlinLexer lexer = new KotlinLexer(CharStreams.fromString(p1));
+    KotlinLexer lexer = new KotlinLexer(CharStreams.fromString(p1));
     Token token;
     int advance = 0;
     while ((token = lexer.nextToken()) != null) {
@@ -167,12 +167,11 @@ public class KotlinLanguage implements Language {
         advance++;
         /*case RBRACE:
         advance--;
-        break;*
+        break;**/
       }
     }
     advance = Math.max(0, advance);
-    return advance * 4;*/
-     return delegate.getIndentAdvance();
+    return advance * 4;
   }
 
   @Override
