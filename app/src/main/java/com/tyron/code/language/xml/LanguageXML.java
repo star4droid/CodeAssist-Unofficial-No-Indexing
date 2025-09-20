@@ -98,7 +98,7 @@ public class LanguageXML implements Language {
 
     try {
       AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-      delegate = LanguageManager.createTextMateLanguage("source.xml",
+      delegate = LanguageManager.createTextMateLanguage("text.xml",
                 "textmate/xml/syntaxes/xml.tmLanguage.json",
                 "textmate/java/language-configuration.json", editor);
     } catch (Exception e) {
