@@ -83,7 +83,7 @@ public class GroovyLanguage implements Language {
       throws CompletionCancelledException {}
 
   @Override
-  public int getIndentAdvance(@NonNull ContentReference contnt, int line, int column) {
+  public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
     return delegate.getIndentAdvance(content, line, column);
   }
 
