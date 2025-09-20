@@ -3,9 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.diffplug.spotless'
 
 android {
-    compileSdkVersion 35
-    buildToolsVersion '35.0.0' 
-	namespace "org.codeassist.unofficial" 
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace rootProject.ext.applicationId 
 	
 	spotless {
 		java {
@@ -15,11 +15,11 @@ android {
 		}
 	
     defaultConfig {
-        targetSdkVersion 35
-		minSdkVersion 26		
-		applicationId "org.codeassist.unofficial"
-		versionCode 1
-		versionName "1.0.2"         	
+        targetSdkVersion rootProject.ext.targetSdkVersion
+		minSdkVersion rootProject.ext.minSdkVersion		
+		applicationId rootProject.ext.applicationId
+		versionCode rootProject.ext.versionCode
+		versionName rootProject.ext.versionName        	
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
