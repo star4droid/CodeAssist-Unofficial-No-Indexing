@@ -393,11 +393,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
     return CodeEditorView.super.formatCodeAsync();
   }
 
- /* @Override
+ @Override
   public synchronized boolean formatCodeAsync(int start, int end) {
-    if (isFormatting()) {
+   /* if (isFormatting()) {
       return false;
-    }
+    }*/
+    if(true) return false;
     if (getEditorLanguage() instanceof EditorFormatter
         && getText() != null
         && getEditorLanguage() != null) {
@@ -422,7 +423,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
       return true;
     }
     return false;
-  }*/
+  }
 
   @Override
   public Caret getCaret() {
