@@ -37,12 +37,15 @@ import androidx.annotation.Nullable;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
+import com.tyron.code.language.LanguageManager;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 
 public class LanguageXML implements Language {
 
   private final Editor mEditor;
 
   private final BaseTextmateAnalyzer mAnalyzer;
+  private final TextMateLanguage delegate;
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -95,13 +98,9 @@ public class LanguageXML implements Language {
 
     try {
       AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-      mAnalyzer =
-          new XMLAnalyzer(
-              editor,
-              "xml.tmLanguage.json",
-              assetManager.open("textmate/xml" + "/syntaxes/xml" + ".tmLanguage.json"),
-              new InputStreamReader(assetManager.open("textmate/java/language-configuration.json")),
-              ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
+      delegate = LanguageManager.createTextMateLanguage("source.xml",
+                "textmate/xml/syntaxes/xml.tmLanguage.json",
+                "textmate/java/language-configuration.json", editor);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -144,7 +143,7 @@ public class LanguageXML implements Language {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return new SymbolPairMatch.DefaultSymbolPairs();
+    return delegate.getSymbolPairs();
   }
 
   @Override
@@ -155,12 +154,14 @@ public class LanguageXML implements Language {
   }
 
   @Override
-  public void destroy() {}
+  public void destroy() {
+    delegate.destroy();
+  }
 
   @NonNull
   @Override
   public AnalyzeManager getAnalyzeManager() {
-    return mAnalyzer;
+    return delegate.getAnalyzeManager();
   }
 
   @Override
