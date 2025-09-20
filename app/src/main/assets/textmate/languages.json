@@ -7,13 +7,13 @@
       "languageConfiguration": "textmate/java/language-configuration.json"
     },
     {
-      "grammar": "textmate/kotlin/syntaxes/Kotlin.tmLanguage",
+      "grammar": "textmate/kotlin/syntaxes/kotlin.tmLanguage",
       "name": "kotlin",
       "scopeName": "source.kotlin",
       "languageConfiguration": "textmate/kotlin/language-configuration.json"
     },
     {
-      "grammar": "textmate/groovy/syntaxes/groovy.tmLanguage.json",
+      "grammar": "textmate/groovy/syntaxes/groovy.tmLanguage",
       "name": "groovy",
       "scopeName": "source.groovy",
       "languageConfiguration": "textmate/groovy/language-configuration.json"
