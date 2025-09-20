@@ -27,7 +27,7 @@ public class GroovyLanguage implements Language {
     private static final String GRAMMAR_NAME = "groovy.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/groovy/syntaxes/groovy.tmLanguage";
   private static final String CONFIG_PATH = "textmate/groovy/language-configuration.json";
-  private static final String SCOPENAME="source.gradle";
+  private static final String SCOPENAME="source.groovy";
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
