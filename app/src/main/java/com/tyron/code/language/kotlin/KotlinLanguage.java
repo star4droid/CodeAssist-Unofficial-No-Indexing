@@ -46,7 +46,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 public class KotlinLanguage implements Language {
 
   private final Editor mEditor;
-  private final KotlinAnalyzer mAnalyzer;
+  private KotlinAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
    private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
     private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
