@@ -23,6 +23,10 @@ public class GroovyLanguage implements Language {
   private final Editor mEditor;
   private final GroovyAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
+    private static final String GRAMMAR_NAME = "groovy.tmLanguage";
+  private static final String LANGUAGE_PATH = "textmate/groovy/syntaxes/groovy.tmLanguage";
+  private static final String CONFIG_PATH = "textmate/groovy/language-configuration.json";
+  private static final String SCOPENAME="source.gradle";
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -53,8 +57,8 @@ public class GroovyLanguage implements Language {
 
 
     public GroovyLanguage(Editor editor) {
-        this.editor = editor;
-        delegate = LanguageManager.createTextMateLanguage(GRAMMAR_NAME, LANGUAGE_PATH, CONFIG_PATH, editor);
+        this.mEditor = editor;
+        delegate = LanguageManager.createTextMateLanguage(SCOPENAME, LANGUAGE_PATH, CONFIG_PATH, editor);
     }
 
     @NonNull
