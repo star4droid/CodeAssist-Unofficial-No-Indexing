@@ -398,8 +398,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
    /* if (isFormatting()) {
       return false;
     }*/
-    if(true) return false;
-    if (getEditorLanguage() instanceof EditorFormatter
+    return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
+   // if(true) return false;
+   /* if (getEditorLanguage() instanceof EditorFormatter
         && getText() != null
         && getEditorLanguage() != null) {
       ProgressManager.getInstance()
@@ -422,7 +423,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
               });
       return true;
     }
-    return false;
+    return false;*/
   }
 
   @Override
