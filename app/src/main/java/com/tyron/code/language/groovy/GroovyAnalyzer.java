@@ -15,7 +15,7 @@ public class GroovyAnalyzer extends BaseTextmateAnalyzer {
   private static final String GRAMMAR_NAME = "groovy.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/groovy/syntaxes/groovy.tmLanguage";
   private static final String CONFIG_PATH = "textmate/groovy/language-configuration.json";
-  private static final String SCOPENAME="source.gradle";
+  private static final String SCOPENAME="source.groovy";
 
   public GroovyAnalyzer(
       Editor editor,
