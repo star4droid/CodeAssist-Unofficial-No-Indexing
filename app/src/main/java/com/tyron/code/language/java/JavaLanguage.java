@@ -38,6 +38,7 @@ import io.github.rosemoe.sora.text.Content;
 //import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import com.tyron.code.language.LanguageManager;
 
 public class JavaLanguage implements Language, EditorFormatter {
 
