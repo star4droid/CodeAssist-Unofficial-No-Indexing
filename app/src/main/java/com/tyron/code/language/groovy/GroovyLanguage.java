@@ -17,6 +17,7 @@ import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.Content;
 import androidx.annotation.Nullable;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import com.tyron.code.language.LanguageManager;
 
 public class GroovyLanguage implements Language {
 
