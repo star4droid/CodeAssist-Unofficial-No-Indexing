@@ -50,61 +50,39 @@ public class JavaLanguage implements Language, EditorFormatter {
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
   private static final String SCOPENAME="source.java";
-    private final Formatter formatter = new AsyncFormatter() {
-        @Nullable
-        @Override
-        public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String formatted = null;
-        /*  try {
-
-      StringWriter out = new StringWriter();
-      StringWriter err = new StringWriter();
-
-      com.google.googlejavaformat.java.Main main =
-          new com.google.googlejavaformat.java.Main(
-              new PrintWriter(out, true),
-              new PrintWriter(err, true),
-              new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)));
-      int exitCode = main.format("-");
-
-      formatted = out.toString();
-
-      if (exitCode != 0) {
-        formatted = text.toString();
-      }
-
-   //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-    } catch (Exception e) {
-            formatted = text.toString();
-    }*/
-     try{
-    // formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-         formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),
-                    cursorRange.getStartIndex(),
-                    cursorRange.getEndIndex() - cursorRange.getStartIndex());
-       }catch(Exception e){
-        // throw new Error(e.fillInStackTrace());
-     }     
-
-    if (formatted == null) {
-      formatted = text.toString();
-    } 
-            if (!text.toString().equals(formatted)) {
-                text.delete(0, text.getLineCount() - 1);
-                text.insert(0, 0, formatted);
-            }
-            return cursorRange;
+  private final Formatter formatter = new AsyncFormatter() {
+    @Nullable
+    @Override
+    public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
+        String formatted;
+        try {
+            formatted = new com.google.googlejavaformat.java.Formatter()
+                    .formatSource(text.toString());
+        } catch (Exception e) {
+            formatted = text.toString(); // fallback
         }
 
-        @Nullable
-        @Override
-        public TextRange formatRegionAsync(@NonNull Content text,
-                                           @NonNull TextRange rangeToFormat,
-                                           @NonNull TextRange cursorRange) {
-            return null;
+        if (!text.toString().equals(formatted)) {
+            int oldCursor = cursorRange.getStartIndex();
+            text.delete(0, text.length());
+            text.insert(0, 0, formatted); 
+            int newCursor = Math.min(oldCursor, formatted.length());
+            return new TextRange(newCursor, newCursor);
         }
-    };
-@NonNull
+
+        return cursorRange;
+    }
+
+    @Nullable
+    @Override
+    public TextRange formatRegionAsync(@NonNull Content text,
+                                       @NonNull TextRange rangeToFormat,
+                                       @NonNull TextRange cursorRange) {
+        return null;
+    }
+}; 
+  
+    @NonNull
     @Override
     public Formatter getFormatter() {
         return formatter;
