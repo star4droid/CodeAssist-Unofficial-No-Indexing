@@ -51,6 +51,7 @@ public class JavaLanguage implements Language, EditorFormatter {
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
   private static final String SCOPENAME="source.java";
   private final Formatter formatter = new AsyncFormatter() {
+  private final Formatter formatter = new AsyncFormatter() {
     @Nullable
     @Override
     public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
@@ -63,11 +64,21 @@ public class JavaLanguage implements Language, EditorFormatter {
         }
 
         if (!text.toString().equals(formatted)) {
+            // احفظ موقع المؤشر القديم
             int oldCursor = cursorRange.getStartIndex();
+
+            // امسح النص القديم وأدخل الجديد
             text.delete(0, text.length());
-            text.insert(0, 0, formatted); 
+            text.insert(0, 0, formatted);
+
+            // احسب الموقع الجديد للمؤشر
             int newCursor = Math.min(oldCursor, formatted.length());
-            return new TextRange(newCursor, newCursor);
+
+            // حوله لـ CharPosition
+            CharPosition pos = text.getIndexer().getCharPosition(newCursor);
+
+            // رجع المؤشر
+            return new TextRange(pos, pos);
         }
 
         return cursorRange;
@@ -80,7 +91,7 @@ public class JavaLanguage implements Language, EditorFormatter {
                                        @NonNull TextRange cursorRange) {
         return null;
     }
-}; 
+};
   
     @NonNull
     @Override
