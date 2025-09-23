@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 
 public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
 
@@ -33,13 +38,12 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
 
   public DiagnosticTextmateAnalyzer(
       Editor editor,
-      String grammarName,
-      String scopeName,
-      InputStream grammarIns,
-      Reader languageConfiguration,
-      IRawTheme theme)
+      EmptyTextMateLanguage language,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme)
       throws Exception {
-    super(editor, grammarName,scopeName, grammarIns, languageConfiguration, theme);
+    super(language, grammar, languageConfiguration, theme);
     mEditor = editor;
     mStyleModifier = this::modifyStyles;
   }
