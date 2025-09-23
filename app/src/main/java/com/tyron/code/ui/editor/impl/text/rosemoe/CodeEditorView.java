@@ -164,7 +164,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
 
-    AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
+  /*  AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
     if (manager instanceof DiagnosticTextmateAnalyzer) {
       ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
     }
@@ -177,8 +177,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(/*manager,*/ styles);
-    }
+      setStyles(/*manager,/ styles);
+    }*/
     convDiagnostics(diagnostics);
   }
 
