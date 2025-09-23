@@ -35,8 +35,14 @@ import androidx.annotation.Nullable;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 
-public class JsonLanguage implements Language {
+public class JsonLanguage extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
 
@@ -85,12 +91,9 @@ public class JsonLanguage implements Language {
       AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
       mAnalyzer =
           new BaseTextmateAnalyzer(
-              editor,
-              "json.tmLanguage.json",
-               "source.json",
-              assetManager.open("textmate/json" + "/syntaxes/json" + ".tmLanguage.json"),
-              new InputStreamReader(assetManager.open("textmate/json/language-configuration.json")),
-              ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
+              this,
+             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
