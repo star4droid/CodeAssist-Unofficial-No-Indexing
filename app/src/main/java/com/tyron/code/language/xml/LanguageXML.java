@@ -39,8 +39,14 @@ import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
 import com.tyron.code.language.LanguageManager;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 
-public class LanguageXML implements Language {
+public class LanguageXML extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
 
