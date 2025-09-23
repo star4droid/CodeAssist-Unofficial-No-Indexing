@@ -47,7 +47,7 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
 
   private BaseTextmateAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
-  final boolean createIdentifiers = false;
+  public boolean createIdentifiers = false;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
