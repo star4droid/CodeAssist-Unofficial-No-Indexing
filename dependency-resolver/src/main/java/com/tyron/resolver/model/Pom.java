@@ -57,6 +57,34 @@ public class Pom {
     return valueOf(names[0], names[1], names[2]);
   }
 
+  @Nullable
+public String resolveProperty(String key) {
+    // 1. حاول من properties
+    String value = properties.get(key);
+    if (value != null) {
+        return value;
+    }
+
+    // 2. built-in properties
+    switch (key) {
+        case "project.version":
+            return getVersionName();
+        case "project.groupId":
+            return getGroupId();
+        case "project.artifactId":
+            return getArtifactId();
+        case "project.packaging":
+            return getPackaging();
+    }
+
+    // 3. لو عنده parent جرّب فيهو
+    if (parent != null) {
+        return parent.resolveProperty(key);
+    }
+
+    return null; // لو ما لقى حاجة
+}
+
   public String getVersionName() {
     return versionName;
   }
