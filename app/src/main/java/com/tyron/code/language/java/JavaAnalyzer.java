@@ -74,9 +74,6 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
 
   public static JavaAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
     try {
-      AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-
-      
         return new JavaAnalyzer(
             editor,
             lang,
