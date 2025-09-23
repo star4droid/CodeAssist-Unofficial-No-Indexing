@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.lang.reflect.Field;
 
 import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager;
 import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
@@ -278,6 +279,17 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
     public void onChangeTheme(ThemeModel newTheme) {
         this.theme = newTheme.getTheme();
     }
+    public void updateTheme(Theme theme){
+        try{
+        ThemeModel tm = new ThemeModel(null,null);
+        Field tmf = ThemeModel.class.getDeclaredField("theme");
+        tmf.setAccessible(true);
+        tmf.set(theme,tm);
+        onChangeTheme(tm);
+        } catch(Exception e) {} 
+    }
+    
+    public Theme getTheme(){ return this.theme; }
      
 } 
  
