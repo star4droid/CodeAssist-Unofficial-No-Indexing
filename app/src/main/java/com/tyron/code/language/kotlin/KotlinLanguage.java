@@ -47,9 +47,9 @@ import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
-  private KotlinAnalyzer mAnalyzer;
+  private final KotlinAnalyzer mAnalyzer;
   public boolean createIdentifiers = false;
-  private final TextMateLanguage delegate;
+//  private final TextMateLanguage delegate;
    private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
     private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
     private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
@@ -104,21 +104,20 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
   public KotlinLanguage(Editor editor) {
     mEditor = editor;
     AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-    delegate = LanguageManager.createTextMateLanguage(SCOPENAME,
-                LANGUAGE_PATH,
-                CONFIG_PATH,
-                editor);
+  //  delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
+    mAnalyzer = KotlinAnalyzer.create(editor,this);
   }
 
     @NonNull
     @Override
     public AnalyzeManager getAnalyzeManager() {
-        return delegate.getAnalyzeManager();
+      //  return delegate.getAnalyzeManager();
+      return mAnalyzer;
     }
 
   @Override
   public int getInterruptionLevel() {
-    return delegate.getInterruptionLevel();
+     return INTERRUPTION_LEVEL_SLIGHT;
   }
 
   @Override
@@ -152,9 +151,9 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   @Override
   public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
-  /*  String text = content.getLine(line).substring(0, column);
-    return getIndentAdvance(text);*/
-    return delegate.getIndentAdvance(content,line,column);
+    String text = content.getLine(line).substring(0, column);
+    return getIndentAdvance(text);
+   // return delegate.getIndentAdvance(content,line,column);
   }
 
   public int getIndentAdvance(String p1) {
@@ -178,7 +177,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   @Override
   public boolean useTab() {
-    return delegate.useTab();
+    //return delegate.useTab();
+    return true;
   }
 
   public CharSequence format(CharSequence text) {
@@ -210,7 +210,9 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return delegate.getSymbolPairs();
+    //return delegate.getSymbolPairs();
+    return new SymbolPairMatch.DefaultSymbolPairs();
+    
   }
 
   @Override
@@ -220,7 +222,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   @Override
     public void destroy() {
-        delegate.destroy();
+        //delegate.destroy();
+      mAnalyzer.destroy();
     }
 
   private final NewlineHandler[] handlers = new NewlineHandler[] {new BraceHandler()};
