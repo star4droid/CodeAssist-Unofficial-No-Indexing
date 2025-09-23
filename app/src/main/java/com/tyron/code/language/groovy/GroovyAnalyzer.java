@@ -9,6 +9,11 @@ import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 
 public class GroovyAnalyzer extends BaseTextmateAnalyzer {
 
@@ -19,26 +24,21 @@ public class GroovyAnalyzer extends BaseTextmateAnalyzer {
 
   public GroovyAnalyzer(
       Editor editor,
-      String grammarName,
-      InputStream open,
-      InputStreamReader config,
-      IRawTheme rawTheme)
+      EmptyTextMateLanguage lang,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme)
       throws Exception {
-    super(editor, grammarName,SCOPENAME, open, config, rawTheme);
+    super(editor,lang,grammar, languageConfiguration, theme);
   }
 
-  public static GroovyAnalyzer create(Editor editor) {
+  public static GroovyAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
     try {
-      AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-
-      try (InputStreamReader config = new InputStreamReader(assetManager.open(CONFIG_PATH))) {
         return new GroovyAnalyzer(
             editor,
-            GRAMMAR_NAME,
-            assetManager.open(LANGUAGE_PATH),
-            config,
-            ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
-      }
+            lang,
+             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
