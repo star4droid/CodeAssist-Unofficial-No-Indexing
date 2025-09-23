@@ -30,7 +30,7 @@ public class GroovyAnalyzer extends BaseTextmateAnalyzer {
       LanguageConfiguration languageConfiguration,
       ThemeRegistry theme)
       throws Exception {
-    super(editor,lang,grammar, languageConfiguration, theme);
+    super(lang,grammar, languageConfiguration, theme);
   }
 
   public static GroovyAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
