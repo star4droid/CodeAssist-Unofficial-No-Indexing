@@ -278,6 +278,9 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
 
     @Override
     public void reset(@NonNull ContentReference content, @NonNull Bundle extraArguments) {
+        if (!extraArguments.getBoolean("loaded", false)) {
+            return;
+        }
         super.reset(content, extraArguments);
         syncIdentifiers.clear();
     }
