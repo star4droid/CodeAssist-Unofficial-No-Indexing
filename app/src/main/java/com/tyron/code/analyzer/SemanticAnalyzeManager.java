@@ -15,6 +15,11 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 import org.eclipse.tm4e.core.internal.theme.StyleAttributes;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 
 public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer {
 
@@ -22,13 +27,12 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
 
   public SemanticAnalyzeManager(
       Editor editor,
-      String grammarName,
-      String scopeName,
-      InputStream grammarIns,
-      Reader languageConfiguration,
-      IRawTheme theme)
+      EmptyTextMateLanguage language,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme)
       throws Exception {
-    super(editor, grammarName,scopeName, grammarIns, languageConfiguration, theme);
+    super(editor,language,grammar, languageConfiguration, theme);
   }
 
   public abstract List<SemanticToken> analyzeSpansAsync(CharSequence contents);
