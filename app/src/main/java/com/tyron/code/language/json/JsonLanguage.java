@@ -175,7 +175,9 @@ public class JsonLanguage extends EmptyTextMateLanguage implements Language {
   }
 
   @Override
-  public void destroy() {}
+  public void destroy() {
+    mAnalyzer.destroy();
+  }
 
  /* class IndentHandler implements NewlineHandler {
 
