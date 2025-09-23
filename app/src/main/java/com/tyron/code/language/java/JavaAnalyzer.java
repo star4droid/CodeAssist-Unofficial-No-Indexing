@@ -58,6 +58,11 @@ import org.codeassist.unofficial.BuildConfig;
 import java.lang.reflect.Method;
 import javax.tools.JavaCompiler.CompilationTask;
 import dev.mutwakil.javac.JavacTreesUtil;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
@@ -67,18 +72,16 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
   private static final String SCOPENAME="source.java";
 
-  public static JavaAnalyzer create(Editor editor) {
+  public static JavaAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
     try {
       AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
 
-      try (InputStreamReader config = new InputStreamReader(assetManager.open(CONFIG_PATH))) {
+      
         return new JavaAnalyzer(
             editor,
-            GRAMMAR_NAME,
-            assetManager.open(LANGUAGE_PATH),
-            config,
-            ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
-      }
+            lang,
+             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -103,12 +106,12 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
 
   public JavaAnalyzer(
       Editor editor,
-      String grammarName,
-      InputStream grammarIns,
-      Reader languageConfiguration,
-      IRawTheme theme)
+      EmptyTextMateLanguage lang,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme)
       throws Exception {
-    super(editor, grammarName,SCOPENAME, grammarIns, languageConfiguration, theme);
+    super(editor,lang,grammar, languageConfiguration, theme);
 
     mEditorReference = new WeakReference<>(editor);
     mPreferences = ApplicationLoader.getDefaultPreferences();
