@@ -39,8 +39,9 @@ import io.github.rosemoe.sora.text.Content;
 import com.google.googlejavaformat.java.FormatterException;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import com.tyron.code.language.LanguageManager;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 
-public class JavaLanguage implements Language, EditorFormatter {
+public class JavaLanguage extends EmptyTextMateLanguage implements Language, EditorFormatter {
 
   private final Editor mEditor;
 
