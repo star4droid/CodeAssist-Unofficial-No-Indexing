@@ -279,7 +279,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
     public void onChangeTheme(ThemeModel newTheme) {
         this.theme = newTheme.getTheme();
     }
-    public void updateTheme(Theme theme){
+ /*   public void updateTheme(Theme theme){
         try{
         ThemeModel tm = new ThemeModel(null,null);
         Field tmf = ThemeModel.class.getDeclaredField("theme");
@@ -287,7 +287,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
         tmf.set(theme,tm);
         onChangeTheme(tm);
         } catch(Exception e) {} 
-    }
+    }*/
     
     public Theme getTheme(){ return this.theme; }
      
