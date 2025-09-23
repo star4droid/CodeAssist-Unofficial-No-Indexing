@@ -21,6 +21,7 @@ import org.eclipse.tm4e.core.grammar.IGrammar;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 
 /**
  * A text mate analyzer which does not use a TextMateLanguage
@@ -44,6 +45,16 @@ public class BaseTextmateAnalyzer extends TextMateAnalyzer {
         }
         super.reset(content, extraArguments);
     }
+
+  public void setTheme(Theme theme){
+      ThemeModel tm = new ThemeModel();
+      try{
+          Field tmf = ThemeModel.class.getDeclaredField("theme");
+          tmf.setAccessible(true);
+          tmf.set(tm,theme);
+          onChangeTheme(tm);
+      }catch(Exception e){}
+  }
 
     public Theme getTheme() {
         try {
