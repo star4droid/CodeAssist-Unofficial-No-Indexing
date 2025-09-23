@@ -142,6 +142,10 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
     return ProgressManager.getInstance()
         .computeNonCancelableAsync(
             () -> {
+
+             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            String selectedTheme = preferences.getString("theme", "default");
+             
                String path = file.getAbsolutePath();
             
             ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
@@ -154,7 +158,7 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
              name
            );
 // If the theme is dark
- model.setDark(true);
+ model.setDark(selectedTheme.equals("dark"));
 try{             
 model.load();
 ThemeRegistry.getInstance().loadTheme(model);
