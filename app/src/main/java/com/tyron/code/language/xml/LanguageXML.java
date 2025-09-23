@@ -50,8 +50,8 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
 
-  private BaseTextmateAnalyzer mAnalyzer;
-  private final TextMateLanguage delegate;
+  private final BaseTextmateAnalyzer mAnalyzer;
+//  private final TextMateLanguage delegate;
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -104,9 +104,8 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language {
 
     try {
       AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-      delegate = LanguageManager.createTextMateLanguage("text.xml",
-                "textmate/xml/syntaxes/xml.tmLanguage.json",
-                "textmate/java/language-configuration.json", editor);
+     // delegate = LanguageManager.createTextMateLanguage("text.xml");
+      mAnalyzer = XMLAnalyzer.create(editor, this) ;
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -149,7 +148,8 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return delegate.getSymbolPairs();
+    //return delegate.getSymbolPairs();
+    return new SymbolPairMatch.DefaultSymbolPairs();
   }
 
   @Override
@@ -161,13 +161,15 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language {
 
   @Override
   public void destroy() {
-    delegate.destroy();
+   // delegate.destroy();
+    mAnalyzer.destroy();
   }
 
   @NonNull
   @Override
   public AnalyzeManager getAnalyzeManager() {
-    return delegate.getAnalyzeManager();
+    //return delegate.getAnalyzeManager();
+    return mAnalyzer;
   }
 
   @Override
