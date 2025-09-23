@@ -59,7 +59,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
     final IdentifierAutoComplete.SyncIdentifiers syncIdentifiers = new IdentifierAutoComplete.SyncIdentifiers();
 
 
-    public BaseTextMateAnalyzer(EmptyTextMateLanguage language, IGrammar grammar, LanguageConfiguration languageConfiguration,/* GrammarRegistry grammarRegistry,*/ ThemeRegistry themeRegistry) {
+    public BaseTextmateAnalyzer(EmptyTextMateLanguage language, IGrammar grammar, LanguageConfiguration languageConfiguration,/* GrammarRegistry grammarRegistry,*/ ThemeRegistry themeRegistry) {
         this.language = language;
 
         this.theme = themeRegistry.getCurrentThemeModel().getTheme();
