@@ -16,18 +16,11 @@ import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.Content;
 import androidx.annotation.Nullable;
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
-import com.tyron.code.language.LanguageManager;
 
 public class GroovyLanguage implements Language {
 
   private final Editor mEditor;
-  private GroovyAnalyzer mAnalyzer;
-  private final TextMateLanguage delegate;
-    private static final String GRAMMAR_NAME = "groovy.tmLanguage";
-  private static final String LANGUAGE_PATH = "textmate/groovy/syntaxes/groovy.tmLanguage";
-  private static final String CONFIG_PATH = "textmate/groovy/language-configuration.json";
-  private static final String SCOPENAME="source.groovy";
+  private final GroovyAnalyzer mAnalyzer;
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
@@ -51,28 +44,24 @@ public class GroovyLanguage implements Language {
 @NonNull
     @Override
     public Formatter getFormatter() {
-        return delegate.getFormatter();
+        return formatter;
     }
 
-  
+  public GroovyLanguage(Editor editor) {
+    mEditor = editor;
+    mAnalyzer = GroovyAnalyzer.create(editor, this);
+  }
 
+  @NonNull
+  @Override
+  public AnalyzeManager getAnalyzeManager() {
+    return mAnalyzer;
+  }
 
-    public GroovyLanguage(Editor editor) {
-        this.mEditor = editor;
-        delegate = LanguageManager.createTextMateLanguage(SCOPENAME, LANGUAGE_PATH, CONFIG_PATH, editor);
-    }
-
-    @NonNull
-    @Override
-    public AnalyzeManager getAnalyzeManager() {
-        return delegate.getAnalyzeManager();
-    }
-
-    @Override
-    public int getInterruptionLevel() {
-        return delegate.getInterruptionLevel();
-    }
-
+  @Override
+  public int getInterruptionLevel() {
+    return INTERRUPTION_LEVEL_STRONG;
+  }
 
   @Override
   public void requireAutoComplete(
@@ -84,12 +73,12 @@ public class GroovyLanguage implements Language {
 
   @Override
   public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
-    return delegate.getIndentAdvance(content, line, column);
+    return 0;
   }
 
   @Override
   public boolean useTab() {
-    return delegate.useTab();
+    return true;
   }
 
   
@@ -99,7 +88,7 @@ public class GroovyLanguage implements Language {
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return delegate.getSymbolPairs();
+    return null;
   }
 
   @Override
@@ -108,7 +97,7 @@ public class GroovyLanguage implements Language {
   }
 
   @Override
-    public void destroy() {
-        delegate.destroy();
-    }
-}
+  public void destroy() {
+    mAnalyzer.destroy();
+  }
+} 
