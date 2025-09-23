@@ -69,7 +69,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
       EmptyTextMateLanguage lang,
       IGrammar grammar,
       LanguageConfiguration languageConfiguration,
-      ThemeRegistry theme){
+      ThemeRegistry theme) throws Exception {
     super(editor,lang,grammar, languageConfiguration, theme);
   }
 
