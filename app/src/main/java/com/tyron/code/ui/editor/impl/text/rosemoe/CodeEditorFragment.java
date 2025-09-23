@@ -82,6 +82,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
 import java.lang.reflect.Field;
+import org.eclipse.tm4e.core.internal.theme.Theme;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
