@@ -425,14 +425,12 @@ public class CodeEditorFragment extends Fragment
                 assert result != null;
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
-                  try{
+                 /* try{
                       Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
                       themeField.setAccessible(true);
                      String themeNameF = ((ThemeModel) themeField.get(result)).getName();
-                /*  ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
-                      .updateTheme(themeFR);*/
                       ThemeRegistry.setTheme(themeNameF);
-                }catch(Exception e) {}
+                }catch(Exception e) {}*/
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }
