@@ -77,43 +77,17 @@ public class LanguageManager {
         return null;
     }
 
-    public static TextMateLanguage createTextMateLanguage(
-        String scopeName,
-        String grammarAssetPath,
-        String configAssetPath,
-        Editor editor) {
+    public static TextMateLanguage createTextMateLanguage( String scopeName) {
 
-    AssetManager assets = ApplicationLoader.getInstance().getAssets();
-    try{
+   try{
     /* 1. obtain the registries */
     GrammarRegistry grammarReg = GrammarRegistry.getInstance();
-    ThemeRegistry themeReg = ThemeRegistry.getInstance();
 
-    /* 2. register grammar source */
-  /*  grammarReg.addGrammar(
-            IGrammarSource.fromInputStream(
-                    assets.open(grammarAssetPath),
-                    grammarAssetPath,
-                    StandardCharsets.UTF_8),
-            null, 0, null);*/
-  //  grammarReg.loadGrammars(grammarAssetPath);
-
-    /* 3. register language-configuration (folding, brackets, etc.) */
-  /*  LanguageConfiguration config =
-            LanguageConfiguration.load(
-                    new InputStreamReader(
-                            assets.open(configAssetPath),
-                            StandardCharsets.UTF_8));*/
-
-    /* 4. create the language */
     TextMateLanguage lang =
             TextMateLanguage.create(
                     scopeName,
                     grammarReg,
                     false);   // or false if you don’t want built-in completion
-
-    /* 5. attach the configuration */
-    //lang.setLanguageConfiguration(config);
 
     return lang;
     } catch(Exception e) {
