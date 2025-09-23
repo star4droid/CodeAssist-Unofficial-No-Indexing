@@ -43,6 +43,7 @@ import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfigurati
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 
 public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
