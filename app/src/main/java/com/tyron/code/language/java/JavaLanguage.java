@@ -45,8 +45,8 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
 
   private final Editor mEditor;
 
-  private BaseTextmateAnalyzer mAnalyzer;
-  private final TextMateLanguage delegate;
+  private final BaseTextmateAnalyzer mAnalyzer;
+  //private final TextMateLanguage delegate;
   public boolean createIdentifiers = false;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
@@ -102,7 +102,8 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
 
   public JavaLanguage(Editor editor) {
         this.mEditor = editor;
-        delegate = LanguageManager.createTextMateLanguage(SCOPENAME, LANGUAGE_PATH, CONFIG_PATH, editor);
+        //delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
+       mAnalyzer = JavaAnalyzer.create(editor, this);
   }
 
   public boolean isAutoCompleteChar(char p1) {
@@ -142,7 +143,8 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   @NonNull
   @Override
   public AnalyzeManager getAnalyzeManager() {
-    return delegate.getAnalyzeManager();
+    //return delegate.getAnalyzeManager();
+    return mAnalyzer;
   }
 
   @Override
@@ -237,7 +239,8 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return delegate.getSymbolPairs();
+    //return delegate.getSymbolPairs();
+    return new SymbolPairMatch.DefaultSymbolPairs();
   }
 
   private final NewlineHandler[] newLineHandlers =
@@ -252,7 +255,8 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
 
   @Override
   public void destroy() {
-    delegate.destroy();
+ //   delegate.destroy();
+    mAnalyzer.destroy();
   }
 
   class CallParenHandler implements NewlineHandler {
