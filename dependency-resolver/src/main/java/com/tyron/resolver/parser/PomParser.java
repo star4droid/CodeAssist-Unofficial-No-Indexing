@@ -172,6 +172,46 @@ public class PomParser {
     return buffer.toString();
   }
 
+  private String resolveVariables(String value, Pom pom) {
+    Matcher matcher = VARIABLE_PATTERN.matcher(value);
+    StringBuffer buffer = new StringBuffer();
+
+    while (matcher.find()) {
+        String name = matcher.group(1);
+        String property = mProperties.get(name);
+
+        if (property == null && parent != null) {
+            property = parent.getProperty(name);
+        }
+
+        if (property == null && pom != null) {
+            switch (name) {
+                case "project.version":
+                    property = pom.getVersionName();
+                    break;
+                case "project.groupId":
+                    property = pom.getGroupId();
+                    break;
+                case "project.artifactId":
+                    property = pom.getArtifactId();
+                    break;
+                case "project.packaging":
+                    property = pom.getPackaging();
+                    break;
+            }
+        }
+
+        if (property == null) {
+            property = matcher.group(0); // خليه زي ما هو
+        }
+
+        matcher.appendReplacement(buffer, Matcher.quoteReplacement(property));
+    }
+    matcher.appendTail(buffer);
+
+    return buffer.toString();
+  }
+
   private Pom parseParent(Element element) {
     Dependency dependency = new Dependency();
     NodeList groupIdList = element.getElementsByTagName("groupId");
