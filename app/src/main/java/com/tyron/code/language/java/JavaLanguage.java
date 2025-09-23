@@ -51,7 +51,6 @@ public class JavaLanguage implements Language, EditorFormatter {
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
   private static final String SCOPENAME="source.java";
   private final Formatter formatter = new AsyncFormatter() {
-  private final Formatter formatter = new AsyncFormatter() {
     @Nullable
     @Override
     public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
@@ -221,10 +220,11 @@ public class JavaLanguage implements Language, EditorFormatter {
     } catch (Exception e) {
     }*/
     try{
-     //formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-      formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
+     formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+      //formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
      }catch(Exception e){
         // throw new Error(e.fillInStackTrace());
+      formatted = text;
     } 
 
     if (formatted == null) {
@@ -249,7 +249,9 @@ public class JavaLanguage implements Language, EditorFormatter {
   }
 
   @Override
-  public void destroy() {}
+  public void destroy() {
+    delegate.destroy();
+  }
 
   class CallParenHandler implements NewlineHandler {
 
