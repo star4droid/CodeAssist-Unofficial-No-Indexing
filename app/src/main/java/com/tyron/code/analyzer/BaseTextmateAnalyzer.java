@@ -41,6 +41,7 @@ import io.github.rosemoe.sora.util.ArrayList;
 import io.github.rosemoe.sora.util.MyCharacter;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.MyState;
 
 public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState, Span> implements FoldingHelper, ThemeRegistry.ThemeChangeListener {
 
