@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.tyron.editor.Editor;
 
-import org.eclipse.tm4e.core.theme.IRawTheme;
-import org.eclipse.tm4e.core.theme.Theme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.Theme;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -20,6 +20,7 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
 /**
  * A text mate analyzer which does not use a TextMateLanguage
@@ -29,11 +30,10 @@ public class BaseTextmateAnalyzer extends TextMateAnalyzer {
     private static final Field THEME_FIELD;
 
     public BaseTextmateAnalyzer(TextMateLanguage language, Editor editor,
-                                String scopeName,
-                                InputStream grammarIns,
-                                LanguageConfi languageConfiguration,
-                              Theme theme) throws Exception {
-        super(language,GrammarRegistry.getInstance().findGrammar(scopeName),
+                                IGrammar grammar,
+                                LanguageConfiguration languageConfiguration,
+                              ThemeRegistry theme) throws Exception {
+        super(language,grammar,
                 languageConfiguration, theme);
     }
 
