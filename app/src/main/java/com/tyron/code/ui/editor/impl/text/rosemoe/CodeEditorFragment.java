@@ -83,6 +83,7 @@ import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
 import java.lang.reflect.Field;
 import org.eclipse.tm4e.core.internal.theme.Theme;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -425,11 +426,12 @@ public class CodeEditorFragment extends Fragment
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
                   try{
-                      Field themeField = TextMateColorScheme.class.getDeclaredField("theme");
+                      Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
                       themeField.setAccessible(true);
-                     Theme themeFR = (Theme) themeField.get(result);
-                  ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
-                      .updateTheme(themeFR);
+                     String themeNameF = ((ThemeModel) themeField.get(result)).getName();
+                /*  ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
+                      .updateTheme(themeFR);*/
+                      ThemeRegistry.setTheme(themeNameF);
                 }catch(Exception e) {}
                   mLanguage.getAnalyzeManager().rerun();
                 }
