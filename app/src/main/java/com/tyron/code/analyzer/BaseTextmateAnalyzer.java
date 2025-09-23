@@ -48,7 +48,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
 
     private final IGrammar grammar;
     private Theme theme;
-    private final TextMateLanguage language;
+    private final EmptyTextMateLanguage language;
     private final LanguageConfiguration configuration;
 
     //private final GrammarRegistry grammarRegistry;
