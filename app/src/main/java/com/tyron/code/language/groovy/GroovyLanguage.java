@@ -16,8 +16,9 @@ import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.Content;
 import androidx.annotation.Nullable;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 
-public class GroovyLanguage implements Language {
+public class GroovyLanguage extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
   private final GroovyAnalyzer mAnalyzer;
