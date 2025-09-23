@@ -107,7 +107,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
       EmptyTextMateLanguage lang,
       IGrammar grammar,
       LanguageConfiguration languageConfiguration,
-      ThemeRegistry theme){
+      ThemeRegistry theme) throws Exception {
     super(editor,lang,grammar, languageConfiguration, theme);
 
     mEditorReference = new WeakReference<>(editor);
