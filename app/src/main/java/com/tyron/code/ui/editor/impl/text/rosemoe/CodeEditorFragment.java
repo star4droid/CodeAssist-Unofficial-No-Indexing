@@ -429,7 +429,7 @@ public class CodeEditorFragment extends Fragment
                       themeField.setAccessible(true);
                      Theme themeFR = (Theme) themeField.get(result);
                   ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
-                      .updateTheme(themeFR,null);
+                      .updateTheme(themeFR);
                 }catch(Exception e) {}
                   mLanguage.getAnalyzeManager().rerun();
                 }
