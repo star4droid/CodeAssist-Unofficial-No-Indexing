@@ -141,7 +141,7 @@ public class EditorUtil {
          themeModel.load();*/
         
          ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
-String name = light?"quietlight":"darcula"; // name of theme
+String name = path; //light?"quietlight":"darcula"; // name of theme
 String themeAssetsPath =path;
 ThemeModel model = new ThemeModel(
         IThemeSource.fromInputStream(
@@ -150,8 +150,8 @@ ThemeModel model = new ThemeModel(
         name
     );
 // If the theme is dark
- model.setDark(!light);
- model.load();       
+ model.setDark(!light); 
+         model.load();
 themeRegistry.loadTheme(model);
          
             return createTheme(/*themeModel*/);
