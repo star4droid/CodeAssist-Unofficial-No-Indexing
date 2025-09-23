@@ -81,6 +81,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
+import java.lang.reflect.Field;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -422,8 +423,13 @@ public class CodeEditorFragment extends Fragment
                 assert result != null;
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
+                  try{
+                      Field themeField = TextMateColorScheme.class.getDeclaredField("theme");
+                      themeField.setAccessible(true);
+                     Theme themeFR = (Theme) themeField.get(result);
                   ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
-                      .updateTheme(result.getRawTheme(),null);
+                      .updateTheme(themeFR,null);
+                }catch(Exception e) {}
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }
