@@ -155,8 +155,10 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
            );
 // If the theme is dark
  model.setDark(true);
+try{             
 model.load();
-try{ThemeRegistry.getInstance().loadTheme(model);}catch(Exception e){}
+ThemeRegistry.getInstance().loadTheme(model);
+}catch(Exception e){}
              
               return Futures.immediateFuture(EditorUtil.createTheme(/*themeModel*/));
             });
