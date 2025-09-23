@@ -41,13 +41,14 @@ import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
 import com.tyron.code.language.LanguageManager;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 
 
-public class KotlinLanguage implements Language {
+public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
   private KotlinAnalyzer mAnalyzer;
-   final boolean createIdentifiers = false;
+  public boolean createIdentifiers = false;
   private final TextMateLanguage delegate;
    private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
     private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
