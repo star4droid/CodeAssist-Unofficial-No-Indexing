@@ -15,6 +15,7 @@ import io.github.rosemoe.sora.widget.SymbolPairMatch;
 
 public class EmptyTextMateLanguage extends EmptyLanguage implements Language {
   public boolean createIdentifiers = false;
+  protected int tabSize = 4;
 
   @Override
   public void destroy() {
@@ -74,6 +75,14 @@ public class EmptyTextMateLanguage extends EmptyLanguage implements Language {
       @NonNull Bundle extraArguments) {
     super.requireAutoComplete(content, position, publisher, extraArguments);
   }
+
+  public void setTabSize(int tabSize) {
+        this.tabSize = tabSize;
+    }
+
+    public int getTabSize() {
+        return tabSize;
+    }
 
   @Override
   public boolean useTab() {
