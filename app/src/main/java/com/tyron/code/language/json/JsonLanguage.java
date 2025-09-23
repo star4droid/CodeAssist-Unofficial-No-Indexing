@@ -45,6 +45,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 public class JsonLanguage extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
+  public String SCOPENAME = "source.json";
 
   private final BaseTextmateAnalyzer mAnalyzer;
   private final Formatter formatter = new AsyncFormatter() {
