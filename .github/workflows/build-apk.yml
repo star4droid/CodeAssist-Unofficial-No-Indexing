@@ -1,4 +1,4 @@
-name: Android CI Debug
+name: Android CI Buid Apk Debug
 
 on:
   workflow_dispatch:
