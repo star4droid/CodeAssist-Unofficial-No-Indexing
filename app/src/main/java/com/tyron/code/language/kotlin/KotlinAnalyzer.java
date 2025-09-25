@@ -50,7 +50,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
   private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
   private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
-  private static final String SCOPENAME ="source.kt";
+  private static final String SCOPENAME ="source.kotlin";
 
   public static KotlinAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
     try {
