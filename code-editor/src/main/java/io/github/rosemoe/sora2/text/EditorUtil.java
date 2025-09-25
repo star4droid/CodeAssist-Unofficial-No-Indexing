@@ -44,7 +44,7 @@ public class EditorUtil {
     public static TextMateColorScheme createTheme(/*ThemeModel themeModel*/) throws Exception {
         TextMateColorScheme scheme = TextMateColorScheme.create(/*themeModel*/ThemeRegistry.getInstance());
         scheme.setTheme(/*themeModel*/ThemeRegistry.getInstance().getCurrentThemeModel());
-       try{
+       /*try{
         IRawTheme rawTheme = scheme.getRawTheme();
         Collection<IRawThemeSetting> settings = rawTheme.getSettings();
         if (settings != null && settings.size() >= 1) {
@@ -75,7 +75,7 @@ public class EditorUtil {
             scheme.setColor(EditorColorScheme.COMPLETION_WND_CORNER,
                             getColor(completionStroke, Color.TRANSPARENT));
         }
-       }catch(Exception e){}
+       }catch(Exception e){}*/
         return scheme;
     }
 
