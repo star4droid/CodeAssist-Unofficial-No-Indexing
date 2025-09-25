@@ -100,7 +100,7 @@ public class PomParser {
     return pom;
   }
 
-  private String getTextContent(Node child) {
+ /* private String getTextContent(Node child) {
     String value = child.getTextContent();
     Matcher matcher = VARIABLE_PATTERN.matcher(value);
     if (matcher.matches()) {
@@ -111,6 +111,105 @@ public class PomParser {
       }
     }
     return value;
+  }*/
+  private String getTextContent(Node child) {
+    String value = child.getTextContent();
+    Matcher matcher = VARIABLE_PATTERN.matcher(value);
+    StringBuffer buffer = new StringBuffer();
+
+    while (matcher.find()) {
+        String name = matcher.group(1);
+        String property = mProperties.get(name);
+        if (property == null && parent != null) {
+            property = parent.getProperty(name);
+        }
+        if (property == null) {
+            property = matcher.group(0);
+        }
+        matcher.appendReplacement(buffer, Matcher.quoteReplacement(property));
+    }
+    matcher.appendTail(buffer);
+
+    return buffer.toString();
+  }
+
+  private String getTextContent(Node child, Pom currentPom) {
+    String value = child.getTextContent();
+    Matcher matcher = VARIABLE_PATTERN.matcher(value);
+    StringBuffer buffer = new StringBuffer();
+
+    while (matcher.find()) {
+        String name = matcher.group(1);
+        String property = mProperties.get(name);
+
+        if (property == null && parent != null) {
+            property = parent.getProperty(name);
+        }
+
+        // ✅ دعم built-in variables
+        if (property == null && currentPom != null) {
+            switch (name) {
+                case "project.version":
+                    property = currentPom.getVersionName();
+                    break;
+                case "project.groupId":
+                    property = currentPom.getGroupId();
+                    break;
+                case "project.artifactId":
+                    property = currentPom.getArtifactId();
+                    break;
+            }
+        }
+
+        if (property == null) {
+            property = matcher.group(0); // لو ما لقى، خليه زي ما هو
+        }
+
+        matcher.appendReplacement(buffer, Matcher.quoteReplacement(property));
+    }
+    matcher.appendTail(buffer);
+
+    return buffer.toString();
+  }
+
+  private String resolveVariables(String value, Pom pom) {
+    Matcher matcher = VARIABLE_PATTERN.matcher(value);
+    StringBuffer buffer = new StringBuffer();
+
+    while (matcher.find()) {
+        String name = matcher.group(1);
+        String property = mProperties.get(name);
+
+        if (property == null && parent != null) {
+            property = parent.getProperty(name);
+        }
+
+        if (property == null && pom != null) {
+            switch (name) {
+                case "project.version":
+                    property = pom.getVersionName();
+                    break;
+                case "project.groupId":
+                    property = pom.getGroupId();
+                    break;
+                case "project.artifactId":
+                    property = pom.getArtifactId();
+                    break;
+                case "project.packaging":
+                    property = pom.getPackaging();
+                    break;
+            }
+        }
+
+        if (property == null) {
+            property = matcher.group(0); // خليه زي ما هو
+        }
+
+        matcher.appendReplacement(buffer, Matcher.quoteReplacement(property));
+    }
+    matcher.appendTail(buffer);
+
+    return buffer.toString();
   }
 
   private Pom parseParent(Element element) {

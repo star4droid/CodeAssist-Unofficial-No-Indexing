@@ -17,6 +17,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class SwitchConstantCompletionProvider extends BaseCompletionProvider {
 
@@ -52,7 +53,7 @@ public class SwitchConstantCompletionProvider extends BaseCompletionProvider {
       }
     }
 
-    TypeMirror type = Trees.instance(task.task).getTypeMirror(path);
+    TypeMirror type = JavacTreesUtil.instance(task.task).getTypeMirror(path);
 
     if (!(type instanceof DeclaredType)) {
       return;

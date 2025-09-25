@@ -1,0 +1,26 @@
+name: Build & Publish Release APK
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  Gradle:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v4
+    - name: setup jdk
+      uses: actions/setup-java@v4.2.2
+      with:
+        java-version: 21
+    - name: Make Gradle executable
+      run: chmod +x ./gradlew
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
+    - name: Releasing using Hub
+      uses: sangatdesai/release-apk@main
+      env:
+       GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+       APP_FOLDER: app

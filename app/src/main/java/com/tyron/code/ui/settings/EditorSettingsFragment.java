@@ -23,14 +23,22 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
-import io.github.rosemoe.sora.textmate.core.internal.theme.reader.ThemeReader;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.registry.IThemeSource;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+ 
+ 
 
 public class EditorSettingsFragment extends PreferenceFragmentCompat {
 
@@ -134,10 +142,30 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
     return ProgressManager.getInstance()
         .computeNonCancelableAsync(
             () -> {
-              IRawTheme rawTheme =
-                  ThemeReader.readThemeSync(
-                      file.getAbsolutePath(), FileUtils.openInputStream(file));
-              return Futures.immediateFuture(EditorUtil.createTheme(rawTheme));
+
+            // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+           // String selectedTheme = preferences.getString("theme", "default");
+             
+               String path = file.getAbsolutePath();
+            
+            ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
+            String name = path; // name of theme
+            String themeAssetsPath = path;
+           ThemeModel model = new ThemeModel(
+               IThemeSource.fromInputStream(
+              FileProviderRegistry.getInstance().tryGetInputStream(themeAssetsPath), themeAssetsPath, null
+             ), 
+             name
+           );
+// If the theme is dark
+// model.setDark(selectedTheme.equals("dark"));
+ model.setDark(true);           
+try{             
+model.load();
+ThemeRegistry.getInstance().loadTheme(model);
+}catch(Exception e){}
+             
+              return Futures.immediateFuture(EditorUtil.createTheme(/*themeModel*/));
             });
   }
 }

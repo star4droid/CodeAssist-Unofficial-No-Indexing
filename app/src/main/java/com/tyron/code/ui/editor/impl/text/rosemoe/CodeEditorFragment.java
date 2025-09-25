@@ -66,7 +66,7 @@ import io.github.rosemoe.sora.event.ClickEvent;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.LongPressEvent;
 import io.github.rosemoe.sora.lang.Language;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.DirectAccessProps;
@@ -81,6 +81,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
+import java.lang.reflect.Field;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -295,7 +298,7 @@ public class CodeEditorFragment extends Fragment
     editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.openFile(mCurrentFile);
-    editor.setAutoCompletionItemAdapter(new CodeAssistCompletionAdapter());
+  //  editor.replaceComponent(CodeAssistCompletionAdapter.class,new CodeAssistCompletionAdapter());
     editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
     editor.setInputType(
         EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
@@ -422,8 +425,12 @@ public class CodeEditorFragment extends Fragment
                 assert result != null;
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
-                  ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager())
-                      .updateTheme(result.getRawTheme());
+                 /* try{
+                      Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
+                      themeField.setAccessible(true);
+                     String themeNameF = ((ThemeModel) themeField.get(result)).getName();
+                      ThemeRegistry.setTheme(themeNameF);
+                }catch(Exception e) {}*/
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }
@@ -834,13 +841,13 @@ public class CodeEditorFragment extends Fragment
 
     DiagnosticWrapper diagnosticWrapper =
         DiagnosticUtil.getDiagnosticWrapper(
-            mEditor.getDiagnostics(),
+            mEditor.getDiagnosticsList(),
             mEditor.getCursor().getLeft(),
             mEditor.getCursor().getRight());
     if (diagnosticWrapper == null && mLanguage instanceof LanguageXML) {
       diagnosticWrapper =
           DiagnosticUtil.getXmlDiagnosticWrapper(
-              mEditor.getDiagnostics(), mEditor.getCursor().getLeftLine());
+              mEditor.getDiagnosticsList(), mEditor.getCursor().getLeftLine());
     }
     dataContext.putData(CommonDataKeys.DIAGNOSTIC, diagnosticWrapper);
     return dataContext;

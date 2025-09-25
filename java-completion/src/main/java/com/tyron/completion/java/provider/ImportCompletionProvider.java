@@ -36,6 +36,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
@@ -89,7 +90,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
 
     if (path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
-      Trees trees = Trees.instance(task.task);
+      Trees trees = JavacTreesUtil.instance(task.task);
       MethodInvocationTree method =
           (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf();
       Element element = trees.getElement(path.getParentPath().getParentPath());
@@ -142,7 +143,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
       CompletionList.Builder list) {
     checkCanceled();
 
-    Trees trees = Trees.instance(task.task);
+    Trees trees = JavacTreesUtil.instance(task.task);
     HashMap<String, List<ExecutableElement>> methods = new HashMap<>();
     for (ImportTree i : root.getImports()) {
       if (!i.isStatic()) continue;

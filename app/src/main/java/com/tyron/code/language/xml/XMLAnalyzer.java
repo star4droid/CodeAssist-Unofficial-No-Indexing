@@ -23,7 +23,7 @@ import com.tyron.completion.progress.ProgressManager;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.editor.Editor;
 import com.tyron.viewbinding.task.InjectViewBindingTask;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,10 +40,18 @@ import java.util.stream.Collectors;
 import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.BuildConfig;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+
 
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private boolean mAnalyzerEnabled = false;
+  private static final String SCOPENAME ="source.xml";
 
   private static final Debouncer sDebouncer =
       new Debouncer(
@@ -62,14 +70,25 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
   public XMLAnalyzer(
       Editor editor,
-      String grammarName,
-      InputStream grammarIns,
-      Reader languageConfiguration,
-      IRawTheme theme)
+      EmptyTextMateLanguage lang,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
-
+    super(editor,lang,grammar, languageConfiguration, theme);
     mEditorReference = new WeakReference<>(editor);
+  }
+
+  public static XMLAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
+    try {
+        return new XMLAnalyzer(
+            editor,
+            lang,
+             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

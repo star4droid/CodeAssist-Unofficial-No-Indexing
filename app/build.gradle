@@ -3,9 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.diffplug.spotless'
 
 android {
-    compileSdkVersion 35
-    buildToolsVersion '35.0.0' 
-	namespace "org.codeassist.unofficial" 
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace rootProject.ext.applicationId 
 	
 	spotless {
 		java {
@@ -15,21 +15,21 @@ android {
 		}
 	
     defaultConfig {
-        targetSdkVersion 35
-		minSdkVersion 26		
-		applicationId "org.codeassist.unofficial"
-		versionCode 1
-		versionName "1.0.0star"         	
+        targetSdkVersion rootProject.ext.targetSdkVersion
+		minSdkVersion rootProject.ext.minSdkVersion		
+		applicationId rootProject.ext.applicationId
+		versionCode rootProject.ext.versionCode
+		versionName rootProject.ext.versionName        	
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         coreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     testOptions {
@@ -81,6 +81,9 @@ android {
         exclude "about_files/*"
         exclude "META-INF/eclipse.inf"
         pickFirst "META-INF/native-image/reflect-config.json"
+		
+        //exclude 'com/sun/tools/javac/resources/legacy.properties'
+		
     }
 }
 
@@ -102,6 +105,7 @@ dependencies {
     implementation project(path: ':viewbinding-inject')
     implementation project(path: ':xml-repository')
     implementation project(path: ':java-completion')
+	
     // not used for compilation, but for analysis
     implementation project(path: ':javac')
 
@@ -131,6 +135,7 @@ dependencies {
     // formatters    
     implementation project(path: ':google-java-format')
     implementation project(path: ':ktfmt')
+	implementation project(path: ':eclipse-formatter') 
 
     // about
     implementation 'com.github.daniel-stoneuk:material-about-library:3.1.2'
@@ -181,5 +186,36 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
+
+/*compileJava {
+    options.compilerArgs += ["--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"]
+}*/
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
+    ]
+}
+

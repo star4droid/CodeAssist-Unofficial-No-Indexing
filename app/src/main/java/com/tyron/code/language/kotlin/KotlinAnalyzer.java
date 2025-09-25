@@ -18,8 +18,8 @@ import com.tyron.common.util.ExecutionResult;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.Editor;
 import com.tyron.kotlin_completion.CompletionEngine;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,25 +38,27 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 
 public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
   private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
   private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
+  private static final String SCOPENAME ="source.kt";
 
-  public static KotlinAnalyzer create(Editor editor) {
+  public static KotlinAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
     try {
-      AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
-
-      try (InputStreamReader config = new InputStreamReader(assetManager.open(CONFIG_PATH))) {
         return new KotlinAnalyzer(
             editor,
-            GRAMMAR_NAME,
-            assetManager.open(LANGUAGE_PATH),
-            config,
-            ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
-      }
+            lang,
+             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -64,12 +66,11 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
   public KotlinAnalyzer(
       Editor editor,
-      String grammarName,
-      InputStream grammarIns,
-      Reader languageConfiguration,
-      IRawTheme theme)
-      throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+      EmptyTextMateLanguage lang,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme) throws Exception {
+    super(editor,lang,grammar, languageConfiguration, theme);
   }
 
   @Override

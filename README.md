@@ -1,14 +1,12 @@
-> [!WARNING]
-> 
-> This project is deprecated.
-> Join Telegram Channel for more informations :- https://t.me/kodtikide_app
- 
+> [!WELCOME]
+> This is an Active Repo for CodeAssist Pro.
+
 <p align='center'>
- <img width='300px%' height='300px' src='https://github.com/Deenu488/CodeAssist-Unofficial/blob/main/logo-dark.png#gh-dark-mode-only' >
-<img width='300px' height='300px' src='https://github.com/Deenu488/CodeAssist-Unofficial/blob/main/logo-light.png#gh-light-mode-only'>
+ <img width='300px%' height='300px' src='https://github.com/Wadamzmail/CodeAssist-Unofficial/blob/main/logo-dark.png#gh-dark-mode-only' >
+<img width='300px' height='300px' src='https://github.com/Wadamzmail/CodeAssist-Unofficial/blob/main/logo-light.png#gh-light-mode-only'>
 </p>
 
-<h2 align="center"><b>CodeAssist Unofficial</b></h2>
+<h2 align="center"><b>CodeAssist Pro</b></h2>
 <p align="center">
 Forked of Official CodeAssist Version Alpha-0.2.9
 <p><br>
@@ -16,11 +14,11 @@ Forked of Official CodeAssist Version Alpha-0.2.9
 <div align='center'>
 
 [![stability-alpha](https://img.shields.io/badge/stability-alpha-f4d03f.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#alpha)
-![Repository Size](https://img.shields.io/github/repo-size/Deenu143/CodeAssist-ALPHA-0.2.9)
-![CI](https://github.com/Deenu143/CodeAssist-ALPHA-0.2.9/actions/workflows/release-apk.yml/badge.svg)
-[![Total downloads](https://img.shields.io/github/downloads/Deenu143/CodeAssist-ALPHA-0.2.9/total)](https://github.com/Deenu143/CodeAssist-ALPHA-0.2.9/releases)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/Deenu143/CodeAssist-ALPHA-0.2.9)
-<img src="https://img.shields.io/github/v/release/Deenu143/CodeAssist-ALPHA-0.2.9?include_prereleases&amp;label=latest%20release" alt="Latest release">
+![Repository Size](https://img.shields.io/github/repo-size/Wadamzmail/CodeAssist-Unofficial)
+![CI](https://github.com/Wadamzmail/CodeAssist-Unofficial/actions/workflows/debug.yml/badge.svg)
+[![Total downloads](https://img.shields.io/github/downloads/tyron12233/CodeAssist/total)](https://github.com/tyron12233/CodeAssist/releases)
+![Commit Activity](https://img.shields.io/github/commit-activity/m/Wadamzmail/CodeAssist-Unofficial)
+<img src="https://img.shields.io/github/v/release/tyron12233/CodeAssist?include_prereleases&amp;label=latest%20release" alt="Latest release">
 
   <h2>A javac APIs-based code editor that supports building Android apps.</h2>
 

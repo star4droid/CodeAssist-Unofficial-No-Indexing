@@ -45,7 +45,7 @@ public class JavaCompletionProvider extends CompletionProvider {
   static {
     try {
       Class<?> completionThreadClass = Class.forName(COMPLETION_THREAD_CLASS);
-      sCanceledField = completionThreadClass.getDeclaredField("mAborted");
+      sCanceledField = completionThreadClass.getDeclaredField("aborted");
       sCanceledField.setAccessible(true);
     } catch (Throwable e) {
       throw new Error("Rosemoe thread implementation has changed", e);

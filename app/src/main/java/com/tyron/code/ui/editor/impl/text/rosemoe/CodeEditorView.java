@@ -48,10 +48,22 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import org.codeassist.unofficial.R;
+//import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.TextRange;
+import java.util.Objects;
+import java.util.function.Function;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
-  private static final Field sFormatThreadField;
+/*  private static final Field sFormatThreadField;
 
   static {
     try {
@@ -61,6 +73,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
       throw new Error(e);
     }
   }
+  */
 
   private final Set<Character> IGNORED_PAIR_ENDS =
       ImmutableSet.<Character>builder()
@@ -87,7 +100,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
   public CodeEditorView(Context context, AttributeSet attrs) {
-    this(DataContext.wrap(context), attrs, 0);
+    this(DataContext.wrap(context), attrs,0);
   }
 
   public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -142,8 +155,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
     super.setColorScheme(colors);
   }
 
-  @Override
-  public List<DiagnosticWrapper> getDiagnostics() {
+  
+  public List<DiagnosticWrapper> getDiagnosticsList() {
     return mDiagnostics;
   }
 
@@ -151,7 +164,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
 
-    AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
+  /*  AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
     if (manager instanceof DiagnosticTextmateAnalyzer) {
       ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
     }
@@ -164,8 +177,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(manager, styles);
-    }
+      setStyles(/*manager,/ styles);
+    }*/
+    convDiagnostics(diagnostics);
   }
 
   public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
@@ -217,7 +231,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void commitText(CharSequence text) {
-    super.commitText(text);
+   try{ super.commitText(text);}catch(Exception e){e.printStackTrace();}
   }
 
   @Override
@@ -271,14 +285,14 @@ public class CodeEditorView extends CodeEditor implements Editor {
       if (startIndex - 1 >= 0) {
         char deleteChar = text.charAt(startIndex - 1);
         char afterChar = text.charAt(startIndex);
-        SymbolPairMatch.Replacement replacement = null;
+        SymbolPairMatch.SymbolPair replacement = null;
 
         SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
         if (pairs != null) {
-          replacement = pairs.getCompletion(deleteChar);
+          replacement = pairs.matchBestPairBySingleChar(deleteChar);
         }
         if (replacement != null) {
-          if (("" + deleteChar + afterChar + "").equals(replacement.text)) {
+          if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
             text.delete(startIndex - 1, startIndex + 1);
             return;
           }
@@ -365,25 +379,28 @@ public class CodeEditorView extends CodeEditor implements Editor {
     getText().endBatchEdit();
   }
 
-  public boolean isFormatting() {
+/*  public boolean isFormatting() {
     try {
-      return sFormatThreadField.get(this) != null;
+      //return sFormatThreadField.get(this) != null;
     } catch (IllegalAccessException e) {
       return false;
     }
   }
+  */
 
   @Override
   public synchronized boolean formatCodeAsync() {
     return CodeEditorView.super.formatCodeAsync();
   }
 
-  @Override
+ @Override
   public synchronized boolean formatCodeAsync(int start, int end) {
-    if (isFormatting()) {
+   /* if (isFormatting()) {
       return false;
-    }
-    if (getEditorLanguage() instanceof EditorFormatter
+    }*/
+    return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
+   // if(true) return false;
+   /* if (getEditorLanguage() instanceof EditorFormatter
         && getText() != null
         && getEditorLanguage() != null) {
       ProgressManager.getInstance()
@@ -394,7 +411,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
                   final CharSequence formatted =
                       ((EditorFormatter) getEditorLanguage()).format(originalText, start, end);
                   if (formatted != null) {
-                    super.onFormatSucceed(originalText, formatted);
+                    TextRange tRange = new TextRange(getText().getIndexer().getCharPosition(start),
+                                                     getText().getIndexer().getCharPosition(end));
+                    super.onFormatSucceed(formatted, tRange);
                   } else {
                     // Handle null formatted text
                   }
@@ -404,7 +423,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
               });
       return true;
     }
-    return false;
+    return false;*/
   }
 
   @Override
@@ -468,6 +487,14 @@ public class CodeEditorView extends CodeEditor implements Editor {
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
   }
+  @Override 
+ public void moveSelectionRight(){}
+  @Override 
+public  void moveSelectionUp(){} 
+  @Override 
+public  void moveSelectionDown(){}
+  @Override 
+public  void moveSelectionLeft(){}
 
   private void drawSquigglyLine(Canvas canvas, float startX, float startY, float endX, float endY) {
     float waveSize = getDpUnit() * 3;
@@ -491,4 +518,37 @@ public class CodeEditorView extends CodeEditor implements Editor {
         mDiagnosticPaint.setColor(color.getColor(EditorColorScheme.PROBLEM_WARNING));
     }
   }
+
+
+  private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
+
+    Function<Diagnostic.Kind, Short> severitySupplier = it -> {
+        switch (it) {
+            case ERROR:
+                return DiagnosticRegion.SEVERITY_ERROR;
+            case MANDATORY_WARNING:
+            case WARNING:
+                return DiagnosticRegion.SEVERITY_WARNING;
+            default:
+            case OTHER:
+            case NOTE:
+                return DiagnosticRegion.SEVERITY_NONE;
+        }
+    };
+
+    DiagnosticsContainer container = new DiagnosticsContainer();
+
+    diagnostics.stream()
+            .map(it -> new DiagnosticRegion(
+                    (int) it.getStartPosition(),
+                    (int) it.getEndPosition(),
+                    severitySupplier.apply(it.getKind())
+            ))
+            .forEach(container::addDiagnostic);
+
+    // أرسلها للـ editor
+     setDiagnostics(container);
+  }
+
+  
 }

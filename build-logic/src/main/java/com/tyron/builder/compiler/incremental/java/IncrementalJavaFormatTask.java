@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 
 public class IncrementalJavaFormatTask extends Task<JavaModule> {
 
@@ -65,7 +67,7 @@ public class IncrementalJavaFormatTask extends Task<JavaModule> {
       if (Boolean.parseBoolean(applyJavaFormat)) {
 
         for (File mJava : mJavaFiles) {
-
+       /*
           StringWriter out = new StringWriter();
           StringWriter err = new StringWriter();
           String text = new String(Files.readAllBytes(mJava.toPath()));
@@ -81,8 +83,17 @@ public class IncrementalJavaFormatTask extends Task<JavaModule> {
             getLogger().debug("Error: " + mJava.getAbsolutePath() + " " + err.toString());
             throw new CompilationFailedException(TAG + " error");
           }
-
-          String formatted = out.toString();
+        */
+          String text = new String(Files.readAllBytes(mJava.toPath()));
+          String formatted = null;
+          try{
+       formatted =  new Formatter().formatSource(text.toString());
+      //  formatted = com.tyron.eclipse.formatter.Formatter.format(text,0,text.length());   
+     }catch(FormatterException e){
+         getLogger().debug("Error: " + mJava.getAbsolutePath() + " " + Throwables.getStackTraceAsString(e));
+            throw new CompilationFailedException(TAG + " error");
+          }
+         // String formatted = out.toString();
           if (formatted != null && !formatted.isEmpty()) {
             FileUtils.writeStringToFile(mJava, formatted, Charset.defaultCharset());
           }

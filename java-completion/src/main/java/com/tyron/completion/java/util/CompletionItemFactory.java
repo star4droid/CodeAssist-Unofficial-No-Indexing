@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiNamedElement;
 import org.jetbrains.kotlin.com.intellij.psi.PsiParameter;
 import org.jetbrains.kotlin.com.intellij.psi.PsiParameterList;
 import org.jetbrains.kotlin.com.intellij.psi.PsiType;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class CompletionItemFactory {
 
@@ -248,7 +249,7 @@ public class CompletionItemFactory {
 
     List<CompletionItem> items = new ArrayList<>(overloads.size());
     Types types = task.task.getTypes();
-    Element parentElement = Trees.instance(task.task).getElement(parentPath);
+    Element parentElement = JavacTreesUtil.instance(task.task).getElement(parentPath);
     DeclaredType type = (DeclaredType) parentElement.asType();
     for (ExecutableElement element : overloads) {
       checkCanceled();

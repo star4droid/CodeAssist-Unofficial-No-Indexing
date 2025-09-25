@@ -2,9 +2,9 @@ name: Android CI Debug
 
 on:
   push:
-    branches: ['main']
+  #  branches: ['main', 'editor']
   pull_request:
-    branches: ['main']
+  #  branches: ['main', 'editor']
   workflow_dispatch:
 
 jobs:

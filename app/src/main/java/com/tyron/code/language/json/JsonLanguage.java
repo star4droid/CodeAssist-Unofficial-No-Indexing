@@ -18,7 +18,7 @@ import io.github.rosemoe.sora.lang.completion.CompletionCancelledException;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentReference;
 import io.github.rosemoe.sora.text.TextUtils;
@@ -27,13 +27,64 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
+import io.github.rosemoe.sora.text.TextRange;
+import io.github.rosemoe.sora.lang.format.AsyncFormatter;
+import io.github.rosemoe.sora.lang.format.Formatter;
+import io.github.rosemoe.sora.text.Content;
+import androidx.annotation.Nullable;
+import io.github.rosemoe.sora.lang.styling.Styles;
+import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.Content;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 
-public class JsonLanguage implements Language {
+public class JsonLanguage extends EmptyTextMateLanguage implements Language {
 
   private final Editor mEditor;
+  public String SCOPENAME = "source.json";
 
   private final BaseTextmateAnalyzer mAnalyzer;
+  private final Formatter formatter = new AsyncFormatter() {
+        @Nullable
+        @Override
+        public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
+            String format = "";
+          try {
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      try (StringWriter writer = new StringWriter()) {
+        JsonWriter jsonWriter = gson.newJsonWriter(writer);
+        jsonWriter.setIndent(useTab() ? "\t" : " ");
+        gson.toJson(JsonParser.parseString(text.toString()), jsonWriter);
+        format = writer.toString();
+      }
+    } catch (Throwable e) {
+      // format error, return the original string
+      format = text.toString();
+          } 
+            if (!text.toString().equals(format)) {
+                text.delete(0, text.getLineCount() - 1);
+                text.insert(0, 0, format);
+            }
+            return cursorRange;
+        }
 
+        @Nullable
+        @Override
+        public TextRange formatRegionAsync(@NonNull Content text,
+                                           @NonNull TextRange rangeToFormat,
+                                           @NonNull TextRange cursorRange) {
+            return null;
+        }
+    };
+@NonNull
+    @Override
+    public Formatter getFormatter() {
+        return formatter;
+    }
   public JsonLanguage(Editor editor) {
     mEditor = editor;
 
@@ -41,11 +92,9 @@ public class JsonLanguage implements Language {
       AssetManager assetManager = ApplicationLoader.applicationContext.getAssets();
       mAnalyzer =
           new BaseTextmateAnalyzer(
-              editor,
-              "json.tmLanguage.json",
-              assetManager.open("textmate/json" + "/syntaxes/json" + ".tmLanguage.json"),
-              new InputStreamReader(assetManager.open("textmate/json/language-configuration.json")),
-              ((TextMateColorScheme) ((CodeEditorView) editor).getColorScheme()).getRawTheme());
+              this,
+             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -100,7 +149,7 @@ public class JsonLanguage implements Language {
   }
 
   @SuppressLint("WrongThread")
-  @Override
+
   public CharSequence format(CharSequence text) {
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -127,9 +176,11 @@ public class JsonLanguage implements Language {
   }
 
   @Override
-  public void destroy() {}
+  public void destroy() {
+    mAnalyzer.destroy();
+  }
 
-  class IndentHandler implements NewlineHandler {
+ /* class IndentHandler implements NewlineHandler {
 
     private final String start;
     private final String end;
@@ -158,5 +209,76 @@ public class JsonLanguage implements Language {
       int shiftLeft = text.length() + 1;
       return new NewlineHandleResult(sb, shiftLeft);
     }
+
   }
+} 
+
+  }*/
+  class IndentHandler implements NewlineHandler {
+
+    private final String start;
+    private final String end;
+
+    IndentHandler(String start, String end) {
+        this.start = start;
+        this.end   = end;
+    }
+
+    @Override
+    public boolean matchesRequirement(@NonNull Content text,
+                                      @NonNull CharPosition position,
+                                      @Nullable Styles style) {
+        int line = position.line;
+        if (line < 0 || line >= text.getLineCount()) return false;
+
+        String before = text.subContent(
+        line, 0,
+        line, position.column)
+        .toString();
+
+
+        String after = text.subContent(
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
+
+        return before.endsWith(start) && after.startsWith(end);
+    }
+
+    @Override
+    @NonNull
+    public NewlineHandleResult handleNewline(@NonNull Content text,
+                                             @NonNull CharPosition position,
+                                             @Nullable Styles style,
+                                             int tabSize) {
+        int line = position.line;
+        String before = text.subContent(
+        line, 0,
+        line, position.column)
+        .toString();
+
+
+        String after = text.subContent(
+        line, position.column,
+        line, text.getLine(line).length())
+        .toString();
+
+
+        int indentBase = TextUtils.countLeadingSpaceCount(before, tabSize);
+        int advanceBefore = getIndentAdvance(before);   // or your own helper
+        int advanceAfter  = getIndentAdvance(after);
+
+        String indentBefore = TextUtils.createIndent(indentBase + advanceBefore, tabSize, false);
+        String indentAfter  = TextUtils.createIndent(indentBase + advanceAfter,  tabSize, false);
+
+        StringBuilder insert = new StringBuilder("\n")
+                .append(indentBefore)
+                .append('\n')
+                .append(indentAfter);
+
+        int cursorShiftBack = indentAfter.length() + 1;
+        return new NewlineHandleResult(insert, cursorShiftBack);
+    }
+}
 } 

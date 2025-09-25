@@ -8,12 +8,18 @@ import com.tyron.editor.Editor;
 import io.github.rosemoe.sora.lang.styling.Span;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.lang.styling.TextStyle;
-import io.github.rosemoe.sora.textmate.core.theme.FontStyle;
-import io.github.rosemoe.sora.textmate.core.theme.IRawTheme;
-import io.github.rosemoe.sora.textmate.core.theme.ThemeTrieElementRule;
+import org.eclipse.tm4e.core.internal.theme.FontStyle;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.ThemeTrieElementRule;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
+import org.eclipse.tm4e.core.internal.theme.StyleAttributes;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 
 public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer {
 
@@ -21,12 +27,12 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
 
   public SemanticAnalyzeManager(
       Editor editor,
-      String grammarName,
-      InputStream grammarIns,
-      Reader languageConfiguration,
-      IRawTheme theme)
+      EmptyTextMateLanguage language,
+      IGrammar grammar,
+      LanguageConfiguration languageConfiguration,
+      ThemeRegistry theme)
       throws Exception {
-    super(editor, grammarName, grammarIns, languageConfiguration, theme);
+    super(editor,language,grammar, languageConfiguration, theme);
   }
 
   public abstract List<SemanticToken> analyzeSpansAsync(CharSequence contents);
@@ -62,18 +68,19 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
   }
 
   private long getStyle(SemanticToken token) {
-    List<ThemeTrieElementRule> match = getTheme().match(token.getTokenType().toString());
-    if (!match.isEmpty()) {
-      ThemeTrieElementRule next = match.iterator().next();
-      int foreground = next.foreground;
-      int fontStyle = next.fontStyle;
-      return TextStyle.makeStyle(
-          foreground + 255,
-          0,
-          (fontStyle & FontStyle.Bold) == FontStyle.Bold,
-          (fontStyle & FontStyle.Italic) == FontStyle.Italic,
-          false);
+    StyleAttributes style = getTheme().match(token.getTokenType());
+    if (style != null) {
+        int foreground = style.foregroundId;
+        int fontStyle  = style.fontStyle;
+
+        return TextStyle.makeStyle(
+                foreground + 255,
+                0,
+                (fontStyle & FontStyle.Bold)   != 0,
+                (fontStyle & FontStyle.Italic) != 0,
+                false);
     }
-    return 0;
-  }
+    return 0L;
+}
+
 }

@@ -11,6 +11,7 @@ import com.tyron.completion.model.CompletionList;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 /**
  * Responsive for suggesting unique variable names. If a variable already exists, it is appended
@@ -29,7 +30,7 @@ public class VariableNameCompletionProvider extends BaseCompletionProvider {
       TreePath path,
       String partial,
       boolean endsWithParen) {
-    Element element = Trees.instance(task.task).getElement(path);
+    Element element = JavacTreesUtil.instance(task.task).getElement(path);
     if (element == null) {
       return;
     }

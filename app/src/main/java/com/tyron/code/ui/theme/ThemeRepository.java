@@ -1,7 +1,7 @@
 package com.tyron.code.ui.theme;
 
 import com.tyron.common.ApplicationProvider;
-import io.github.rosemoe.sora.langs.textmate.theme.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.util.HashMap;
 import java.util.Map;
