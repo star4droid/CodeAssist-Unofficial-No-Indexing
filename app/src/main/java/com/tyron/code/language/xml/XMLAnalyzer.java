@@ -51,7 +51,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private boolean mAnalyzerEnabled = false;
-  private static final String SCOPENAME ="source.xml";
+  private static final String SCOPENAME ="text.xml";
 
   private static final Debouncer sDebouncer =
       new Debouncer(
