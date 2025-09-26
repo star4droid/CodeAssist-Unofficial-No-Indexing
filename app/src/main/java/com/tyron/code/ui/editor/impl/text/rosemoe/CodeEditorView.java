@@ -63,18 +63,6 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
-/*  private static final Field sFormatThreadField;
-
-  static {
-    try {
-      sFormatThreadField = CodeEditor.class.getDeclaredField("mFormatThread");
-      sFormatThreadField.setAccessible(true);
-    } catch (Throwable e) {
-      throw new Error(e);
-    }
-  }
-  */
-
   private final Set<Character> IGNORED_PAIR_ENDS =
       ImmutableSet.<Character>builder()
           .add(')')
@@ -164,7 +152,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
     mDiagnostics = diagnostics;
 
-  /*  AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
+    AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
     if (manager instanceof DiagnosticTextmateAnalyzer) {
       ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
     }
@@ -177,8 +165,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(/*manager,/ styles);
-    }*/
+      setStyles(/*manager,*/ styles);
+    }
     convDiagnostics(diagnostics);
   }
 
