@@ -82,6 +82,9 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
           return false;
         });
     assert caLogging != null;
-    caLogging.setOnPreferenceChangeListener((preference,newValue)->Toast.makeText(requireContext(),"Changes will Apply after restart",Toast.LENGTH_SHORT).show());
+    caLogging.setOnPreferenceChangeListener((preference,newValue)->{
+      Toast.makeText(requireContext(),"Changes will Apply after restart",Toast.LENGTH_SHORT).show();
+      return true;
+    });
   }
 }
