@@ -78,7 +78,7 @@ public class ApplicationLoader extends Application {
 
     addProviders();
     try{
-    boolean isLoggingEnabled = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance()).getBoolean("ca_logging", false);
+    boolean isLoggingEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("ca_logging", false);
     if(isLoggingEnabled)Logger.initialize(this);
     }catch(Exception e){
       Logger.initialize(this);
