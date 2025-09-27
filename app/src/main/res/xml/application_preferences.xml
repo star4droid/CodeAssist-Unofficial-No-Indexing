@@ -9,4 +9,11 @@
         app:entries="@array/theme_entries"
         app:iconSpaceReserved="false"
         />
+         <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:iconSpaceReserved="false"
+            android:key="ca_logging"
+            app:iconSpaceReserved="false"
+            android:title="@string/enable_ca_logging_title"
+            android:summary="@string/enable_ca_logging_des"/>
 </PreferenceScreen>
