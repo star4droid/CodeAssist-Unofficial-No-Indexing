@@ -3,6 +3,7 @@ package com.tyron.code;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -76,8 +77,8 @@ public class ApplicationLoader extends Application {
     super.onCreate();
 
     addProviders();
-
-    Logger.initialize(this);
+    boolean isLoggingEnabled = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance()).getBoolean("ca_logging", false);
+    if(isLoggingEnabled)Logger.initialize(this);
 
     setupTheme();
 
