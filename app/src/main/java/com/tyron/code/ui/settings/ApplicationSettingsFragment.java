@@ -3,6 +3,7 @@ package com.tyron.code.ui.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -66,6 +67,7 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
     setPreferencesFromResource(R.xml.application_preferences, rootKey);
 
     Preference theme = findPreference(SharedPreferenceKeys.THEME);
+    Preference caLogging = findPreference("ca_logging");
     assert theme != null;
     theme.setOnPreferenceChangeListener(
         (preference, newValue) -> {
@@ -79,5 +81,7 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
           }
           return false;
         });
+    assert caLogging != null;
+    caLogging.setOnPreferenceChangeListener((preference,newValue)->Toast.makeText(requireContext(),"Changes will Apply after restart",Toast.LENGTH_SHORT).show());
   }
 }
