@@ -77,9 +77,12 @@ public class ApplicationLoader extends Application {
     super.onCreate();
 
     addProviders();
+    try{
     boolean isLoggingEnabled = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance()).getBoolean("ca_logging", false);
     if(isLoggingEnabled)Logger.initialize(this);
-
+    }catch(Exception e){
+      Logger.initialize(this);
+    }
     setupTheme();
 
     mEventManager = new EventManager();
