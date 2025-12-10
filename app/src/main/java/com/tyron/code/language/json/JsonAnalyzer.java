@@ -84,7 +84,7 @@ public class JsonAnalyzer extends AbstractCodeAnalyzer<Object> {
           mCurrSwitch = 0;
         }
         mCurrSwitch++;
-        CodeBlock block = styles.obtainNewBlock();
+        CodeBlock block = new CodeBlock();
         block.startLine = line;
         block.startColumn = column;
         mBlockLines.push(block);

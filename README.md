@@ -98,7 +98,9 @@ English-language chat in Telegram: https://t.me/codeassist_app
 
 Clone this repository to your local device and then open it on Android Studio.
 
+## Support Docs
 
+you find documentation under [docs](docs/) directory.
 
 ## Contributing
 

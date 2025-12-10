@@ -52,23 +52,27 @@ public class JsonLanguage extends EmptyTextMateLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = "";
+            String formatted = "";
           try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
       try (StringWriter writer = new StringWriter()) {
         JsonWriter jsonWriter = gson.newJsonWriter(writer);
         jsonWriter.setIndent(useTab() ? "\t" : " ");
         gson.toJson(JsonParser.parseString(text.toString()), jsonWriter);
-        format = writer.toString();
+        formatted = writer.toString();
       }
     } catch (Throwable e) {
       // format error, return the original string
-      format = text.toString();
+      formatted = text.toString();
           } 
-            if (!text.toString().equals(format)) {
-                text.delete(0, text.getLineCount() - 1);
-                text.insert(0, 0, format);
-            }
+            if (!text.toString().equals(formatted)) {
+            int oldCursor = cursorRange.getStartIndex();
+            text.delete(0, text.length());
+            text.insert(0, 0, formatted);
+            int newCursor = Math.min(oldCursor, formatted.length());
+            CharPosition pos = text.getIndexer().getCharPosition(newCursor);
+            return new TextRange(pos, pos);
+        }
             return cursorRange;
         }
 

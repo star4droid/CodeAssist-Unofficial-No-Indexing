@@ -7,7 +7,7 @@ apply plugin: 'com.diffplug.spotless'
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.8.2'
-    api 'com.android.tools:sdklib:25.3.0'
+    api 'com.android.tools:sdklib:25.3.0' //32.0.0-alpha14
     implementation project(path: ':common')
 	implementation project(path: ':apksigner')
     implementation 'androidx.test:core:1.4.0'
@@ -37,7 +37,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.13"
     testImplementation project(path: ':jaxp')
 
-    api 'com.android.tools:r8:8.5.35'
+    api 'com.android.tools:r8:8.11.18'
 
     compileOnly project(path: ':android-stubs')
 }

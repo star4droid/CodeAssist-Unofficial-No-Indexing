@@ -6,7 +6,7 @@ apply plugin: 'com.diffplug.spotless'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-	namespace "com.tyron.completion.xml"
+	namespace = "com.tyron.completion.xml"
 	
 	spotless {
 		java {
@@ -16,8 +16,8 @@ android {
 		}
 		
     defaultConfig {
-        minSdk 26
-        targetSdk 31
+        minSdk rootProject.ext.minSdkVersion 
+        targetSdk rootProject.ext.targetSdkVersion 
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -40,7 +40,7 @@ dependencies {
     implementation project(path: ':editor-api')
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.android.material:material:1.13.0'
 
     // bytecode analysis
     api 'org.apache.bcel:bcel:6.5.0'
@@ -57,7 +57,7 @@ dependencies {
     implementation project(path: ':manifmerger')
     implementation project(path: ':xml-repository')
 
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

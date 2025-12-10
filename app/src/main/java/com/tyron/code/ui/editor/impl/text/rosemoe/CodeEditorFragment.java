@@ -84,6 +84,7 @@ import org.codeassist.unofficial.R;
 import java.lang.reflect.Field;
 import org.eclipse.tm4e.core.internal.theme.Theme;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+import io.github.rosemoe.sora.widget.component.Magnifier;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -298,6 +299,7 @@ public class CodeEditorFragment extends Fragment
     editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.openFile(mCurrentFile);
+    //editor.getComponent(Magnifier.class).setWithinEditorForcibly(true);
   //  editor.replaceComponent(CodeAssistCompletionAdapter.class,new CodeAssistCompletionAdapter());
     editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
     editor.setInputType(

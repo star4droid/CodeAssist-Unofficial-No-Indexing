@@ -1,3 +1,26 @@
+/*
+ *    sora-editor - the awesome code editor for Android
+ *    https://github.com/Rosemoe/sora-editor
+ *    Copyright (C) 2020-2024  Rosemoe
+ *
+ *     This library is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU Lesser General Public
+ *     License as published by the Free Software Foundation; either
+ *     version 2.1 of the License, or (at your option) any later version.
+ *
+ *     This library is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *     Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public
+ *     License along with this library; if not, write to the Free Software
+ *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+ *     USA
+ *
+ *     Please contact Rosemoe by email 2073412493@qq.com if you need
+ *     additional information or have any questions
+ */
 package com.tyron.code.analyzer;
 
 import android.annotation.SuppressLint;
@@ -9,18 +32,19 @@ import androidx.annotation.NonNull;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.core.internal.grammar.tokenattrs.EncodedTokenAttributes;
 import org.eclipse.tm4e.core.internal.grammar.tokenattrs.StandardTokenType;
-import org.eclipse.tm4e.core.internal.oniguruma.OnigRegExp;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigResult;
+import org.eclipse.tm4e.core.internal.oniguruma.Oniguruma;
+import org.eclipse.tm4e.core.internal.oniguruma.OnigRegExp;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigString;
 import org.eclipse.tm4e.core.internal.theme.FontStyle;
 import org.eclipse.tm4e.core.internal.theme.Theme;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.lang.reflect.Field;
 
 import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager;
 import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
@@ -38,7 +62,6 @@ import io.github.rosemoe.sora.langs.textmate.utils.StringUtils;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentLine;
 import io.github.rosemoe.sora.text.ContentReference;
-import io.github.rosemoe.sora.util.ArrayList;
 import io.github.rosemoe.sora.util.MyCharacter;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
@@ -112,7 +135,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
         var markers = configuration.getFolding();
         if (markers == null) return;
         foldingOffside = markers.offSide;
-        cachedRegExp = new OnigRegExp("(" + markers.markersStart + ")|(?:" + markers.markersEnd + ")");
+        cachedRegExp = Oniguruma.newRegex("(" + markers.markersStart + ")|(?:" + markers.markersEnd + ")");
     }
 
     @Override
@@ -195,7 +218,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
         for (int i = 0; i < tokensLength; i++) {
             int startIndex = StringUtils.convertUnicodeOffsetToUtf16(line, lineTokens.getTokens()[2 * i], surrogate);
             if (i == 0 && startIndex != 0) {
-                tokens.add(SpanFactory.obtain(0, EditorColorScheme.TEXT_NORMAL));
+                tokens.add(SpanFactory.obtainNoExt(0, EditorColorScheme.TEXT_NORMAL));
             }
             int metadata = lineTokens.getTokens()[2 * i + 1];
             int foreground = EncodedTokenAttributes.getForeground(metadata);
@@ -219,7 +242,7 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
                     }
                 }
             }
-            Span span = SpanFactory.obtain(startIndex, TextStyle.makeStyle(foreground + 255, 0, (fontStyle & FontStyle.Bold) != 0, (fontStyle & FontStyle.Italic) != 0, false));
+            Span span = SpanFactory.obtainNoExt(startIndex, TextStyle.makeStyle(foreground + 255, 0, (fontStyle & FontStyle.Bold) != 0, (fontStyle & FontStyle.Italic) != 0, false));
 
             span.setExtra(tokenType);
 
@@ -257,9 +280,6 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
 
     @Override
     public void reset(@NonNull ContentReference content, @NonNull Bundle extraArguments) {
-        if (!extraArguments.getBoolean("loaded", false)) {
-            return;
-        }
         super.reset(content, extraArguments);
         syncIdentifiers.clear();
     }
@@ -279,18 +299,5 @@ public class BaseTextmateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState
     public void onChangeTheme(ThemeModel newTheme) {
         this.theme = newTheme.getTheme();
     }
- /*   public void updateTheme(Theme theme){
-        try{
-        ThemeModel tm = new ThemeModel(null,null);
-        Field tmf = ThemeModel.class.getDeclaredField("theme");
-        tmf.setAccessible(true);
-        tmf.set(theme,tm);
-        onChangeTheme(tm);
-        } catch(Exception e) {} 
-    }*/
-    
-    public Theme getTheme(){ return this.theme; }
-     
-} 
- 
-     
+    public Theme getTheme(){ return this.theme; }     
+}

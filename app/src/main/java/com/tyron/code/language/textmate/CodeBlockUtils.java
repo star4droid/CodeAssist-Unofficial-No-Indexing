@@ -1,5 +1,6 @@
 package com.tyron.code.language.textmate;
 
+import org.eclipse.tm4e.core.internal.oniguruma.Oniguruma;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigRegExp;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigResult;
 import org.eclipse.tm4e.core.internal.oniguruma.OnigString;
@@ -24,7 +25,7 @@ public class CodeBlockUtils {
 
         OnigRegExp pattern = null;
         if (markers != null) {
-            pattern = new OnigRegExp("(" + markers.markersStart.toString() + ")|(?:" + markers.markersEnd.toString() + ")");
+            pattern = Oniguruma.newRegex("(" + markers.markersStart + ")|(?:" + markers.markersEnd + ")");
         }
 
         List<PreviousRegion> previousRegions = new ArrayList<>();

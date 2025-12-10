@@ -157,14 +157,14 @@ fun String.toCamelCaseAsVar(): String {
 fun String.capitalizeUS() = if (isEmpty()) {
     ""
 } else {
-    substring(0, 1).toUpperCase(Locale.US) + substring(1)
+    substring(0, 1).uppercase(Locale.US) + substring(1)
 }
 
 // TODO replace with String.decapitalize(Locale) from standard library once it is not experimental.
 fun String.decapitalizeUS() = if (isEmpty()) {
     ""
 } else {
-    substring(0, 1).toLowerCase(Locale.US) + substring(1)
+    substring(0, 1).lowercase(Locale.US) + substring(1)
 }
 
 fun String.br(): String =

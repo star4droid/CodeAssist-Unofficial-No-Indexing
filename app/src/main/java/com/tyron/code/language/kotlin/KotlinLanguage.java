@@ -58,33 +58,23 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = null;
-          ByteArrayOutputStream out = new ByteArrayOutputStream();
-    ByteArrayOutputStream err = new ByteArrayOutputStream();
+             String formatted;
+        try {
+            formatted = com.facebook.ktfmt.format.Formatter.format(text.toString(),false);
+        } catch (Exception e) {
+            formatted = text.toString(); // fallback
+        }
 
-    com.facebook.ktfmt.cli.Main main =
-        new com.facebook.ktfmt.cli.Main(
-            new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)),
-            new PrintStream(out),
-            new PrintStream(err),
-            new String[] {"-"});
-    int exitCode = main.run();
+        if (!text.toString().equals(formatted)) {
+            int oldCursor = cursorRange.getStartIndex();
+            text.delete(0, text.length());
+            text.insert(0, 0, formatted);
+            int newCursor = Math.min(oldCursor, formatted.length());
+            CharPosition pos = text.getIndexer().getCharPosition(newCursor);
+            return new TextRange(pos, pos);
+        }
 
-    format= out.toString();
-
-    if (exitCode != 0) {
-      format = text.toString();
-    }
-
-    if (format == null) {
-      format = text.toString();
-    }
-  
-            if (!text.toString().equals(format)) {
-                text.delete(0, text.getLineCount() - 1);
-                text.insert(0, 0, format);
-            }
-            return cursorRange;
+        return cursorRange;
         }
 
         @Nullable

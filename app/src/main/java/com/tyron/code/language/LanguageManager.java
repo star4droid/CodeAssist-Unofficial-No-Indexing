@@ -77,7 +77,7 @@ public class LanguageManager {
         return null;
     }
 
-    public static TextMateLanguage createTextMateLanguage( String scopeName) {
+    public static TextMateLanguage createTextMateLanguage( String scopeName, boolean createIdentifiers) {
 
    try{
     /* 1. obtain the registries */
@@ -87,12 +87,15 @@ public class LanguageManager {
             TextMateLanguage.create(
                     scopeName,
                     grammarReg,
-                    false);   // or false if you don’t want built-in completion
+                    createIdentifiers);   // or false if you don’t want built-in completion
 
     return lang;
     } catch(Exception e) {
       return TextMateLanguage.create(scopeName,false);
     }
+}
+public static TextMateLanguage createTextMateLanguage( String scopeName){
+    return createTextMateLanguage(scopeName,false);
 }
 
 }

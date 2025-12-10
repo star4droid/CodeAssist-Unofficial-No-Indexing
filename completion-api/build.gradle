@@ -6,11 +6,11 @@ apply plugin: 'com.diffplug.spotless'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-	namespace "com.tyron.completion"
+	namespace = "com.tyron.completion"
 	
     defaultConfig {
-        minSdk 21
-        targetSdk 32
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -28,7 +28,7 @@ android {
     }
      
     buildFeatures {
-        buildConfig true	    
+        buildConfig = true	    
     }
 }
 
@@ -43,7 +43,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.checkerframework/checker-qual
     implementation("org.checkerframework:checker-qual:3.50.0")
 
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

@@ -6,7 +6,7 @@ apply plugin: 'com.diffplug.spotless'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-	namespace "com.tyron.layout.appcompat"
+	namespace = "com.tyron.layout.appcompat"
 	
 	spotless {
 		java {
@@ -16,8 +16,8 @@ android {
 		}
 		
     defaultConfig {
-        minSdk 26
-        targetSdk 31
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -38,7 +38,7 @@ android {
 dependencies {
 
     compileOnly 'androidx.appcompat:appcompat:1.7.0'
-    compileOnly 'com.google.android.material:material:1.12.0'
+    compileOnly 'com.google.android.material:material:1.13.0'
     compileOnly project(path: ':proteus-core')
 
     testImplementation 'junit:junit:4.13.2'

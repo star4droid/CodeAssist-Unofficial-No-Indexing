@@ -65,20 +65,11 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
         }
 
         if (!text.toString().equals(formatted)) {
-            // احفظ موقع المؤشر القديم
             int oldCursor = cursorRange.getStartIndex();
-
-            // امسح النص القديم وأدخل الجديد
             text.delete(0, text.length());
             text.insert(0, 0, formatted);
-
-            // احسب الموقع الجديد للمؤشر
             int newCursor = Math.min(oldCursor, formatted.length());
-
-            // حوله لـ CharPosition
             CharPosition pos = text.getIndexer().getCharPosition(newCursor);
-
-            // رجع المؤشر
             return new TextRange(pos, pos);
         }
 
@@ -201,33 +192,10 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   public CharSequence format(@NonNull CharSequence text, int start, int end) {
 
     CharSequence formatted = null;
-
-    /*try {
-
-      StringWriter out = new StringWriter();
-      StringWriter err = new StringWriter();
-
-      com.google.googlejavaformat.java.Main main =
-          new com.google.googlejavaformat.java.Main(
-              new PrintWriter(out, true),
-              new PrintWriter(err, true),
-              new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8)));
-      int exitCode = main.format("-");
-
-      formatted = out.toString();
-
-      if (exitCode != 0) {
-        formatted = text;
-      }
-
-   //    formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-    } catch (Exception e) {
-    }*/
     try{
      formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
       //formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
      }catch(Exception e){
-        // throw new Error(e.fillInStackTrace());
       formatted = text;
     } 
 

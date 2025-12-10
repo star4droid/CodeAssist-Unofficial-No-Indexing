@@ -56,31 +56,34 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language {
         @Nullable
         @Override
         public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-            String format = null;
           XmlFormatPreferences preferences = XmlFormatPreferences.defaults();
     File file = mEditor.getCurrentFile();
     CharSequence formatted = null;
     if ("AndroidManifest.xml".equals(file.getName())) {
-      format =
+      formatted =
           XmlPrettyPrinter.prettyPrint(
               String.valueOf(text.toString()), preferences, XmlFormatStyle.MANIFEST, "\n");
     } else {
       if (ProjectUtils.isLayoutXMLFile(file)) {
-        format =
+        formatted =
             XmlPrettyPrinter.prettyPrint(
                 String.valueOf(text), preferences, XmlFormatStyle.LAYOUT, "\n");
       } else if (ProjectUtils.isResourceXMLFile(file)) {
-        format =
+        formatted =
             XmlPrettyPrinter.prettyPrint(
                 String.valueOf(text), preferences, XmlFormatStyle.RESOURCE, "\n");
       }
     }
-    if (format == null) {
-      format = text.toString();
+    if (formatted == null) {
+      formatted = text.toString();
     } 
-            if (!text.toString().equals(format)) {
-                text.delete(0, text.getLineCount() - 1);
-                text.insert(0, 0, format);
+            if (!text.toString().equals(formatted)) {
+            int oldCursor = cursorRange.getStartIndex();
+            text.delete(0, text.length());
+            text.insert(0, 0, formatted);
+            int newCursor = Math.min(oldCursor, formatted.length());
+            CharPosition pos = text.getIndexer().getCharPosition(newCursor);
+            return new TextRange(pos, pos);
             }
             return cursorRange;
         }

@@ -6,7 +6,7 @@ apply plugin: 'com.diffplug.spotless'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-	namespace "io.github.rosemoe.sora2"
+	namespace = "io.github.rosemoe.sora2"
 	
 	spotless {
 		java {
@@ -16,8 +16,8 @@ android {
 		}
 	
     defaultConfig {
-        minSdk 26
-        targetSdk 31
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -36,7 +36,7 @@ android {
     }
 
     buildFeatures {
-        buildConfig true	    
+        buildConfig = true	    
     }
 }
 
@@ -47,7 +47,7 @@ configurations.implementation {
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     implementation project(path: ':completion-api')
@@ -56,10 +56,11 @@ dependencies {
 
  //   api 'io.github.Rosemoe.sora-editor:editor:0.15.1'
   //  api 'io.github.Rosemoe.sora-editor:language-textmate:0.15.1'
-	api 'io.github.rosemoe:editor:0.23.7'
-    api 'io.github.rosemoe:language-textmate:0.23.7'
+	
+	api 'io.github.rosemoe:editor:0.24.2'
+    api 'io.github.rosemoe:language-textmate:0.24.2'
 
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 	//coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
